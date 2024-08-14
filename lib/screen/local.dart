@@ -1,9 +1,8 @@
+import 'package:farm_connects/controller/loginC.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:farm_connects/config/palette.dart';
 import 'package:get/get.dart';
-
-import '../controller/loginC.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   @override
@@ -15,11 +14,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   bool isSignupScreen = true;
   bool isMale = true;
   bool isRememberMe = false;
-
-  // Form key for validation
-  final _formKey = GlobalKey<FormState>();
-  final _signinFormKey = GlobalKey<FormState>();
-
   // Controllers for Signup
   final TextEditingController username = TextEditingController();
   final TextEditingController phone = TextEditingController();
@@ -29,9 +23,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
   // Controllers for Signin
   final TextEditingController signinPhoneController = TextEditingController();
-  final TextEditingController signinPasswordController =
-      TextEditingController();
-
+  final TextEditingController signinPasswordController = TextEditingController();
   @override
   void dispose() {
     // Dispose controllers to free up resources
@@ -46,18 +38,17 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   }
 
   void _submitForm() {
-    if (isSignupScreen) {
-      if (_formKey.currentState!.validate()) {
-        LoginController.Signup(
-            username.text.trim(),
-            int.parse(phone.text.trim()),
-            address.text.trim(),
-            int.parse(pincode.text.trim()),
-            password.text.trim());
-      }
-    }
-  }
 
+    LoginController.Signup(
+        username.text.trim(),
+        phone.text.trim() as int,
+        address.text.trim(),
+        pincode.text.trim() as int,
+        password.text.trim()
+
+    );
+
+  }
   @override
   Widget build(BuildContext context) {
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -95,8 +86,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           ),
                           children: [
                             TextSpan(
-                              text:
-                                  isSignupScreen ? " Farm Connects," : " Back,",
+                              text: isSignupScreen ? " Farm Connects," : " Back,",
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -135,6 +125,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               width: MediaQuery.of(context).size.width - 40,
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
+
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
@@ -205,16 +196,36 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                         )
                       ],
                     ),
-                    if (isSignupScreen)
-                      Form(key: _formKey, child: buildSignupSection()),
-                    if (!isSignupScreen)
-                      Form(key: _signinFormKey, child: buildSigninSection())
+                    if (isSignupScreen) buildSignupSection(),
+                    if (!isSignupScreen) buildSigninSection()
                   ],
                 ),
               ),
             ),
           ),
           buildBottomHalfContainer(false),
+          // Positioned(
+          //   top: MediaQuery.of(context).size.height - 100,
+          //   right: 0,
+          //   left: 0,
+          //   child: Column(
+          //     children: [
+          //       Text(isSignupScreen ? "Or Signup with" : "Or Signin with"),
+          //       Container(
+          //         margin: EdgeInsets.only(right: 20, left: 20, top: 15),
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //           children: [
+          //             buildTextButton(FontAwesomeIcons.facebook, "Facebook",
+          //                 Palette.facebookColor),
+          //             buildTextButton(FontAwesomeIcons.google, "Google",
+          //                 Palette.googleColor),
+          //           ],
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );
@@ -226,35 +237,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       child: Column(
         children: [
           buildTextField(
-            FontAwesomeIcons.phone,
-            "0123456789",
-            false,
-            TextInputType.number,
-            signinPhoneController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
-              } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                return 'Please enter a valid 10-digit phone number';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.phone, "0123456789", false, TextInputType.number, signinPhoneController),
           buildTextField(
-            FontAwesomeIcons.lock,
-            "**********",
-            true,
-            TextInputType.text,
-            signinPasswordController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters long';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.lock, "**********", true, TextInputType.text, signinPasswordController),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -291,75 +276,88 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       child: Column(
         children: [
           buildTextField(
-            FontAwesomeIcons.user,
-            "User Name",
-            false,
-            TextInputType.text,
-            username,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your username';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.user, "User Name", false, TextInputType.text, username),
           buildTextField(
-            FontAwesomeIcons.phone,
-            "Phone",
-            false,
-            TextInputType.number,
-            phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
-              } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                return 'Please enter a valid 10-digit phone number';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.phone, "Phone", false, TextInputType.number, phone),
           buildTextField(
-            FontAwesomeIcons.addressCard,
-            "Address",
-            false,
-            TextInputType.text,
-            address,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your address';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.addressCard, "Address", false, TextInputType.text, address),
           buildTextField(
-            FontAwesomeIcons.locationPin,
-            "Pincode",
-            false,
-            TextInputType.number,
-            pincode,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your pincode';
-              } else if (!RegExp(r'^[0-9]{6}$').hasMatch(value)) {
-                return 'Please enter a valid 6-digit pincode';
-              }
-              return null;
-            },
-          ),
+              FontAwesomeIcons.locationPin, "Pincode", false, TextInputType.number, pincode),
           buildTextField(
-            FontAwesomeIcons.lock,
-            "Password",
-            true,
-            TextInputType.text,
-            password,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters long';
-              }
-              return null;
-            },
+              FontAwesomeIcons.lock, "Password", true, TextInputType.text, password),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 10),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMale = true;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                            color: isMale ? Colors.green : Colors.transparent,
+                            border: Border.all(
+                                width: 1,
+                                color: isMale
+                                    ? Colors.transparent
+                                    : Palette.textColor1),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Icon(
+                          FontAwesomeIcons.mars,
+                          color: isMale ? Colors.white : Palette.iconColor,
+                        ),
+                      ),
+                      Text(
+                        "Male",
+                        style: TextStyle(color: Palette.textColor1),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMale = false;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                            color: isMale ? Colors.transparent : Colors.green,
+                            border: Border.all(
+                                width: 1,
+                                color: isMale
+                                    ? Palette.textColor1
+                                    : Colors.transparent),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Icon(
+                          FontAwesomeIcons.venus,
+                          color: isMale ? Palette.iconColor : Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Female",
+                        style: TextStyle(color: Palette.textColor1),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Container(
             width: 200,
@@ -367,7 +365,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                  text: "By pressing 'Submit' you agree to our ",
+                  text:
+                  "By pressing 'Submit' you agree to our ",
                   style: TextStyle(color: Palette.textColor2),
                   children: [
                     TextSpan(
@@ -381,13 +380,37 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       ),
     );
   }
+  Widget buildTextButton(IconData icon, String title, Color backgroundColor) {
+    return TextButton(
+      onPressed: () {},
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.white, side: BorderSide(width: 1, color: Colors.grey),
+        minimumSize: Size(145, 40),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)),
+        backgroundColor: backgroundColor,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 20,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(title)
+        ],
+      ),
+    );
+  }
 
   Widget buildTextField(IconData icon, String hintText, bool isPassword,
-      TextInputType inputType, TextEditingController controller,
-      {String? Function(String?)? validator}) {
+      TextInputType inputType, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextFormField(
+      child: TextField(
         controller: controller,
         obscureText: isPassword,
         keyboardType: inputType,
@@ -408,76 +431,58 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           hintText: hintText,
           hintStyle: TextStyle(fontSize: 14, color: Palette.textColor1),
         ),
-        validator: validator,
       ),
     );
   }
 
+
   Widget buildBottomHalfContainer(bool showShadow) {
+    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return AnimatedPositioned(
       duration: Duration(milliseconds: 700),
       curve: Curves.bounceInOut,
-      top: isSignupScreen ? 670 : 450,
+      top: isSignupScreen ? (keyboardOpen ? 555 : 655)
+          : (keyboardOpen ? 415 : 455) ,
+
       right: 0,
       left: 0,
       child: Center(
-        child: GestureDetector(
-          // onTap: () {
-          //   if (isSignupScreen) {
-          //     if (_formKey.currentState!.validate()) {
-          //
-          //       print("Username: ${usernameController.text}");
-          //       print("Phone: ${phoneController.text}");
-          //       print("Address: ${addressController.text}");
-          //       print("Pincode: ${pincodeController.text}");
-          //       print("Password: ${passwordController.text}");
-          //     }
-          //   } else {
-          //     if (_signinFormKey.currentState!.validate()) {
-          //       print("Phone: ${signinPhoneController.text}");
-          //       print("Password: ${signinPasswordController.text}");
-          //     }
-          //   }
-          // },
-          onTap: _submitForm,
-          child: Container(
-            height: 90,
-            width: 90,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.orange[400],
+        child: Container(
+          height: 90,
+          width: 90,
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.circular(50),
               boxShadow: [
                 if (showShadow)
                   BoxShadow(
-                      color: Colors.black.withOpacity(.3),
-                      spreadRadius: 1.5,
-                      blurRadius: 10,
-                      offset: Offset(0, 1))
-              ],
-            ),
-            child: !showShadow
-                ? Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [Colors.orange[200]!, Colors.red[400]!],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight),
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(.3),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 1))
-                        ]),
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
+                    color: Colors.black.withOpacity(0.3),
+                    spreadRadius: 1.5,
+                    blurRadius: 10,
                   )
-                : Center(),
-          ),
+              ]),
+          child: !showShadow
+              ? Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.orange, Colors.red],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.3),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(0, 1))
+                ]),
+            child: Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+          )
+              : Center(),
         ),
       ),
     );
