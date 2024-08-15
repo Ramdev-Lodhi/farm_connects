@@ -46,11 +46,43 @@ class LoginR {
       // Check the status code and parse the response
       if (response.statusCode == 200 || response.statusCode == 201) {
         return {
+          'status': '200',
+          'data': json.decode(response.body),
+        };
+      } else {
+        return {
+          'status': '500',
+          'message': 'Failed to sign up: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      // Handle any errors that occur during the request
+      return {
+        'status': '500',
+        'message': 'An error occurred: $e',
+      };
+    }
+  }
+  Future<Map<String, dynamic>> signin(int phone,String password) async {
+    final url = Uri.parse('$apiUrl/getuserphone');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({
+      'phone': phone,
+      'password': password
+    });
+    try {
+      // Send POST request
+      final response = await http.post(url, headers: headers, body: body);
+      // Check the status code and parse the response
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'status':'200',
           'success': true,
           'data': json.decode(response.body),
         };
       } else {
         return {
+          'status':'500',
           'success': false,
           'message': 'Failed to sign up: ${response.statusCode}',
         };
@@ -58,6 +90,7 @@ class LoginR {
     } catch (e) {
       // Handle any errors that occur during the request
       return {
+        'status':'500',
         'success': false,
         'message': 'An error occurred: $e',
       };

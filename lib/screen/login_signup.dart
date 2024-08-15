@@ -49,11 +49,19 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     if (isSignupScreen) {
       if (_formKey.currentState!.validate()) {
         LoginController.Signup(
-            username.text.trim(),
-            int.parse(phone.text.trim()),
-            address.text.trim(),
-            int.parse(pincode.text.trim()),
-            password.text.trim());
+          username.text.trim(),
+          int.parse(phone.text.trim()),
+          address.text.trim(),
+          int.parse(pincode.text.trim()),
+          password.text.trim(),
+        );
+      }
+    } else {
+      if (_signinFormKey.currentState!.validate()) {
+        LoginController.Signin(
+          int.parse(signinPhoneController.text.trim()),
+          signinPasswordController.text.trim(),
+        );
       }
     }
   }
@@ -439,7 +447,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           //     }
           //   }
           // },
-          onTap: _submitForm,
+          onTap:_submitForm,
           child: Container(
             height: 90,
             width: 90,
