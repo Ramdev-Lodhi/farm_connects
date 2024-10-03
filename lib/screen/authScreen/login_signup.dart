@@ -391,9 +391,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your email';
                 }
-                // else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                //   return 'Please enter a valid 10-digit phone number';
-                // }
                 return null;
               },
             ),
