@@ -314,9 +314,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
               }
-              // else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-              //   return 'Please enter a valid 10-digit phone number';
-              // }
               return null;
             },
           ),
@@ -360,25 +357,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               )
             ],
           ),
-// Google Sign-In Button
-//           SizedBox(height: 10),
-//           ElevatedButton.icon(
-//             onPressed: () {
-//               // Trigger Google sign-in process here
-//               // LoginController.signInWithGoogle();
-//             },
-//             icon: Icon(FontAwesomeIcons.google, color: Colors.white),
-//             label: Text("Sign in with Google"),
-//             style: ElevatedButton.styleFrom(
-//               foregroundColor: Colors.white,
-//               backgroundColor: Colors.red[400],
-//               // Text color
-//               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(30),
-//               ),
-//               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-//             ),
-//           ),
         ],
       ),
     );
@@ -493,25 +471,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     ]),
               ),
             ),
-            // Google Sign-Up Button
-            // SizedBox(height: 10),
-            // ElevatedButton.icon(
-            //   onPressed: () {
-            //     // Trigger Google sign-up process here
-            //     // LoginController.signUpWithGoogle();
-            //   },
-            //   icon: Icon(FontAwesomeIcons.google, color: Colors.white),
-            //   label: Text("Sign up with Google"),
-            //   style: ElevatedButton.styleFrom(
-            //     foregroundColor: Colors.white,
-            //     backgroundColor: Colors.red[400],
-            //     // Text color
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(30),
-            //     ),
-            //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-            //   ),
-            // ),
+
           ],
         ),
       ),
