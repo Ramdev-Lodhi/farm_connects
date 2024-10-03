@@ -14,7 +14,6 @@ class LoginSignupScreen extends StatefulWidget {
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
   final LoginController = Get.put(LoginC());
   bool isSignupScreen = false;
-  bool isMale = true;
   bool isRememberMe = false;
 
   // Form key for validation
@@ -59,6 +58,15 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       }
     } else {
       if (_signinFormKey.currentState!.validate()) {
+        if (!isRememberMe) {
+          // Show a message if Remember Me is not checked
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Please check 'Remember Me' if you want to stay logged in."),
+            ),
+          );
+          return; // Prevent submission if checkbox is not checked
+        }
         LoginController.Signin(
           signinEmailController.text.trim(),
           signinPasswordController.text.trim(),
@@ -342,9 +350,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     activeColor: Palette.textColor2,
                     onChanged: (value) {
                       setState(() {
-                        isRememberMe = !isRememberMe;
-                      });
-                    },
+                        isRememberMe = value ?? false; // Handle null case
+                      });},
+
                   ),
                   Text("Remember me",
                       style: TextStyle(fontSize: 12, color: Palette.textColor1))
