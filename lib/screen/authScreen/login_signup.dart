@@ -75,7 +75,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         .bottom != 0;
     final topPosition = isSignupScreen
         ? (keyboardOpen ? 50 : 150)
-        : (keyboardOpen ? 150 : 150);
+        : (keyboardOpen ? 150 : 300);
     final heightPosition = isSignupScreen
         ? (keyboardOpen ? 450 : 500)
         : (keyboardOpen ? 340 : 320);
@@ -549,7 +549,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       // Dynamically adjust the 'top' position based on signup or signin and keyboard state
       top: isSignupScreen
           ? (keyboardOpen ? 460 : 610) // Move up when the keyboard is open
-          : (keyboardOpen ? 450 : 430),
+          : (keyboardOpen ? 450 : 580),
       right: 0,
       left: screenWidth * 0.4,
       // Responsive left positioning (30% of screen width)
