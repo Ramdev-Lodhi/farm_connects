@@ -1,8 +1,23 @@
+import 'package:farm_connects/screen/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class DashboardScreen extends StatelessWidget {
+class HomeLayout extends StatefulWidget {
+  @override
+  _HomeLayoutState createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  int currentIndex = 0; // To keep track of the current index
   final Color orange = Color(0xFFFFA500); // Define the orange color
+
+  final List<Widget> screens = [
+    Center(child: Text('Home Screen')), // Placeholder for Home screen
+    Center(child: Text('Category Screen')), // Placeholder for Category screen
+    Center(child: Text('Favorites Screen')), // Placeholder for Favorites screen
+    SettingsScreen(), // Settings screen
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
         label: 'Home',
         activeIcon: Icon(
           Icons.home,
-          color: Colors.orange, // Change active icon color
+          color: orange, // Change active icon color
         ),
       ),
       BottomNavigationBarItem(
@@ -20,7 +35,7 @@ class DashboardScreen extends StatelessWidget {
         label: 'Category',
         activeIcon: Icon(
           Icons.category,
-          color: Colors.orange, // Change active icon color
+          color: orange, // Change active icon color
         ),
       ),
       BottomNavigationBarItem(
@@ -28,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
         label: 'Favorites',
         activeIcon: Icon(
           Icons.favorite,
-          color: Colors.orange, // Change active icon color
+          color: orange, // Change active icon color
         ),
       ),
       BottomNavigationBarItem(
@@ -36,7 +51,7 @@ class DashboardScreen extends StatelessWidget {
         label: 'Settings',
         activeIcon: Icon(
           Icons.settings,
-          color: Colors.orange, // Change active icon color
+          color: orange, // Change active icon color
         ),
       ),
     ];
@@ -56,12 +71,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height, // Adjusted for responsiveness
-        width: MediaQuery.of(context).size.width, // Adjusted for responsiveness
-        color: Colors.blue,
-        child: Center(child: Text('Dashboard Content')), // Placeholder for dashboard content
-      ),
+      body: screens[currentIndex], // Display the selected screen
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(10.0),
@@ -70,14 +80,14 @@ class DashboardScreen extends StatelessWidget {
         child: SizedBox(
           height: MediaQuery.of(context).size.height / 12.8,
           child: BottomNavigationBar(
+            currentIndex: currentIndex,
             onTap: (index) {
-              // Ensure cubit is defined in your context
-              // Replace 'cubit' with the actual instance of your cubit
-              // cubit.changeNavIndex(index);
+              setState(() {
+                currentIndex = index; // Update the current index
+              });
             },
             unselectedFontSize: 11.0,
             selectedFontSize: 12.0,
-            // currentIndex: cubit.currentIndex, // Ensure cubit is defined in your context
             items: navItems,
             iconSize: MediaQuery.of(context).size.height / 30.0,
             unselectedItemColor: Colors.black,

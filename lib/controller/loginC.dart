@@ -2,6 +2,7 @@ import 'package:farm_connects/repository/loginR.dart';
 import 'package:farm_connects/screen/dashboard.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
 import 'package:farm_connects/screen/authScreen/login_signup.dart';
+import 'package:farm_connects/screen/homeScreen/home_layout.dart';
 import 'package:get/get.dart';
 import 'package:farm_connects/config/network/end_points.dart';
 import 'package:farm_connects/config/network/remote/dio.dart';
@@ -34,10 +35,13 @@ class LoginC extends GetxController {
     ).then((value) {
       print(value);
       loginModel = LoginModel.fromJson(value.data);
-        print(loginModel.status);
+        print(loginModel.data?.image);
       if(loginModel.status){
         CacheHelper.saveData(key: 'token', value: loginModel.data?.token);
-        Get.offAll(() => DashboardScreen());
+        CacheHelper.saveData(key: 'image', value: loginModel.data?.image);
+        CacheHelper.saveData(key: 'name', value: loginModel.data?.name);
+        CacheHelper.saveData(key: 'email', value: loginModel.data?.email);
+        Get.offAll(() => HomeLayout());
       }
       // print(loginModel.data?.token);
 

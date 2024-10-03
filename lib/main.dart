@@ -1,4 +1,5 @@
 import 'package:farm_connects/screen/dashboard.dart';
+import 'package:farm_connects/screen/homeScreen/home_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: token != '' ? DashboardScreen() :  LoginSignupScreen(),
+      home: token != '' ? HomeLayout() :  LoginSignupScreen(),
     ),
   );
 }
