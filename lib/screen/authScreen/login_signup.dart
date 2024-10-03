@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:farm_connects/constants/palette.dart';
@@ -29,7 +31,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   // Controllers for Signin
   final TextEditingController signinEmailController = TextEditingController();
   final TextEditingController signinPasswordController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void dispose() {
@@ -67,13 +69,16 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    final keyboardOpen = MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom != 0;
     final topPosition = isSignupScreen
-        ? (keyboardOpen ? 100 : 200)
-        : (keyboardOpen ? 150 : 200);
+        ? (keyboardOpen ? 50 : 150)
+        : (keyboardOpen ? 150 : 150);
     final heightPosition = isSignupScreen
         ? (keyboardOpen ? 450 : 500)
-        : (keyboardOpen ? 340 : 380);
+        : (keyboardOpen ? 340 : 320);
 
     return Scaffold(
       backgroundColor: Palette.backgroundColor,
@@ -106,7 +111,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           children: [
                             TextSpan(
                               text:
-                                  isSignupScreen ? " Farm Connects," : " Back,",
+                              isSignupScreen ? " Farm Connects," : " Back,",
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -144,7 +149,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               height: heightPosition.toDouble(),
               // isSignupScreen ? 500 : 380,
               padding: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width - 40,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 40,
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -155,118 +163,125 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                         blurRadius: 15,
                         spreadRadius: 5),
                   ]),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSignupScreen = false;
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                "LOGIN",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSignupScreen
-                                        ? Palette.activeColor
-                                        : Palette.textColor1),
-                              ),
-                              if (!isSignupScreen)
-                                Container(
-                                  margin: EdgeInsets.only(top: 3),
-                                  height: 2,
-                                  width: 55,
-                                  color: Colors.orange,
-                                )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSignupScreen = true;
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                "SIGNUP",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: isSignupScreen
-                                        ? Palette.activeColor
-                                        : Palette.textColor1),
-                              ),
-                              if (isSignupScreen)
-                                Container(
-                                  margin: EdgeInsets.only(top: 3),
-                                  height: 2,
-                                  width: 55,
-                                  color: Colors.orange,
-                                )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    if (isSignupScreen)
-                      Form(key: _formKey, child: buildSignupSection()),
-                    if (!isSignupScreen)
-                      Form(key: _signinFormKey, child: buildSigninSection()),
-                    Positioned(
-                      top: MediaQuery.of(context).size.height - 100,
-                      right: 0,
-                      left: 0,
-                      child: Column(
-                        children: [
-                          Text(isSignupScreen
-                              ? "Or Signup with"
-                              : "Or Signin with"),
-                          Container(
-                            margin:
-                                EdgeInsets.only(right: 20, left: 20, top: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // buildTextButton(FontAwesomeIcons.facebookF,
-                                //     "Facebook", Palette.facebookColor),
-                                buildTextButton(FontAwesomeIcons.google,
-                                    "Google", Palette.googleColor),
-                              ],
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSignupScreen = false;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              "LOGIN",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSignupScreen
+                                      ? Palette.activeColor
+                                      : Palette.textColor1),
                             ),
-                          )
-                        ],
+                            if (!isSignupScreen)
+                              Container(
+                                margin: EdgeInsets.only(top: 3),
+                                height: 2,
+                                width: 55,
+                                color: Colors.orange,
+                              )
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSignupScreen = true;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              "SIGNUP",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSignupScreen
+                                      ? Palette.activeColor
+                                      : Palette.textColor1),
+                            ),
+                            if (isSignupScreen)
+                              Container(
+                                margin: EdgeInsets.only(top: 3),
+                                height: 2,
+                                width: 55,
+                                color: Colors.orange,
+                              )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  if (isSignupScreen)
+                    Expanded(child: Form(
+                        key: _formKey, child: buildSignupSection())),
+                  if (!isSignupScreen)
+                    Expanded(child: Form(
+                        key: _signinFormKey, child: buildSigninSection())),
+                  SizedBox(
+                    height: 25,
+                  ),
+
+                ],
               ),
             ),
           ),
           buildBottomHalfContainer(false),
+          Positioned(
+            top: MediaQuery
+                .of(context)
+                .size
+                .height - 100,
+            right: 0,
+            left: 0,
+            child: Column(
+              children: [
+                Text(isSignupScreen
+                    ? "Or Signup with"
+                    : "Or Signin with"),
+                Container(
+                  margin:
+                  EdgeInsets.only(right: 20, left: 20, top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildTextButton(FontAwesomeIcons.facebookF,
+                          "Facebook", Palette.facebookColor),
+                      buildTextButton(FontAwesomeIcons.google,
+                          "  Google      ", Palette.googleColor),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
-  TextButton buildTextButton(
-      IconData icon, String title, Color backgroundColor) {
+  TextButton buildTextButton(IconData icon, String title,
+      Color backgroundColor) {
     return TextButton(
       onPressed: () {},
       style: TextButton.styleFrom(
           foregroundColor: Colors.white,
           side: BorderSide(width: 1, color: Colors.grey),
-          minimumSize: Size(145, 40),
+          // minimumSize: Size(145, 40),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           backgroundColor: backgroundColor),
       child: Row(
         children: [
@@ -372,115 +387,117 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   Container buildSignupSection() {
     return Container(
       margin: EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          buildTextField(
-            FontAwesomeIcons.user,
-            "User Name",
-            false,
-            TextInputType.text,
-            username,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your username';
-              }
-              return null;
-            },
-          ),
-          buildTextField(
-            FontAwesomeIcons.phone,
-            "Phone",
-            false,
-            TextInputType.number,
-            phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
-              } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                return 'Please enter a valid 10-digit phone number';
-              }
-              return null;
-            },
-          ),
-          buildTextField(
-            FontAwesomeIcons.addressCard,
-            "Address",
-            false,
-            TextInputType.text,
-            address,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your address';
-              }
-              return null;
-            },
-          ),
-          buildTextField(
-            FontAwesomeIcons.locationPin,
-            "Pincode",
-            false,
-            TextInputType.number,
-            pincode,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your pincode';
-              } else if (!RegExp(r'^[0-9]{6}$').hasMatch(value)) {
-                return 'Please enter a valid 6-digit pincode';
-              }
-              return null;
-            },
-          ),
-          buildTextField(
-            FontAwesomeIcons.lock,
-            "Password",
-            true,
-            TextInputType.text,
-            password,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters long';
-              }
-              return null;
-            },
-          ),
-          Container(
-            width: 200,
-            margin: EdgeInsets.only(top: 20),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                  text: "By pressing 'Submit' you agree to our ",
-                  style: TextStyle(color: Palette.textColor2),
-                  children: [
-                    TextSpan(
-                      text: "term & conditions",
-                      style: TextStyle(color: Colors.orange),
-                    ),
-                  ]),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            buildTextField(
+              FontAwesomeIcons.user,
+              "User Name",
+              false,
+              TextInputType.text,
+              username,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
             ),
-          ),
-          // Google Sign-Up Button
-          // SizedBox(height: 10),
-          // ElevatedButton.icon(
-          //   onPressed: () {
-          //     // Trigger Google sign-up process here
-          //     // LoginController.signUpWithGoogle();
-          //   },
-          //   icon: Icon(FontAwesomeIcons.google, color: Colors.white),
-          //   label: Text("Sign up with Google"),
-          //   style: ElevatedButton.styleFrom(
-          //     foregroundColor: Colors.white,
-          //     backgroundColor: Colors.red[400],
-          //     // Text color
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(30),
-          //     ),
-          //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-          //   ),
-          // ),
-        ],
+            buildTextField(
+              FontAwesomeIcons.phone,
+              "Phone",
+              false,
+              TextInputType.number,
+              phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your phone number';
+                } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+                  return 'Please enter a valid 10-digit phone number';
+                }
+                return null;
+              },
+            ),
+            buildTextField(
+              FontAwesomeIcons.addressCard,
+              "Address",
+              false,
+              TextInputType.text,
+              address,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your address';
+                }
+                return null;
+              },
+            ),
+            buildTextField(
+              FontAwesomeIcons.locationPin,
+              "Pincode",
+              false,
+              TextInputType.number,
+              pincode,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your pincode';
+                } else if (!RegExp(r'^[0-9]{6}$').hasMatch(value)) {
+                  return 'Please enter a valid 6-digit pincode';
+                }
+                return null;
+              },
+            ),
+            buildTextField(
+              FontAwesomeIcons.lock,
+              "Password",
+              true,
+              TextInputType.text,
+              password,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters long';
+                }
+                return null;
+              },
+            ),
+            Container(
+              width: 200,
+              margin: EdgeInsets.only(top: 20),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                    text: "By pressing 'Submit' you agree to our ",
+                    style: TextStyle(color: Palette.textColor2),
+                    children: [
+                      TextSpan(
+                        text: "term & conditions",
+                        style: TextStyle(color: Colors.orange),
+                      ),
+                    ]),
+              ),
+            ),
+            // Google Sign-Up Button
+            // SizedBox(height: 10),
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     // Trigger Google sign-up process here
+            //     // LoginController.signUpWithGoogle();
+            //   },
+            //   icon: Icon(FontAwesomeIcons.google, color: Colors.white),
+            //   label: Text("Sign up with Google"),
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Colors.white,
+            //     backgroundColor: Colors.red[400],
+            //     // Text color
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(30),
+            //     ),
+            //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -517,77 +534,77 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   }
 
   Widget buildBottomHalfContainer(bool showShadow) {
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    final keyboardOpen = MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom != 0;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return AnimatedPositioned(
       duration: Duration(milliseconds: 600),
       curve: Curves.bounceInOut,
-      top: isSignupScreen ? 670 : 540,
+      // Dynamically adjust the 'top' position based on signup or signin and keyboard state
+      top: isSignupScreen
+          ? (keyboardOpen ? 460 : 610) // Move up when the keyboard is open
+          : (keyboardOpen ? 450 : 430),
       right: 0,
-      left: 0,
+      left: screenWidth * 0.4,
+      // Responsive left positioning (30% of screen width)
       child: Center(
         child: GestureDetector(
-          onTap: () {
-            if (isSignupScreen) {
-              if (_formKey.currentState!.validate()) {
-                // print("Username: ${usernameController.text}");
-                // print("Phone: ${phoneController.text}");
-                // print("Address: ${addressController.text}");
-                // print("Pincode: ${pincodeController.text}");
-                // print("Password: ${passwordController.text}");
-              }
-            } else {
-              if (_signinFormKey.currentState!.validate()) {
-                // print("Phone: ${signinEmailController.text}");
-                // print("Password: ${signinPasswordController.text}");
-                LoginController.Signin(
-                  signinEmailController.text.trim(),
-                  signinPasswordController.text.trim(),
-                );
-              }
-            }
-          },
-          // onTap:_submitForm,
-          child: Container(
-            height: 90,
-            width: 90,
-            padding: EdgeInsets.all(15),
+          onTap: _submitForm, // Call the form submission method directly
+
+          child: !showShadow
+              ? Container(
+            height: screenWidth * 0.1, // Adjust height based on screen width
+            width: screenWidth * 0.35, // Adjust width based on screen width
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
+              color: Palette.activeColor,
+              borderRadius: BorderRadius.circular(30),
               boxShadow: [
-                if (showShadow)
-                  BoxShadow(
-                      color: Colors.black.withOpacity(.3),
-                      spreadRadius: 1.5,
-                      blurRadius: 10,
-                      offset: Offset(0, 1))
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  spreadRadius: 1.5,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
               ],
             ),
-            child: !showShadow
-                ? Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            // colors: [Colors.orange[200]!, Colors.red[400]!],
-                            colors: Colors.accents,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight),
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(.3),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 1))
-                        ]),
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
-                  )
-                : Center(),
+            child: Center(
+              child: Text(
+                isSignupScreen ? "SIGN UP" : "LOG IN",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+          )
+              : Container(
+            height: screenWidth * 0.1,
+            width: screenWidth * 0.35,
+            decoration: BoxDecoration(
+              color: Palette.activeColor,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  spreadRadius: 1.5,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                isSignupScreen ? "SIGN UP" : "LOG IN",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 }
+
