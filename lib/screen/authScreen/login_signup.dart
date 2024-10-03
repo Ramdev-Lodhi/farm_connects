@@ -404,6 +404,22 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             buildTextField(
+              FontAwesomeIcons.envelope,
+              "example@gmail.com",
+              false,
+              TextInputType.text,
+              signinEmailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                // else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+                //   return 'Please enter a valid 10-digit phone number';
+                // }
+                return null;
+              },
+            ),
+            buildTextField(
               FontAwesomeIcons.phone,
               "Phone",
               false,
@@ -420,7 +436,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
             ),
             buildTextField(
               FontAwesomeIcons.addressCard,
-              "Address",
+              "city",
               false,
               TextInputType.text,
               address,
