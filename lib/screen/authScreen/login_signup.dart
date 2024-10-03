@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:farm_connects/config/palette.dart';
+import 'package:farm_connects/constants/palette.dart';
 import 'package:get/get.dart';
-
-import '../controller/loginC.dart';
+import '../../controller/loginC.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   @override
@@ -12,7 +11,7 @@ class LoginSignupScreen extends StatefulWidget {
 
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
   final LoginController = Get.put(LoginC());
-  bool isSignupScreen = true;
+  bool isSignupScreen = false;
   bool isMale = true;
   bool isRememberMe = false;
 
@@ -28,7 +27,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   final TextEditingController password = TextEditingController();
 
   // Controllers for Signin
-  final TextEditingController signinPhoneController = TextEditingController();
+  final TextEditingController signinEmailController = TextEditingController();
   final TextEditingController signinPasswordController =
       TextEditingController();
 
@@ -40,7 +39,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     address.dispose();
     pincode.dispose();
     password.dispose();
-    signinPhoneController.dispose();
+    signinEmailController.dispose();
     signinPasswordController.dispose();
     super.dispose();
   }
@@ -59,7 +58,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     } else {
       if (_signinFormKey.currentState!.validate()) {
         LoginController.Signin(
-          int.parse(signinPhoneController.text.trim()),
+          signinEmailController.text.trim(),
           signinPasswordController.text.trim(),
         );
       }
@@ -71,7 +70,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     final topPosition = isSignupScreen
         ? (keyboardOpen ? 100 : 200)
-        : (keyboardOpen ? 190 : 230);
+        : (keyboardOpen ? 150 : 200);
+    final heightPosition = isSignupScreen
+        ? (keyboardOpen ? 450 : 500)
+        : (keyboardOpen ? 340 : 380);
 
     return Scaffold(
       backgroundColor: Palette.backgroundColor,
@@ -132,13 +134,15 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           ),
           buildBottomHalfContainer(true),
           AnimatedPositioned(
-            duration: Duration(milliseconds: 700),
+            duration: Duration(milliseconds: 600),
             curve: Curves.bounceInOut,
             top: topPosition.toDouble(),
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 700),
+              duration: Duration(milliseconds: 600),
               curve: Curves.bounceInOut,
-              height: isSignupScreen ? 500 : 250,
+              // height: heightPosition.toDouble(),
+              height: heightPosition.toDouble(),
+              // isSignupScreen ? 500 : 380,
               padding: EdgeInsets.all(20),
               width: MediaQuery.of(context).size.width - 40,
               margin: EdgeInsets.symmetric(horizontal: 20),
@@ -216,7 +220,32 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     if (isSignupScreen)
                       Form(key: _formKey, child: buildSignupSection()),
                     if (!isSignupScreen)
-                      Form(key: _signinFormKey, child: buildSigninSection())
+                      Form(key: _signinFormKey, child: buildSigninSection()),
+                    Positioned(
+                      top: MediaQuery.of(context).size.height - 100,
+                      right: 0,
+                      left: 0,
+                      child: Column(
+                        children: [
+                          Text(isSignupScreen
+                              ? "Or Signup with"
+                              : "Or Signin with"),
+                          Container(
+                            margin:
+                                EdgeInsets.only(right: 20, left: 20, top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                // buildTextButton(FontAwesomeIcons.facebookF,
+                                //     "Facebook", Palette.facebookColor),
+                                buildTextButton(FontAwesomeIcons.google,
+                                    "Google", Palette.googleColor),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -228,23 +257,51 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     );
   }
 
+  TextButton buildTextButton(
+      IconData icon, String title, Color backgroundColor) {
+    return TextButton(
+      onPressed: () {},
+      style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          side: BorderSide(width: 1, color: Colors.grey),
+          minimumSize: Size(145, 40),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: backgroundColor),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            title,
+          )
+        ],
+      ),
+    );
+  }
+
   Container buildSigninSection() {
     return Container(
       margin: EdgeInsets.only(top: 20),
       child: Column(
         children: [
           buildTextField(
-            FontAwesomeIcons.phone,
-            "0123456789",
+            FontAwesomeIcons.envelope,
+            "example@gmail.com",
             false,
-            TextInputType.number,
-            signinPhoneController,
+            TextInputType.text,
+            signinEmailController,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
-              } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                return 'Please enter a valid 10-digit phone number';
+                return 'Please enter your email';
               }
+              // else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+              //   return 'Please enter a valid 10-digit phone number';
+              // }
               return null;
             },
           ),
@@ -287,7 +344,26 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     style: TextStyle(fontSize: 12, color: Palette.textColor1)),
               )
             ],
-          )
+          ),
+// Google Sign-In Button
+//           SizedBox(height: 10),
+//           ElevatedButton.icon(
+//             onPressed: () {
+//               // Trigger Google sign-in process here
+//               // LoginController.signInWithGoogle();
+//             },
+//             icon: Icon(FontAwesomeIcons.google, color: Colors.white),
+//             label: Text("Sign in with Google"),
+//             style: ElevatedButton.styleFrom(
+//               foregroundColor: Colors.white,
+//               backgroundColor: Colors.red[400],
+//               // Text color
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(30),
+//               ),
+//               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+//             ),
+//           ),
         ],
       ),
     );
@@ -385,6 +461,25 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   ]),
             ),
           ),
+          // Google Sign-Up Button
+          // SizedBox(height: 10),
+          // ElevatedButton.icon(
+          //   onPressed: () {
+          //     // Trigger Google sign-up process here
+          //     // LoginController.signUpWithGoogle();
+          //   },
+          //   icon: Icon(FontAwesomeIcons.google, color: Colors.white),
+          //   label: Text("Sign up with Google"),
+          //   style: ElevatedButton.styleFrom(
+          //     foregroundColor: Colors.white,
+          //     backgroundColor: Colors.red[400],
+          //     // Text color
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(30),
+          //     ),
+          //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -422,38 +517,42 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   }
 
   Widget buildBottomHalfContainer(bool showShadow) {
+    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 700),
+      duration: Duration(milliseconds: 600),
       curve: Curves.bounceInOut,
-      top: isSignupScreen ? 670 : 450,
+      top: isSignupScreen ? 670 : 540,
       right: 0,
       left: 0,
       child: Center(
         child: GestureDetector(
-          // onTap: () {
-          //   if (isSignupScreen) {
-          //     if (_formKey.currentState!.validate()) {
-          //
-          //       print("Username: ${usernameController.text}");
-          //       print("Phone: ${phoneController.text}");
-          //       print("Address: ${addressController.text}");
-          //       print("Pincode: ${pincodeController.text}");
-          //       print("Password: ${passwordController.text}");
-          //     }
-          //   } else {
-          //     if (_signinFormKey.currentState!.validate()) {
-          //       print("Phone: ${signinPhoneController.text}");
-          //       print("Password: ${signinPasswordController.text}");
-          //     }
-          //   }
-          // },
-          onTap:_submitForm,
+          onTap: () {
+            if (isSignupScreen) {
+              if (_formKey.currentState!.validate()) {
+                // print("Username: ${usernameController.text}");
+                // print("Phone: ${phoneController.text}");
+                // print("Address: ${addressController.text}");
+                // print("Pincode: ${pincodeController.text}");
+                // print("Password: ${passwordController.text}");
+              }
+            } else {
+              if (_signinFormKey.currentState!.validate()) {
+                // print("Phone: ${signinEmailController.text}");
+                // print("Password: ${signinPasswordController.text}");
+                LoginController.Signin(
+                  signinEmailController.text.trim(),
+                  signinPasswordController.text.trim(),
+                );
+              }
+            }
+          },
+          // onTap:_submitForm,
           child: Container(
             height: 90,
             width: 90,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.orange[400],
+              color: Colors.white,
               borderRadius: BorderRadius.circular(50),
               boxShadow: [
                 if (showShadow)
@@ -468,7 +567,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 ? Container(
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
-                            colors: [Colors.orange[200]!, Colors.red[400]!],
+                            // colors: [Colors.orange[200]!, Colors.red[400]!],
+                            colors: Colors.accents,
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight),
                         borderRadius: BorderRadius.circular(30),

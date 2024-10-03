@@ -63,11 +63,11 @@ class LoginR {
       };
     }
   }
-  Future<Map<String, dynamic>> signin(int phone,String password) async {
-    final url = Uri.parse('$apiUrl/getuserphone');
+  Future<Map<String, dynamic>> signin(String email,String password) async {
+    final url = Uri.parse('$apiUrl/login');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
-      'phone': phone,
+      'email': email,
       'password': password
     });
     try {

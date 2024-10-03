@@ -1,7 +1,7 @@
 import 'package:farm_connects/controller/loginC.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:farm_connects/config/palette.dart';
+import 'package:farm_connects/constants/palette.dart';
 import 'package:get/get.dart';
 
 class LoginSignupScreen extends StatefulWidget {

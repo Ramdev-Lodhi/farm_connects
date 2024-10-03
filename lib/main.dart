@@ -1,9 +1,25 @@
+import 'package:farm_connects/screen/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:farm_connects/screen/login_signup.dart';
+import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:get/get.dart';
+import 'package:farm_connects/config/network/remote/dio.dart';
+import 'package:farm_connects/config/network/local/cache_helper.dart';
 
-void main() {
-  runApp(LoginSignupUI());
+void main() async {
+  // Ensure that Flutter bindings are initialized before accessing any services
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DioHelper.init();
+  await CacheHelper.init();
+
+  String token = CacheHelper.getData(key: 'token') ?? '';
+
+  runApp(
+    GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: token != '' ? DashboardScreen() :  LoginSignupScreen(),
+    ),
+  );
 }
 
 class LoginSignupUI extends StatelessWidget {
