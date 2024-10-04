@@ -63,7 +63,7 @@ class _HomeLayoutState extends State<HomeLayout> {
           children: [
             Flexible(
               child: Image.asset(
-                'assets/images/FarmConnects Logo.png',
+                'assets/images/FarmLogo.png',
                 height: 40, // Adjust the height
                 fit: BoxFit.contain, // Ensure the image scales properly
               ),
