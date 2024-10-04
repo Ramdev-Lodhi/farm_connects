@@ -2,7 +2,7 @@
     <application
         android:label="Farm Connects"
         android:name="${applicationName}"
-        android:icon="@mipmap/farm_connects">
+        android:icon="@mipmap/farm_connects_new">
         <activity
             android:name=".MainActivity"
             android:exported="true"
