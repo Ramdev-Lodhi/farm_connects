@@ -1,8 +1,7 @@
 import 'package:farm_connects/repository/loginR.dart';
-import 'package:farm_connects/screen/dashboard.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
 import 'package:farm_connects/screen/authScreen/login_signup.dart';
-import 'package:farm_connects/screen/homeScreen/home_layout.dart';
+import 'package:farm_connects/layout/home_layout.dart';
 import 'package:get/get.dart';
 import 'package:farm_connects/config/network/end_points.dart';
 import 'package:farm_connects/config/network/remote/dio.dart';
@@ -19,6 +18,7 @@ class LoginC extends GetxController {
       Get.offAll(() => LoginSignupScreen());
     }
   }
+
   Future<void> Signin(String email,
       String password) async {
     print('Login URL: $email');

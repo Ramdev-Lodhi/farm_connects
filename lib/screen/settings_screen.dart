@@ -4,11 +4,16 @@ import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../config/network/local/cache_helper.dart';
-
+import 'package:farm_connects/controller/cubits/home_cubit/home_cubit.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      HomeCubit.get(context).resetToHome(); // Reset to Home when back is pressed
+      return false; // Prevent default back action
+    },
+    child:Scaffold(
       // appBar: AppBar(
       //   title: Text('Profile'),
       // ),
@@ -35,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(45.0),
                             child: CacheHelper.getData(key: 'image') != null
                                 ? Image.network(
-                                    'http://172.16.101.38:3000/${CacheHelper.getData(key: 'image')}',
+                                    'http://192.168.170.22:3000/${CacheHelper.getData(key: 'image')}',
                                     // Adjust the URL if necessary
                                     height: 120,
                                     width: double.infinity,
@@ -108,6 +113,6 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

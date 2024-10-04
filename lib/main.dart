@@ -1,10 +1,14 @@
-import 'package:farm_connects/screen/dashboard.dart';
-import 'package:farm_connects/screen/homeScreen/home_layout.dart';
+import 'package:farm_connects/controller/cubits/home_cubit/home_cubit.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:farm_connects/layout/home_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:get/get.dart';
 import 'package:farm_connects/config/network/remote/dio.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
+import 'package:farm_connects/controller/cubits/home_cubit/home_states.dart';
 
 void main() async {
   // Ensure that Flutter bindings are initialized before accessing any services
@@ -14,24 +18,52 @@ void main() async {
   await CacheHelper.init();
 
   String token = CacheHelper.getData(key: 'token') ?? '';
-
-  runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: token != '' ? HomeLayout() :  LoginSignupScreen(),
-    ),
-  );
+  runApp(MyApp(token != '' ? HomeLayout() : LoginSignupScreen()));
+  // runApp(
+  //   GetMaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: token != '' ? HomeLayout() : LoginSignupScreen(),
+  //   ),
+  // );
 }
 
-class LoginSignupUI extends StatelessWidget {
-  const LoginSignupUI({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  Widget startWidget;
+
+  MyApp(this.startWidget);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // This widget is the root of your application.
+  @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Login Signup UI",
-      home: LoginSignupScreen(),
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ],
+    );
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomeCubit(),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: widget.startWidget,
+          );
+        },
+      ),
     );
   }
 }
