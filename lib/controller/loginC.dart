@@ -22,6 +22,7 @@ class LoginC extends GetxController {
   Future<void> Signin(String email,
       String password) async {
     print('Login URL: $email');
+    print('Login URL: $password');
     // Log the URL before making the request
     String fullUrl = '${DioHelper.dio.options.baseUrl}$LOGIN';
     print('Login URL: $fullUrl');
@@ -35,7 +36,7 @@ class LoginC extends GetxController {
     ).then((value) {
       print(value);
       loginModel = LoginModel.fromJson(value.data);
-        print(loginModel.data?.image);
+        print(loginModel.status);
       if(loginModel.status){
         CacheHelper.saveData(key: 'token', value: loginModel.data?.token);
         CacheHelper.saveData(key: 'image', value: loginModel.data?.image);

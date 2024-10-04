@@ -58,7 +58,18 @@ class _HomeLayoutState extends State<HomeLayout> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Farm Connects"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Image.asset(
+                'assets/images/FarmConnects Logo.png',
+                height: 40, // Adjust the height
+                fit: BoxFit.contain, // Ensure the image scales properly
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             onPressed: () {
