@@ -9,9 +9,9 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Profile'),
+      // ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -20,53 +20,85 @@ class SettingsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Profile image
-              CircleAvatar(
-                radius: 45.0,
-                backgroundColor: Colors.transparent,
-                child: ClipRRect(
-                  clipBehavior: Clip.hardEdge,
-                  borderRadius: BorderRadius.circular(45.0),
-                  child: CacheHelper.getData(key: 'image') != null
-                      ? Image.network(
-                    'http://192.168.170.22:3000/${CacheHelper.getData(key: 'image')}', // Adjust the URL if necessary
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                      : Image.asset(
-                      'assets/images/background.jpg'), // Default profile image
+              InkWell(
+                child: Card(
+                  elevation: 1,
+                  child: Container(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 45.0,
+                          backgroundColor: Colors.transparent,
+                          child: ClipRRect(
+                            clipBehavior: Clip.hardEdge,
+                            borderRadius: BorderRadius.circular(45.0),
+                            child: CacheHelper.getData(key: 'image') != null
+                                ? Image.network(
+                                    'http://192.168.172.243:3000/${CacheHelper.getData(key: 'image')}',
+                                    // Adjust the URL if necessary
+                                    height: 120,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/images/background.jpg'), // Default profile image
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              CacheHelper.getData(key: 'name') ?? 'User Name',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            // Email
+                            Text(
+                              "My Account",
+                              // CacheHelper.getData(key: 'email') ?? 'user@example.com',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+                onTap: () {
+                  print("profile");
+                },
               ),
               SizedBox(height: 20.0),
               // Name
-              Text(
-                CacheHelper.getData(key: 'name') ?? 'User Name',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 10.0),
-              // Email
-              Text(
-                CacheHelper.getData(key: 'email') ?? 'user@example.com',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16.0,
-                ),
-              ),
+
               SizedBox(height: 20.0),
               // Logout button
               ElevatedButton(
                 onPressed: () {
                   // Handle logout logic here
                   CacheHelper.removeData(key: 'token');
-                  Get.offAll(() => LoginSignupScreen()); // Navigate to LoginSignupScreen
+                  Get.offAll(() =>
+                      LoginSignupScreen()); // Navigate to LoginSignupScreen
                 },
-                child: Text('Logout'),
+                child: Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red, // Change button color as needed
                 ),

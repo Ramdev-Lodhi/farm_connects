@@ -58,6 +58,12 @@ class _HomeLayoutState extends State<HomeLayout> {
 
     return Scaffold(
       appBar: AppBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // No rounded corners, rectangle shape
+        ),
+        elevation: 20, // Shadow effect
+        shadowColor: Colors.black.withOpacity(0.5), // Shadow color
+        backgroundColor: Colors.white,
         title: Text("Farm Connects"),
         actions: [
           IconButton(
