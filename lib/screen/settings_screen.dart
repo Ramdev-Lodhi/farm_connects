@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../config/server_url.dart';
 import '../config/network/local/cache_helper.dart';
 import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
+
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class SettingsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(45.0),
                             child: CacheHelper.getData(key: 'image') != null
                                 ? Image.network(
-                                    'http://192.168.172.243:3000/${CacheHelper.getData(key: 'image')}',
+                                    '$ServerUrl/${CacheHelper.getData(key: 'image')}',
                                     // Adjust the URL if necessary
                                     height: 120,
                                     width: double.infinity,
