@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:get/get.dart';
-import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../config/network/local/cache_helper.dart';
-import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
+import '../screen/authScreen/login_signup.dart';
+import '../cubits/home_cubit/home_cubit.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
