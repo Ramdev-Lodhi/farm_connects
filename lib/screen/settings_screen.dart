@@ -98,6 +98,7 @@ class SettingsScreen extends StatelessWidget {
               // Logout button
               ElevatedButton(
                 onPressed: () {
+                  HomeCubit.get(context).resetToHome(); // Reset to Home when back is pressed
                   // Handle logout logic here
                   CacheHelper.removeData(key: 'token');
                   Get.offAll(() =>
