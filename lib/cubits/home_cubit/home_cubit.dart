@@ -78,15 +78,8 @@ class HomeCubit extends Cubit<HomeStates> {
   int currentIndex = 0;
 
   void changeNavIndex(int index) {
-    // If the user taps on Home (index 0), reset the index to 0
-    if (index == '') {
       currentIndex = index;
       emit(ChangeHomeNavIndexState());
-    } else {
-      // Update the current index for other tabs
-      currentIndex = index;
-      emit(ChangeHomeNavIndexState());
-    }
   }
 
   void resetToHome() {
