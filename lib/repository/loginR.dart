@@ -22,7 +22,6 @@ class LoginR {
       final response = await http.post(url, headers: headers, body: body);
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-
       print(response);
       // Check the status code and parse the response
       if (response.statusCode == 200 || response.statusCode == 201) {
