@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:farm_connects/models/login_model.dart';
-import 'package:farm_connects/screen/settings_screen.dart';
-import 'package:farm_connects/controller/cubits/home_cubit/home_states.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:farm_connects/config/network/end_points.dart';
-import 'package:farm_connects/config/network/local/cache_helper.dart';
-import 'package:farm_connects/config/network/remote/dio.dart';
-import 'package:farm_connects/config/network/styles/colors.dart';
+import '../../models/login_model.dart';
+import '../../screen/settings_screen.dart';
+import '../../cubits/home_cubit/home_states.dart';
+import '../../config/network/end_points.dart';
+import '../../config/network/local/cache_helper.dart';
+import '../../config/network/remote/dio.dart';
+import '../../config/network/styles/colors.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
@@ -78,15 +78,8 @@ class HomeCubit extends Cubit<HomeStates> {
   int currentIndex = 0;
 
   void changeNavIndex(int index) {
-    // If the user taps on Home (index 0), reset the index to 0
-    if (index == '') {
-      currentIndex = index;
-      emit(ChangeHomeNavIndexState());
-    } else {
-      // Update the current index for other tabs
-      currentIndex = index;
-      emit(ChangeHomeNavIndexState());
-    }
+    currentIndex = index;
+    emit(ChangeHomeNavIndexState());
   }
 
   void resetToHome() {

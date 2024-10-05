@@ -8,15 +8,6 @@ class LoginR {
     // Endpoint URL
     final url = Uri.parse('$apiUrl/insertdata');
     print(url);
-    // Request payload
-    // final Map<String, dynamic> payload = {
-    //   'name': name,
-    //   'phone': phone,
-    //   'address': address,
-    //   'pincode': pincode,
-    //   'password': password,
-    // };
-    // final url = Uri.parse('http://localhost:8080/api/insertdata');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
       'name': name,
@@ -29,20 +20,6 @@ class LoginR {
       print(body);
       // Send POST request
       final response = await http.post(url, headers: headers, body: body);
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      // final response = await http.post(
-      //   url,
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: json.encode({
-      //     'name': 'John Doe',
-      //     'phone': 1234567890,
-      //     'address': '123 Main St',
-      //     'pincode': 12345,
-      //     'password': 'password'
-      //   }),
-      // );
-      print(response);
       // Check the status code and parse the response
       if (response.statusCode == 200 || response.statusCode == 201) {
         return {
@@ -63,6 +40,7 @@ class LoginR {
       };
     }
   }
+
   Future<Map<String, dynamic>> signin(String email,String password) async {
     final url = Uri.parse('$apiUrl/login');
     final headers = {'Content-Type': 'application/json'};

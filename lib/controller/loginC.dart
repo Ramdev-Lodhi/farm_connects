@@ -45,7 +45,6 @@ class LoginC extends GetxController {
         Get.offAll(() => HomeLayout());
       }
       // print(loginModel.data?.token);
-
     }).catchError((error) {
       print('error : ' + error.toString());
     });

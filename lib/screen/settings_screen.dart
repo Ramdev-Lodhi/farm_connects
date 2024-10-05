@@ -4,14 +4,14 @@ import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../config/network/local/cache_helper.dart';
-import 'package:farm_connects/controller/cubits/home_cubit/home_cubit.dart';
+import '../cubits/home_cubit/home_cubit.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  WillPopScope(
         onWillPop: () async {
-      HomeCubit.get(context).resetToHome(); // Reset to Home when back is pressed
-      return false; // Prevent default back action
+      HomeCubit.get(context).resetToHome();
+      return false;
     },
     child:Scaffold(
       // appBar: AppBar(
@@ -96,6 +96,7 @@ class SettingsScreen extends StatelessWidget {
               // Logout button
               ElevatedButton(
                 onPressed: () {
+                  HomeCubit.get(context).resetToHome();
                   // Handle logout logic here
                   CacheHelper.removeData(key: 'token');
                   Get.offAll(() =>
