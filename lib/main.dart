@@ -1,4 +1,4 @@
-import 'package:farm_connects/controller/cubits/home_cubit/home_cubit.dart';
+import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +8,7 @@ import 'package:farm_connects/screen/authScreen/login_signup.dart';
 import 'package:get/get.dart';
 import 'package:farm_connects/config/network/remote/dio.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
-import 'package:farm_connects/controller/cubits/home_cubit/home_states.dart';
+import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
 void main() async {
   // Ensure that Flutter bindings are initialized before accessing any services

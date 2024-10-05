@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:farm_connects/models/login_model.dart';
 import 'package:farm_connects/screen/settings_screen.dart';
-import 'package:farm_connects/controller/cubits/home_cubit/home_states.dart';
+import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:farm_connects/config/network/end_points.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
