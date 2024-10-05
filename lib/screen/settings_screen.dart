@@ -40,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(45.0),
                             child: CacheHelper.getData(key: 'image') != null
                                 ? Image.network(
-                                    'http://192.168.170.22:3000/${CacheHelper.getData(key: 'image')}',
+                                    'http://192.168.172.243:3000/${CacheHelper.getData(key: 'image')}',
                                     // Adjust the URL if necessary
                                     height: 120,
                                     width: double.infinity,

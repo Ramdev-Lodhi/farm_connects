@@ -16,6 +16,12 @@ class HomeLayout extends StatelessWidget {
         var cubit = HomeCubit.get(context);
         return Scaffold(
           appBar: AppBar(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero, // No rounded corners, rectangle shape
+            ),
+            elevation: 20, // Shadow effect
+            shadowColor: Colors.black.withOpacity(0.5), // Shadow color
+            backgroundColor: Colors.white,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
