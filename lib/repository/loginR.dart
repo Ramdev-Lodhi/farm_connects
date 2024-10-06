@@ -4,7 +4,7 @@ import 'package:farm_connects/config/server_url.dart';
 
 class LoginR {
   Future<Map<String, dynamic>> signup(String name, int phone, String address,
-      int pincode, String password) async {
+      int pincode, String password,String email) async {
     // Endpoint URL
     final url = Uri.parse('$ServerUrl/insertdata');
     print(url);
@@ -12,6 +12,7 @@ class LoginR {
     final body = json.encode({
       'name': name,
       'phone': phone,
+      'email': email,
       'address': address,
       'pincode': pincode,
       'password': password

@@ -10,8 +10,8 @@ class LoginC extends GetxController {
   final loginrepository = LoginR();
   late LoginModel loginModel;
   Future<void> Signup(String name, int phone, String address, int pincode,
-      String password) async {
-    var signupResponse = await loginrepository.signup(name, phone,address,pincode,password);
+      String password,String email) async {
+    var signupResponse = await loginrepository.signup(name, phone,address,pincode,password,email);
 
     if (signupResponse['status'] == '200') {
 

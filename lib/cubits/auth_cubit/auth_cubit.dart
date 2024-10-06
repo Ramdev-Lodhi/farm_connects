@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
@@ -19,24 +20,43 @@ class AuthCubits extends Cubit<Authstates> {
   late LoginModel loginModel;
 
   Future<void> Signup(String name, int phone, String address, int pincode,
-      String password) async {
+      String password, String email) async {
     emit(SignupLoadingState());
-    try {
-    var signupResponse =
-        await loginrepository.signup(name, phone, address, pincode, password);
+    String fullUrl = '${DioHelper.dio.options.baseUrl}$SIGN_UP';
+    print('Signup URL: $fullUrl');
 
-    if (signupResponse['status'] == '200') {
-      Get.offAll(() => LoginSignupScreen());
-      emit(SignupSuccessState('Signup successful'));
-    } else {
-      emit(SignupErrorState('Signup failed: ${signupResponse['message']}'));
-    }}catch(err){
-      emit(SignupErrorState('Signup failed: $err'));
-    }
+    DioHelper.postData(
+      method: SIGN_UP, // Use SIGN_UP here
+      data: {
+        "name": name,
+        "mobile": phone,
+        "city": address,
+        "pincode": pincode,
+        "password": password,
+        "email": email
+      },
+      lang: 'en',
+    ).then((value) {
+      print(value.data['message']);
+      if(value.data['message']=="User already exists."){
+        Get.snackbar(
+          'Signup Failed',
+          'This user is already registered.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }else{
+
+        Get.offAll(() => LoginSignupScreen());
+      }
+
+    }).catchError((error) {
+      print('error : ' + error.toString());
+    });
   }
 
-  Future<void> Signin(String email,
-      String password) async {
+  Future<void> Signin(String email, String password) async {
     emit(LoginLoadingState());
     print('Login URL: $email');
     print('Login URL: $password');
@@ -46,15 +66,15 @@ class AuthCubits extends Cubit<Authstates> {
     DioHelper.postData(
       method: LOGIN,
       data: {
-        "email" : email,
-        "password" : password,
+        "email": email,
+        "password": password,
       },
       lang: 'en',
     ).then((value) {
       print(value);
       loginModel = LoginModel.fromJson(value.data);
       print(loginModel.status);
-      if(loginModel.status){
+      if (loginModel.status) {
         CacheHelper.saveData(key: 'token', value: loginModel.data?.token);
         CacheHelper.saveData(key: 'image', value: loginModel.data?.image);
         CacheHelper.saveData(key: 'name', value: loginModel.data?.name);
@@ -62,7 +82,6 @@ class AuthCubits extends Cubit<Authstates> {
         Get.offAll(() => HomeLayout());
       }
       // print(loginModel.data?.token);
-
     }).catchError((error) {
       print('error : ' + error.toString());
     });

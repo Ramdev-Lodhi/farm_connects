@@ -34,7 +34,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   // Controllers for Signin
   final TextEditingController signinEmailController = TextEditingController();
   final TextEditingController signinPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void dispose() {
@@ -54,12 +54,12 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     if (isSignupScreen) {
       if (_formKey.currentState!.validate()) {
         context.read<AuthCubits>().Signup(
-          username.text.trim(),
-          int.parse(phone.text.trim()),
-          address.text.trim(),
-          int.parse(pincode.text.trim()),
-          password.text.trim(),
-        );
+            username.text.trim(),
+            int.parse(phone.text.trim()),
+            address.text.trim(),
+            int.parse(pincode.text.trim()),
+            password.text.trim(),
+            email.text.trim());
       }
     } else {
       if (_signinFormKey.currentState!.validate()) {
@@ -74,9 +74,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           return; // Prevent submission if checkbox is not checked
         }
         context.read<AuthCubits>().Signin(
-          signinEmailController.text.trim(),
-          signinPasswordController.text.trim(),
-        );
+              signinEmailController.text.trim(),
+              signinPasswordController.text.trim(),
+            );
       }
     }
   }
@@ -87,9 +87,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       create: (_) => AuthCubits(),
       child: Scaffold(
           resizeToAvoidBottomInset: false,
-
           body:
-          BlocConsumer<AuthCubits, Authstates>(listener: (context, state) {
+              BlocConsumer<AuthCubits, Authstates>(listener: (context, state) {
             if (state is LoginErrorState || state is SignupErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -253,7 +252,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           if (isSignupScreen)
                             Expanded(
                                 child: Form(
-                                    key: _formKey, child: buildSignupSection())),
+                                    key: _formKey,
+                                    child: buildSignupSection())),
                           if (!isSignupScreen)
                             Expanded(
                                 child: Form(
@@ -273,7 +273,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     left: 0,
                     child: Column(
                       children: [
-                        Text(isSignupScreen ? "Or Signup with" : "Or Signin with"),
+                        Text(isSignupScreen
+                            ? "Or Signup with"
+                            : "Or Signin with"),
                         Container(
                           margin: EdgeInsets.only(right: 20, left: 20, top: 15),
                           child: Row(
@@ -305,7 +307,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           side: BorderSide(width: 1, color: Colors.grey),
           // minimumSize: Size(145, 40),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           backgroundColor: backgroundColor),
       child: Row(
         children: [
@@ -330,10 +332,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         child: Column(
           children: [
             BuildTextField(
-              icon:FontAwesomeIcons.user,
+              icon: FontAwesomeIcons.user,
               hintText: "User Name",
               isPassword: false,
-              inputType:TextInputType.text,
+              inputType: TextInputType.text,
               controller: username,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -343,10 +345,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             BuildTextField(
-              icon:FontAwesomeIcons.envelope,
+              icon: FontAwesomeIcons.envelope,
               hintText: "example@gmail.com",
               isPassword: false,
-              inputType:TextInputType.text,
+              inputType: TextInputType.text,
               controller: email,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -356,10 +358,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             BuildTextField(
-              icon:FontAwesomeIcons.phone,
+              icon: FontAwesomeIcons.phone,
               hintText: "Phone",
               isPassword: false,
-              inputType:TextInputType.number,
+              inputType: TextInputType.number,
               controller: phone,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -371,10 +373,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             BuildTextField(
-              icon:FontAwesomeIcons.addressCard,
+              icon: FontAwesomeIcons.addressCard,
               hintText: "city",
               isPassword: false,
-              inputType:TextInputType.text,
+              inputType: TextInputType.text,
               controller: address,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -384,10 +386,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             BuildTextField(
-              icon:FontAwesomeIcons.locationPin,
+              icon: FontAwesomeIcons.locationPin,
               hintText: "Pincode",
               isPassword: false,
-              inputType:TextInputType.number,
+              inputType: TextInputType.number,
               controller: pincode,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -399,10 +401,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               },
             ),
             BuildTextField(
-              icon:FontAwesomeIcons.lock,
+              icon: FontAwesomeIcons.lock,
               hintText: "Password",
               isPassword: true,
-              inputType:TextInputType.text,
+              inputType: TextInputType.text,
               controller: password,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -441,10 +443,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       child: Column(
         children: [
           BuildTextField(
-            icon:FontAwesomeIcons.envelope,
+            icon: FontAwesomeIcons.envelope,
             hintText: "example@gmail.com",
             isPassword: false,
-            inputType:TextInputType.text,
+            inputType: TextInputType.text,
             controller: signinEmailController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -454,11 +456,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
             },
           ),
           BuildTextField(
-            icon:FontAwesomeIcons.lock,
+            icon: FontAwesomeIcons.lock,
             hintText: "**********",
-            isPassword:true,
+            isPassword: true,
             inputType: TextInputType.text,
-            controller:  signinPasswordController,
+            controller: signinPasswordController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your password';
@@ -498,10 +500,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     );
   }
 
-
-
-
-
   Widget buildBottomHalfContainer(bool showShadow) {
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -522,51 +520,51 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
           child: !showShadow
               ? Container(
-            height:
-            screenWidth * 0.1, // Adjust height based on screen width
-            width:
-            screenWidth * 0.35, // Adjust width based on screen width
-            decoration: BoxDecoration(
-              color: Palette.activeColor,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  spreadRadius: 1.5,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                isSignupScreen ? "SIGN UP" : "LOG IN",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          )
+                  height:
+                      screenWidth * 0.1, // Adjust height based on screen width
+                  width:
+                      screenWidth * 0.35, // Adjust width based on screen width
+                  decoration: BoxDecoration(
+                    color: Palette.activeColor,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 1.5,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      isSignupScreen ? "SIGN UP" : "LOG IN",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                )
               : Container(
-            height: screenWidth * 0.1,
-            width: screenWidth * 0.35,
-            decoration: BoxDecoration(
-              color: Palette.activeColor,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  spreadRadius: 1.5,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
+                  height: screenWidth * 0.1,
+                  width: screenWidth * 0.35,
+                  decoration: BoxDecoration(
+                    color: Palette.activeColor,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 1.5,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      isSignupScreen ? "SIGN UP" : "LOG IN",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                isSignupScreen ? "SIGN UP" : "LOG IN",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          ),
         ),
       ),
     );
