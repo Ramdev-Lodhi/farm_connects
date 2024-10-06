@@ -11,6 +11,8 @@ import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
+import '../cubits/auth_cubit/auth_cubit.dart';
+
 void main() async {
   // Ensure that Flutter bindings are initialized before accessing any services
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +53,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(
           create: (context) => HomeCubit(),
+        ), BlocProvider(
+          create: (context) => AuthCubits(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(
