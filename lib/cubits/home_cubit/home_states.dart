@@ -1,5 +1,5 @@
 
-import 'package:farm_connects/models/login_model.dart';
+import '../../models/login_model.dart';
 
 abstract class HomeStates {}
 

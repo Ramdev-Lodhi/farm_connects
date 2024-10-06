@@ -1,15 +1,15 @@
-
+import 'package:farm_connects/config/network/styles/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../screen/authScreen/login_signup.dart';
 import '../config/network/remote/dio.dart';
 import '../config/network/local/cache_helper.dart';
 import '../layout/home_layout.dart';
+import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
-import '../cubits/home_cubit/home_states.dart';
+import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
 void main() async {
   // Ensure that Flutter bindings are initialized before accessing any services
@@ -38,7 +38,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
@@ -54,14 +53,22 @@ class _MyAppState extends State<MyApp> {
           create: (context) => HomeCubit(),
         ),
       ],
-      child: ScreenUtilInit(
-        designSize: const Size(360, 690),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: widget.startWidget,
+      child: BlocBuilder<HomeCubit, HomeStates>(
+        builder: (context, state) {
+          var cubit = HomeCubit.get(context);
+          return ScreenUtilInit(
+            designSize: const Size(360, 690),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return GetMaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: lightTheme,
+                themeMode: cubit.isDark ? ThemeMode.dark : ThemeMode.light,
+                darkTheme: darkTheme,
+                home: widget.startWidget,
+              );
+            },
           );
         },
       ),

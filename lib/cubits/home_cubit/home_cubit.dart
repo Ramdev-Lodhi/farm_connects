@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../models/login_model.dart';
 import '../../screen/settings_screen.dart';
@@ -78,12 +78,19 @@ class HomeCubit extends Cubit<HomeStates> {
   int currentIndex = 0;
 
   void changeNavIndex(int index) {
-    currentIndex = index;
-    emit(ChangeHomeNavIndexState());
+      currentIndex = index;
+      emit(ChangeHomeNavIndexState());
   }
 
   void resetToHome() {
     currentIndex = 0; // Reset to Home
     emit(ChangeHomeNavIndexState());
+  }
+
+  bool isDark = false;
+
+  void changeThemeMode(bool modeState) {
+    isDark = modeState;
+    emit(ChangeThemeMode());
   }
 }

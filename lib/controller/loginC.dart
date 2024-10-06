@@ -1,11 +1,11 @@
-import 'package:farm_connects/repository/loginR.dart';
-import 'package:farm_connects/config/network/local/cache_helper.dart';
-import 'package:farm_connects/screen/authScreen/login_signup.dart';
-import 'package:farm_connects/layout/home_layout.dart';
 import 'package:get/get.dart';
-import 'package:farm_connects/config/network/end_points.dart';
-import 'package:farm_connects/config/network/remote/dio.dart';
-import 'package:farm_connects/models/login_model.dart';
+import '../config/network/local/cache_helper.dart';
+import '../screen/authScreen/login_signup.dart';
+import '../layout/home_layout.dart';
+import '../repository/loginR.dart';
+import '../config/network/end_points.dart';
+import '../config/network/remote/dio.dart';
+import '../models/login_model.dart';
 class LoginC extends GetxController {
   final loginrepository = LoginR();
   late LoginModel loginModel;

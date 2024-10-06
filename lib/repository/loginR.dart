@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:farm_connects/config/api_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:farm_connects/config/server_url.dart';
 
 class LoginR {
   Future<Map<String, dynamic>> signup(String name, int phone, String address,
       int pincode, String password) async {
     // Endpoint URL
-    final url = Uri.parse('$apiUrl/insertdata');
+    final url = Uri.parse('$ServerUrl/insertdata');
     print(url);
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
@@ -20,6 +20,9 @@ class LoginR {
       print(body);
       // Send POST request
       final response = await http.post(url, headers: headers, body: body);
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      print(response);
       // Check the status code and parse the response
       if (response.statusCode == 200 || response.statusCode == 201) {
         return {
@@ -40,9 +43,8 @@ class LoginR {
       };
     }
   }
-
   Future<Map<String, dynamic>> signin(String email,String password) async {
-    final url = Uri.parse('$apiUrl/login');
+    final url = Uri.parse('$ServerUrl/login');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
       'email': email,

@@ -1,13 +1,12 @@
-import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 
 class HomeLayout extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
@@ -15,41 +14,84 @@ class HomeLayout extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
-          appBar: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Image.asset(
-                    'assets/images/logo/FarmConnects_logo.png',
-                    height: 100, // Adjust the height
-                    fit: BoxFit.contain, // Ensure the image scales properly
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(40.0),
+            child: Material(
+              elevation: 5,
+              shadowColor: Colors.black.withOpacity(0.2),
+              child: AppBar(
+                backgroundColor: Colors.white,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Image.asset(
+                        'assets/images/logo/FarmConnects_logo.png',
+                        height: 100,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      // Handle search action
+                    },
+                    icon: Icon(
+                      CupertinoIcons.search,
+                      size: 24.0,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  // Handle search action
-                },
-                icon: Icon(
-                  CupertinoIcons.search,
-                  size: 24.0,
-                ),
+                  Container(
+                    width: 60.0,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      // icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                      icon: Text("Sell/Rent", textAlign: TextAlign.center,style: TextStyle(color: Colors.white),), // Optional: icon color
+                      dropdownColor: Colors.white, // Dropdown background color
+                      items: <String>['Sell', 'Rent'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(color: Colors.black), // Text color
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        // Handle selection
+                        if (value == 'Sell') {
+                          // Handle sell action
+                        } else if (value == 'Rent') {
+                          // Handle rent action
+                        }
+                      },
+                      style: TextStyle(color: Colors.white), // Text color for the selected item
+                      underline: Container(), // Removes the underline
+                    ),
+                  ),
+                ],
               ),
-            ],
-
+            ),
           ),
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: Material(
             elevation: 50,
             child: ClipRRect(
-              borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0),),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10.0),
+                topLeft: Radius.circular(10.0),
+              ),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height / 12.8,
                 child: BottomNavigationBar(
-                  onTap: (index){
+                  onTap: (index) {
                     cubit.changeNavIndex(index);
                   },
                   unselectedFontSize: 11.0.sp,
@@ -57,9 +99,8 @@ class HomeLayout extends StatelessWidget {
                   currentIndex: cubit.currentIndex,
                   items: cubit.navItems,
                   unselectedItemColor: Colors.black,
-                  selectedItemColor: Colors.black, // Selected label color
-                  // backgroundColor: Colors.blue,
-
+                  selectedItemColor: Colors.black,
+                  type: BottomNavigationBarType.fixed,
                   iconSize: MediaQuery.of(context).size.height / 30.0,
                 ),
               ),
