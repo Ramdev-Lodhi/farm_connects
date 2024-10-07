@@ -7,12 +7,12 @@ import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
 import '../../layout/home_layout.dart';
 import '../../models/login_model.dart';
-import '../../repository/loginR.dart';
+
 import '../../screen/authScreen/login_signup.dart';
 import '../auth_cubit/auth_states.dart';
 
 class AuthCubits extends Cubit<Authstates> {
-  final loginrepository = LoginR();
+
 
   AuthCubits() : super(LoginInitialState());
 

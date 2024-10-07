@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import '../../constants//palette.dart';
-import '../../controller/loginC.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
 import '../../widgets/bulidtextfied.dart';
 
