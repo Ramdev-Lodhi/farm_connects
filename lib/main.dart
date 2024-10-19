@@ -53,7 +53,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(
           create: (context) => HomeCubit(),
-        ), BlocProvider(
+        ),
+        BlocProvider(
           create: (context) => AuthCubits(),
         ),
       ],

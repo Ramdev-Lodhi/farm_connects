@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(45.0),
                                     child: CacheHelper.getData(key: 'image') != null
                                         ? Image.network(
-                                      '$ServerUrl/${CacheHelper.getData(key: 'image')}',
+                                      '${CacheHelper.getData(key: 'image')}',
                                       height: 120,
                                       width: double.infinity,
                                       fit: BoxFit.cover,
