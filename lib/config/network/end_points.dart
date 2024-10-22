@@ -1,6 +1,6 @@
 const String LOGIN = 'login';
 const String SIGN_UP = 'register';
-const String HOME = 'user/home';
+const String HOME = 'home';
 const String GET_CATEGORY = 'categories';
 const String CHANGE_FAV = 'favorites';
 const String GET_PROFILE = 'profile';

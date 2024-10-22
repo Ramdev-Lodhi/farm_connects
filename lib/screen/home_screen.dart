@@ -79,6 +79,7 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 10.0.h,
               ),
+              gridTractorsBuilder(homeDataModel, context),
 
               // Container(
               //   height: 90.0.h,
@@ -116,7 +117,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'New Tractor',
+                          'New Tractors',
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w600,
@@ -245,171 +246,66 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
-
-// Widget gridProductBuilder(Brand product, context) {
-//   HomeCubit cubit = HomeCubit.get(context);
-//   return Material(
-//     elevation: 3.0,
-//     borderRadius: BorderRadius.circular(20.0),
-//     color: cubit.isDark ? asmarFate7 : Colors.white,
-//     child: ClipRRect(
-//       borderRadius: BorderRadius.circular(20.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Stack(
-//             alignment: Alignment.topRight,
-//             children: [
-//               Stack(
-//                 alignment: Alignment.topLeft,
-//                 children: [
-//                   CachedNetworkImage(
-//                     imageUrl: product.image,
-//                     errorWidget: (context, url, error) =>
-//                         Icon(Icons.error_outline),
-//                     height: 150.0.h,
-//                     width: double.infinity,
-//                   ),
-//                   if (product.price != product.oldPrice)
-//                     Padding(
-//                       padding: const EdgeInsets.all(5.0),
-//                       child: Container(
-//                         padding: EdgeInsets.all(2.0),
-//                         decoration: BoxDecoration(
-//                             color: blue,
-//                             borderRadius: BorderRadius.circular(
-//                               5.0,
-//                             )),
-//                         child: Text(
-//                           'Sale',
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.w600,
-//                             fontSize: 10.0.sp,
-//                           ),
-//                           textAlign: TextAlign.center,
-//                         ),
-//                       ),
-//                     ),
-//                 ],
-//               ),
-//               //favorites button
-//               InkWell(
-//                 onTap: () {
-//                   // product.inFavorites = !product.inFavorites;
-//                   // cubit.changeFavorite(product.id);
-//                 },
-//                 splashColor: Colors.transparent,
-//                 highlightColor: Colors.transparent,
-//                 child: CircleAvatar(
-//                   backgroundColor:
-//                   cubit.isDark ? Colors.black.withOpacity(0.8) : offWhite,
-//                   radius: 16.0.sp,
-//                   child: Icon(
-//                     product.inFavorites
-//                         ? Icons.favorite
-//                         : Icons.favorite_outline,
-//                     color: product.inFavorites ? orange : skin,
-//                     size: 19.0.sp,
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 5.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   product.name,
-//                   maxLines: 2,
-//                   overflow: TextOverflow.ellipsis,
-//                   style: TextStyle(
-//                     fontSize: 14.0.sp,
-//                     fontWeight: FontWeight.w600,
-//                     color: cubit.isDark ? Colors.white : Colors.black,
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   height: 5.0,
-//                 ),
-//                 Row(
-//                   children: [
-//                     Text(
-//                       product.price.round().toString() + ' EGP',
-//                       style: TextStyle(
-//                         fontSize: 15.0.sp,
-//                         color: orange,
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       width: 5.0,
-//                     ),
-//                     if (product.price != product.oldPrice)
-//                       Expanded(
-//                         child: Text(
-//                           product.oldPrice.round().toString() + ' EGP',
-//                           maxLines: 1,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: TextStyle(
-//                             fontSize: 12.0.sp,
-//                             color: skin,
-//                             decoration: TextDecoration.lineThrough,
-//                           ),
-//                         ),
-//                       ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-// Widget categoryItemBuilder(DataModel_C category) {
-//   return Container(
-//     padding: EdgeInsets.only(bottom: 5.0),
-//     child: Material(
-//       elevation: 3.0,
-//       borderRadius: BorderRadius.circular(20.0),
-//       clipBehavior: Clip.hardEdge,
-//       child: Container(
-//         height: 90.0.h,
-//         width: 90.0.h,
-//         child: Stack(
-//           alignment: Alignment.bottomCenter,
-//           children: [
-//             CachedNetworkImage(
-//               imageUrl: category.image,
-//               errorWidget: (context, url, error) => Icon(Icons.error_outline),
-//               fit: BoxFit.cover,
-//               height: 90.0.h,
-//               width: 90.0.h,
-//             ),
-//             Container(
-//               width: double.infinity,
-//               color: orange.withOpacity(.8),
-//               padding: EdgeInsets.symmetric(horizontal: 5.0.w),
-//               child: Text(
-//                 category.name,
-//                 maxLines: 1,
-//                 textAlign: TextAlign.center,
-//                 overflow: TextOverflow.ellipsis,
-//                 style: TextStyle(
-//                   fontSize: 14.0.sp,
-//                   fontWeight: FontWeight.w500,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
+  Widget gridTractorsBuilder(HomeDataModel? homeDataModel, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+    return SizedBox(
+      height: 190.h,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal, // Horizontal scroll
+        itemCount: homeDataModel?.data.tractors.length ?? 0,
+        itemBuilder: (context, index) {
+          final product = homeDataModel?.data.tractors[index];
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+            child: Card(
+              elevation: 1,
+              child: Material(
+                elevation: 3.0,
+                borderRadius: BorderRadius.circular(8.0),
+                color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                child: Container(
+                  width: 300.w, // Adjust the card width
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 170.w,
+                          child: CachedNetworkImage(
+                            imageUrl: product?.image ?? '',
+                            fit: BoxFit.contain,
+                            width: double.infinity,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            product?.name ?? '',
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w600,
+                              color: cubit.isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

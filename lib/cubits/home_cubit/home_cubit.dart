@@ -123,19 +123,19 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
-  bool isNewTractor = true; // Tracks if New Tractor is selected
-  bool isUsedTractor = false; // Tracks if Used Tractor is selected
+  bool isNewTractor = true;
+  bool isUsedTractor = false;
 
   // Add methods to toggle these
   void toggleNewTractor(bool value) {
     isNewTractor = value;
-    isUsedTractor = !value; // Set the opposite to false
-    emit(HomeInitialState()); // or the appropriate state
+    isUsedTractor = !value;
+    emit(HomeInitialState());
   }
 
   void toggleUsedTractor(bool value) {
     isUsedTractor = value;
-    isNewTractor = !value; // Set the opposite to false
-    emit(HomeInitialState()); // or the appropriate state
+    isNewTractor = !value;
+    emit(HomeInitialState());
   }
 }

@@ -16,6 +16,7 @@ class DataModel
 {
   List<Banner> banners = [];
   List<Brand> brands = [];
+  List<Tractors> tractors = [];
 
   DataModel.fromJson(Map<String, dynamic> json)
   {
@@ -24,6 +25,9 @@ class DataModel
     });
     json['brands'].forEach((element){
       brands.add(Brand.fromJson(element));
+    });
+    json['tractors'].forEach((element){
+      tractors.add(Tractors.fromJson(element));
     });
   }
 }
@@ -51,6 +55,22 @@ class Brand
   {
     id = json['_id'];
     image = json['logo'];
+    name = json['name'];
+
+  }
+
+}
+class Tractors
+{
+  late String id;
+  late String image;
+  late String name;
+
+
+  Tractors.fromJson(Map<String, dynamic> json)
+  {
+    id = json['_id'];
+    image = json['image'];
     name = json['name'];
 
   }
