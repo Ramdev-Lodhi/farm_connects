@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:farm_connects/models/home_data_model.dart';
+import 'package:farm_connects/screen/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +70,8 @@ class HomeCubit extends Cubit<HomeStates> {
   ];
 
   List<Widget> screens = [
-    Center(child: Text('Home Screen')),
+    // Center(child: Text('Home Screen')),
+    HomeScreen(),
     Center(child: Text('New Machine Screen')),
     Center(child: Text('Used Machine Screen')),
     Center(child: Text('Rent Screen')),
@@ -92,5 +95,47 @@ class HomeCubit extends Cubit<HomeStates> {
   void changeThemeMode(bool modeState) {
     isDark = modeState;
     emit(ChangeThemeMode());
+  }
+
+  HomeDataModel? homeDataModel = null;
+
+  void getHomeData() {
+    emit(GetHomeDataLoadingSate());
+
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+
+    print('Token: $token');
+    // print('Request URL: $HOME');
+
+    DioHelper.getData(
+      method: HOME,
+      token: token,
+      lang: lang,
+    ).then((response) {
+      // print('Home Data Response: ${response.data}');
+      homeDataModel = HomeDataModel.fromJson(response.data);
+      // print('Home Data Response: ${homeDataModel}');
+      emit(GetHomeDataSuccessSate());
+    }).catchError((error) {
+      print('Error: ${error.response?.statusCode} ${error.response?.data}');
+      emit(GetHomeDataErrorSate());
+    });
+  }
+
+  bool isNewTractor = true; // Tracks if New Tractor is selected
+  bool isUsedTractor = false; // Tracks if Used Tractor is selected
+
+  // Add methods to toggle these
+  void toggleNewTractor(bool value) {
+    isNewTractor = value;
+    isUsedTractor = !value; // Set the opposite to false
+    emit(HomeInitialState()); // or the appropriate state
+  }
+
+  void toggleUsedTractor(bool value) {
+    isUsedTractor = value;
+    isNewTractor = !value; // Set the opposite to false
+    emit(HomeInitialState()); // or the appropriate state
   }
 }

@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit(),
+          create: (context) => HomeCubit()..getHomeData(),
         ),
         BlocProvider(
           create: (context) => AuthCubits(),

@@ -60,10 +60,10 @@ class SettingsScreen extends StatelessWidget {
                                       width: double.infinity,
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) {
-                                        return Image.asset('assets/images/default_profile.png'); // Fallback image
+                                        return Image.network('https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
                                       },
                                     )
-                                        : Image.asset('assets/images/background.jpg'), // Default profile image
+                                        : Image.network('https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
                                   ),
                                 ),
                                 SizedBox(width: 10),

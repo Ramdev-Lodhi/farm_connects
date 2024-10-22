@@ -58,8 +58,8 @@ class AuthCubits extends Cubit<Authstates> {
 
   Future<void> Signin(String email, String password) async {
     emit(LoginLoadingState());
-    print('Login URL: $email');
-    print('Login URL: $password');
+    // print('Login URL: $email');
+    // print('Login URL: $password');
     // Log the URL before making the request
     String fullUrl = '${DioHelper.dio.options.baseUrl}$LOGIN';
     print('Login URL: $fullUrl');
@@ -73,12 +73,12 @@ class AuthCubits extends Cubit<Authstates> {
     ).then((value) {
       print(value);
       loginModel = LoginModel.fromJson(value.data);
-      print(loginModel.status);
+      print(loginModel.data?.image);
       if (loginModel.status) {
-        CacheHelper.saveData(key: 'token', value: loginModel.data?.token);
-        CacheHelper.saveData(key: 'image', value: loginModel.data?.image);
-        CacheHelper.saveData(key: 'name', value: loginModel.data?.name);
-        CacheHelper.saveData(key: 'email', value: loginModel.data?.email);
+        CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
+        CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
+        CacheHelper.saveData(key: 'name', value: loginModel.data?.name ?? "");
+        CacheHelper.saveData(key: 'email', value: loginModel.data?.email ?? "");
         Get.offAll(() => HomeLayout());
       }
       // print(loginModel.data?.token);

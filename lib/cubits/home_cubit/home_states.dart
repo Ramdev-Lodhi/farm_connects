@@ -12,6 +12,7 @@ class GetHomeDataLoadingSate extends HomeStates {}
 class GetHomeDataSuccessSate extends HomeStates {}
 
 class GetHomeDataErrorSate extends HomeStates {}
+class HomeUpdatedState extends HomeStates {}
 
 class GetCategorySuccessSate extends HomeStates {}
 

@@ -8,7 +8,7 @@ class DioHelper
   {
     dio = Dio(
       BaseOptions(
-        baseUrl: "http://192.168.170.22:3000/api/",
+        baseUrl: "http://192.168.33.218:3000/api/",
         receiveDataWhenStatusError: true,
         headers: {
           "Content-Type": "application/json",
@@ -39,17 +39,36 @@ class DioHelper
     );
   }
 
+//   static Future<Response> getData({
+//     required String method,
+//     Map<String, dynamic>? query,
+//     String? token,
+//     String lang = 'en'
+// }) async
+//   {
+//     dio.options.headers.addAll({'Authorization' : token, 'lang' : lang});
+//     return await dio.get(method, queryParameters: query);
+//   }
+
   static Future<Response> getData({
     required String method,
     Map<String, dynamic>? query,
     String? token,
-    String lang = 'en'
-}) async
-  {
-    dio.options.headers.addAll({'Authorization' : token, 'lang' : lang});
-    return await dio.get(method, queryParameters: query);
-  }
+    String lang = 'en',
+  }) async {
+    // Ensure token uses the 'Bearer' format
+    dio.options.headers.addAll({
+      'lang': lang,
+      if (token != null) 'Authorization': 'Bearer $token',
+    });
 
+    try {
+      return await dio.get(method, queryParameters: query);
+    } catch (error) {
+      print('Error in getData: $error');
+      rethrow;
+    }
+  }
   static Future<Response> putData({
     required String method,
     required Map<String, dynamic> data,

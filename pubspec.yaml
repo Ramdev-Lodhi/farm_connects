@@ -44,6 +44,9 @@ dependencies:
   hexcolor: ^3.0.1
   flutter_bloc: ^8.1.6
   flutter_screenutil: ^5.9.3
+  cached_network_image: ^3.4.1
+  carousel_slider: ^5.0.0
+  conditional_builder_null_safety: ^0.0.6
 
 dev_dependencies:
   flutter_test:
