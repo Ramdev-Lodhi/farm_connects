@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../config/network/end_points.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
@@ -18,6 +18,8 @@ class AuthCubits extends Cubit<Authstates> {
 
   static AuthCubits get(context) => BlocProvider.of(context);
   late LoginModel loginModel;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<void> Signup(String name, int phone, String address, int pincode,
       String password, String email) async {
@@ -85,5 +87,58 @@ class AuthCubits extends Cubit<Authstates> {
     }).catchError((error) {
       print('error : ' + error.toString());
     });
+  }
+  Future<void> signInWithGoogle() async {
+    emit(LoginLoadingState());
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // User cancelled the sign-in
+        emit(LoginErrorState('Google sign-in aborted.'));
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Send the token to your backend for verification and login
+      String token = googleAuth.idToken ?? '';
+      // Call your backend login function with the token
+      await _loginWithGoogleToken(token);
+    } catch (error) {
+      print('Google sign-in error: $error');
+      emit(LoginErrorState(error.toString())); // Emit an error state if needed
+    }
+  }
+
+  Future<void> _loginWithGoogleToken(String token) async {
+    String fullUrl = _buildUrl(GOOGLE_LOGIN); // Update this with your Google login endpoint
+    print('Google Login URL: $fullUrl');
+
+    try {
+      final response = await DioHelper.postData(
+        method: GOOGLE_LOGIN,
+        data: {
+          "token": token,
+        },
+        lang: 'en',
+      );
+
+      loginModel = LoginModel.fromJson(response.data);
+      print(loginModel.data?.image);
+      if (loginModel.status) {
+        await CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
+        await CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
+        await CacheHelper.saveData(key: 'name', value: loginModel.data?.name ?? "");
+        await CacheHelper.saveData(key: 'email', value: loginModel.data?.email ?? "");
+        Get.offAll(() => HomeLayout());
+      }
+    } catch (error) {
+      print('Google login error: $error');
+      emit(LoginErrorState(error.toString())); // Emit an error state if needed
+    }
+  }
+
+  String _buildUrl(String endpoint) {
+    return '${DioHelper.dio.options.baseUrl}$endpoint';
   }
 }

@@ -80,20 +80,6 @@ class HomeScreen extends StatelessWidget {
                 height: 10.0.h,
               ),
               gridTractorsBuilder(homeDataModel, context),
-
-              // Container(
-              //   height: 90.0.h,
-              //   child: ListView.separated(
-              //     physics: BouncingScrollPhysics(),
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (context, index) =>
-              //         categoryItemBuilder(categoryModel.data.data![index]),
-              //     separatorBuilder: (context, index) => SizedBox(
-              //       width: 10.0.w,
-              //     ),
-              //     itemCount: categoryModel.data.data!.length,
-              //   ),
-              // ),
               SizedBox(
                 height: 20.0.h,
               ),
@@ -249,7 +235,7 @@ class HomeScreen extends StatelessWidget {
   Widget gridTractorsBuilder(HomeDataModel? homeDataModel, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return SizedBox(
-      height: 190.h,
+      height: 220.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal, // Horizontal scroll
         itemCount: homeDataModel?.data.tractors.length ?? 0,
@@ -285,16 +271,47 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(5.0),
-                          child: Text(
-                            product?.name ?? '',
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w600,
-                              color: cubit.isDark ? Colors.white : Colors.black,
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Display the tractor name
+                              Text(
+                                product?.name ?? '',
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16.0.sp, // Increased font size
+                                  fontWeight: FontWeight.bold, // Bold text
+                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              // Row for HP and CC details
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // HP text
+                                  Text(
+                                    'HP: ${product?.engine.hpCategory ?? 'N/A'}',
+                                    style: TextStyle(
+                                      fontSize: 14.0.sp, // Increased font size
+                                      fontWeight: FontWeight.bold, // Bold text
+                                      color: cubit.isDark ? Colors.grey[400] : Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w), // Spacing between HP and CC
+                                  // CC text
+                                  Text(
+                                    'CC: ${product?.engine.capacityCC ?? 'N/A'} CC',
+                                    style: TextStyle(
+                                      fontSize: 14.0.sp, // Increased font size
+                                      fontWeight: FontWeight.bold, // Bold text
+                                      color: cubit.isDark ? Colors.grey[400] : Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],

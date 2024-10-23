@@ -1,10 +1,10 @@
 import 'dart:ffi';
-
-import '../../cubits/auth_cubit/auth_cubit.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../constants//palette.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
 import '../../widgets/bulidtextfied.dart';
@@ -15,6 +15,8 @@ class LoginSignupScreen extends StatefulWidget {
 }
 
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   bool isSignupScreen = false;
   bool isRememberMe = false;
 
@@ -300,7 +302,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   TextButton buildTextButton(
       IconData icon, String title, Color backgroundColor) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        AuthCubits.get(context).signInWithGoogle();
+      },
       style: TextButton.styleFrom(
           foregroundColor: Colors.white,
           side: BorderSide(width: 1, color: Colors.grey),

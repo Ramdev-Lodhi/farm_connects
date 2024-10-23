@@ -1,3 +1,4 @@
+const String GOOGLE_LOGIN = '/google';
 const String LOGIN = 'login';
 const String SIGN_UP = 'register';
 const String HOME = 'home';

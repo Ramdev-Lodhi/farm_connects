@@ -21,14 +21,21 @@ class SettingsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         HomeCubit cubit = HomeCubit.get(context);
+        bool isDark = cubit.isDark; // Reference to dark mode state
+
+        // Define colors based on theme
+        Color cardColor = isDark ? Colors.white12 : Colors.white;
+        Color textColor = isDark ? Colors.white : Colors.black;
+        Color profileCardColor = isDark ? Colors.black54 : Colors.white;
+        Color logoutColor = isDark ? asmarFate7 : offWhite;
 
         return WillPopScope(
           onWillPop: () async {
-            HomeCubit.get(context)
-                .resetToHome(); // Reset to Home when back is pressed
+            HomeCubit.get(context).resetToHome(); // Reset to Home when back is pressed
             return false; // Prevent default back action
           },
           child: Scaffold(
+            backgroundColor: cubit.isDark ? Colors.black : Colors.white,
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SingleChildScrollView(
@@ -42,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
                       // Profile image
                       InkWell(
                         child: Card(
-                          color: Colors.white,
+                          color: profileCardColor,
                           elevation: 1,
                           child: Container(
                             child: Row(
@@ -60,10 +67,12 @@ class SettingsScreen extends StatelessWidget {
                                       width: double.infinity,
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) {
-                                        return Image.network('https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
+                                        return Image.network(
+                                            'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
                                       },
                                     )
-                                        : Image.network('https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
+                                        : Image.network(
+                                        'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
                                   ),
                                 ),
                                 SizedBox(width: 10),
@@ -77,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
+                                        color: isDark ? Colors.white : Colors.grey,
                                       ),
                                     ),
                                     SizedBox(height: 5),
@@ -86,7 +95,7 @@ class SettingsScreen extends StatelessWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: isDark ? Colors.white : Colors.black,
                                         fontSize: 20.0,
                                       ),
                                     ),
@@ -102,72 +111,69 @@ class SettingsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 10.0),
                       Card(
-                        color: Colors.white,
-                        // color: Theme.of(context).cardColor, // Use theme color for the card
+                        color: cardColor,
                         elevation: 3,
                         child: Column(
                           children: [
                             ListTile(
-                              leading: Icon(Icons.dark_mode),
-                              title: Text("Dark Mode"),
+                              leading: Icon(Icons.dark_mode, color: textColor),
+                              title: Text("Dark Mode", style: TextStyle(color: textColor)),
                               trailing: CupertinoSwitch(
-                                value: cubit.isDark,
+                                value: isDark,
                                 onChanged: (state) {
                                   cubit.changeThemeMode(state);
                                 },
-                                activeColor: Colors.black45,
-                                thumbColor: cubit.isDark ? asmarFate7 : Colors.white,
+                                activeColor: Colors.white24,
+                                thumbColor: isDark ? Colors.white12 : Colors.white,
                               ),
                             ),
                             ListTile(
-                              leading: Icon(Icons.notifications),
-                              title: Text("NOTIFICATION"),
+                              leading: Icon(Icons.notifications, color: textColor),
+                              title: Text("NOTIFICATION", style: TextStyle(color: textColor)),
                               trailing: Text("On", style: TextStyle(color: Colors.grey)),
                             ),
                             ListTile(
-                              leading: Icon(Icons.add_circle_outline),
-                              title: Text("ADD VEHICLE"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(Icons.add_circle_outline, color: textColor),
+                              title: Text("ADD VEHICLE", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(FontAwesomeIcons.tractor,  size: 20.0, ),
-                              title: Text("NEW TRACTOR"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(FontAwesomeIcons.tractor, size: 20.0, color: textColor),
+                              title: Text("NEW TRACTOR", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.agriculture_outlined),
-                              title: Text("BUY USED TRACTOR"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(Icons.agriculture_outlined, color: textColor),
+                              title: Text("BUY USED TRACTOR", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.sell),
-                              title: Text("SELL USED TRACTOR"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(Icons.sell, color: textColor),
+                              title: Text("SELL USED TRACTOR", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.import_export),
-                              title: Text("FARM EQUIPMENT'S"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
-                            ), ListTile(
-                              leading: Icon(FontAwesomeIcons.retweet,size: 20.0),
-                              title: Text("RENT TRACTOR / EQUIPMENT'S"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(Icons.import_export, color: textColor),
+                              title: Text("FARM EQUIPMENT'S", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.info),
-                              title: Text("About"),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp),
+                              leading: Icon(FontAwesomeIcons.retweet, size: 20.0, color: textColor),
+                              title: Text("RENT TRACTOR / EQUIPMENT'S", style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.info, color: textColor),
+                              title: Text("About", style: TextStyle(color: textColor)),
+                              trailing: Text("Version:1.0.0", style: TextStyle(color: textColor)),
                             ),
                           ],
                         ),
                       ),
-                      // Dark Mode Toggle
 
-
-                      // Logout button
 
                       Container(
-                        color: cubit.isDark ? asmarFate7 : offWhite,
+                        color: logoutColor,
                         width: double.infinity,
                         padding: EdgeInsets.only(
                             left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
@@ -179,7 +185,7 @@ class SettingsScreen extends StatelessWidget {
                               fontSize: 14.0.sp),
                         ),
                       ),
-                      //logout
+
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 10.0.h, horizontal: 20.0.w),
@@ -188,23 +194,21 @@ class SettingsScreen extends StatelessWidget {
                             Icon(
                               Icons.logout,
                               size: 28.sp,
-                              color: cubit.isDark ? skin : Colors.black54,
+                              color: isDark ? skin : Colors.black54,
                             ),
-                            SizedBox(
-                              width: 10.0.w,
-                            ),
+                            SizedBox(width: 10.0.w),
                             Text(
                               'Logout',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 17.0.sp,
-                                color: cubit.isDark ? Colors.white : Colors.black,
+                                color: isDark ? Colors.white : Colors.black,
                               ),
                             ),
                             Spacer(),
                             InkWell(
                               borderRadius: BorderRadius.circular(10.0.sp),
-                              highlightColor: cubit.isDark ? asmarFate7 : offWhite,
+                              highlightColor: isDark ? asmarFate7 : offWhite,
                               onTap: () {
                                 CacheHelper.removeData(key: 'token');
                                 HomeCubit.get(context).resetToHome();

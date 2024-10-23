@@ -20,7 +20,7 @@ class HomeLayout extends StatelessWidget {
               elevation: 5,
               shadowColor: Colors.black.withOpacity(0.2),
               child: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: cubit.isDark ? Colors.black : Colors.white,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -41,6 +41,7 @@ class HomeLayout extends StatelessWidget {
                     icon: Icon(
                       CupertinoIcons.search,
                       size: 24.0,
+                      color: cubit.isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   Container(
@@ -52,15 +53,20 @@ class HomeLayout extends StatelessWidget {
                     ),
                     child: DropdownButton<String>(
                       isExpanded: true,
-                      // icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-                      icon: Text("Sell/Rent", textAlign: TextAlign.center,style: TextStyle(color: Colors.white),), // Optional: icon color
-                      dropdownColor: Colors.white, // Dropdown background color
+                      icon: Text(
+                        "Sell/Rent",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ), // Optional: icon color
+                      dropdownColor: cubit.isDark ? Colors.black : Colors.white, // Dropdown background color
                       items: <String>['Sell', 'Rent'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
                             value,
-                            style: TextStyle(color: Colors.black), // Text color
+                            style: TextStyle(
+                              color: cubit.isDark ? Colors.white70 : Colors.black, // Text color
+                            ),
                           ),
                         );
                       }).toList(),
@@ -72,7 +78,9 @@ class HomeLayout extends StatelessWidget {
                           // Handle rent action
                         }
                       },
-                      style: TextStyle(color: Colors.white), // Text color for the selected item
+                      style: TextStyle(
+                        color: cubit.isDark ? Colors.white70 : Colors.black,
+                      ), // Text color for the selected item
                       underline: Container(), // Removes the underline
                     ),
                   ),
@@ -80,9 +88,13 @@ class HomeLayout extends StatelessWidget {
               ),
             ),
           ),
-          body: cubit.screens[cubit.currentIndex],
+          body: Container(
+            color: cubit.isDark ? Colors.black : Colors.white, // Background color based on theme
+            child: cubit.screens[cubit.currentIndex],
+          ),
           bottomNavigationBar: Material(
             elevation: 50,
+            color: cubit.isDark ? Colors.black : Colors.white, // Bottom nav bar color
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(10.0),
@@ -98,8 +110,8 @@ class HomeLayout extends StatelessWidget {
                   selectedFontSize: 12.0.sp,
                   currentIndex: cubit.currentIndex,
                   items: cubit.navItems,
-                  unselectedItemColor: Colors.black,
-                  selectedItemColor: Colors.black,
+                  unselectedItemColor: cubit.isDark ? Colors.white70 : Colors.black,
+                  selectedItemColor: cubit.isDark ? Colors.white : Colors.black,
                   type: BottomNavigationBarType.fixed,
                   iconSize: MediaQuery.of(context).size.height / 30.0,
                 ),
