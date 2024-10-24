@@ -19,8 +19,15 @@ class AuthCubits extends Cubit<Authstates> {
   static AuthCubits get(context) => BlocProvider.of(context);
   late LoginModel loginModel;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
+  // final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // GoogleSignIn _googleSignIn = GoogleSignIn(
+  //   scopes: ['email'],
+  //   // clientId: "475762921924-9g8freueutt0cekkso8d4t7ooi9hpad4.apps.googleusercontent.com",
+  // );
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+    // clientId: "475762921924-9g8freueutt0cekkso8d4t7ooi9hpad4.apps.googleusercontent.com.apps.googleusercontent.com",
+  );
   Future<void> Signup(String name, int phone, String address, int pincode,
       String password, String email) async {
     emit(SignupLoadingState());
@@ -92,53 +99,111 @@ class AuthCubits extends Cubit<Authstates> {
     emit(LoginLoadingState());
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      print('Google User: $googleUser');
       if (googleUser == null) {
-        // User cancelled the sign-in
         emit(LoginErrorState('Google sign-in aborted.'));
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // final String? idToken = googleAuth.idToken;
 
-      // Send the token to your backend for verification and login
-      String token = googleAuth.idToken ?? '';
-      // Call your backend login function with the token
-      await _loginWithGoogleToken(token);
+      // if (idToken == null) {
+      //   emit(LoginErrorState('Failed to retrieve ID token.'));
+      //   return;
+      // }
+
+      // Pass the entire googleUser data to your backend
+      await _loginWithGoogleUser(googleUser);
     } catch (error) {
-      print('Google sign-in error: $error');
-      emit(LoginErrorState(error.toString())); // Emit an error state if needed
+      emit(LoginErrorState('Google sign-in error: ${error.toString()}'));
+      print('Google sign-in error: ${error.toString()}');
     }
   }
 
-  Future<void> _loginWithGoogleToken(String token) async {
-    String fullUrl = _buildUrl(GOOGLE_LOGIN); // Update this with your Google login endpoint
-    print('Google Login URL: $fullUrl');
-
+  Future<void> _loginWithGoogleUser(GoogleSignInAccount googleUser) async {
     try {
+      // Extract relevant data from googleUser
+      final userData = {
+        "id": googleUser.id,
+        "name": googleUser.displayName,
+        "email": googleUser.email,
+        "image": googleUser.photoUrl,
+      };
+
       final response = await DioHelper.postData(
         method: GOOGLE_LOGIN,
-        data: {
-          "token": token,
-        },
-        lang: 'en',
+        data: userData,
       );
 
       loginModel = LoginModel.fromJson(response.data);
-      print(loginModel.data?.image);
       if (loginModel.status) {
         await CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
         await CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
         await CacheHelper.saveData(key: 'name', value: loginModel.data?.name ?? "");
         await CacheHelper.saveData(key: 'email', value: loginModel.data?.email ?? "");
         Get.offAll(() => HomeLayout());
+      } else {
+        emit(LoginErrorState('Login failed, please try again.'));
       }
     } catch (error) {
+      emit(LoginErrorState('Google login error: $error'));
       print('Google login error: $error');
-      emit(LoginErrorState(error.toString())); // Emit an error state if needed
     }
   }
 
-  String _buildUrl(String endpoint) {
-    return '${DioHelper.dio.options.baseUrl}$endpoint';
-  }
+  // Future<void> signInWithGoogle() async {
+  //   emit(LoginLoadingState());
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  //     print('Google User: $googleUser');
+  //     if (googleUser == null) {
+  //       // User cancelled the sign-in
+  //       emit(LoginErrorState('Google sign-in aborted.'));
+  //       return;
+  //     }
+  //
+  //     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  //     // Ensure that idToken is retrieved
+  //     final String? idToken = googleAuth.idToken;
+  //     print('Google Auth ID Token: $idToken');
+  //     if (idToken == null) {
+  //       emit(LoginErrorState('Failed to retrieve ID token.'));
+  //       print('Failed to retrieve ID token.');
+  //       return;
+  //     }
+  //
+  //     // Pass the idToken to your backend
+  //     await _loginWithGoogleToken(idToken);
+  //   } catch (error) {
+  //     emit(LoginErrorState('Google sign-in error: ${error.toString()}'));
+  //     print('Google sign-in error: ${error.toString()}');
+  //   }
+  // }
+  //
+  // Future<void> _loginWithGoogleToken(String token) async {
+  //   // final String fullUrl = _buildUrl(GOOGLE_LOGIN);
+  //   try {
+  //     final response = await DioHelper.postData(
+  //       method: GOOGLE_LOGIN,
+  //       data: {
+  //         "token": token,
+  //       },
+  //     );
+  //
+  //     loginModel = LoginModel.fromJson(response.data);
+  //     if (loginModel.status) {
+  //       await CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
+  //       await CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
+  //       await CacheHelper.saveData(key: 'name', value: loginModel.data?.name ?? "");
+  //       await CacheHelper.saveData(key: 'email', value: loginModel.data?.email ?? "");
+  //       Get.offAll(() => HomeLayout());
+  //     } else {
+  //       emit(LoginErrorState('Login failed, please try again.'));
+  //     }
+  //   } catch (error) {
+  //     emit(LoginErrorState('Google login error: $error'));
+  //     print('Google login error: $error');
+  //   }
+  // }
 }

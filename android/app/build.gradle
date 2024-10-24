@@ -29,6 +29,14 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    signingConfigs {
+        debug {
+            keyAlias 'farmconnectskeystore'
+            keyPassword 'xxx123xxx'
+            storeFile file('farmconnects-keystore.jks')
+            storePassword 'xxx123xxx'
+        }
+    }
 
     buildTypes {
         release {
@@ -41,4 +49,9 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+    // Flutter dependencies
+    implementation 'com.google.android.gms:play-services-location:21.3.0'  // Google Sign-In
+    implementation 'androidx.core:core-ktx:1.7.0'  // Kotlin Extensions
 }
