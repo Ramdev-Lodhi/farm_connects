@@ -25,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 30.0), // Adjust the left margin here
+                      padding: const EdgeInsets.only(right: 20.0),
                       child: Image.asset(
                         'assets/images/logo/FarmConnects_logo.png',
                         height: 100,
