@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../config/server_url.dart';
 import '../config/network/local/cache_helper.dart';
+import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
@@ -31,7 +32,8 @@ class SettingsScreen extends StatelessWidget {
 
         return WillPopScope(
           onWillPop: () async {
-            HomeCubit.get(context).resetToHome(); // Reset to Home when back is pressed
+            HomeCubit.get(context)
+                .resetToHome(); // Reset to Home when back is pressed
             return false; // Prevent default back action
           },
           child: Scaffold(
@@ -60,19 +62,21 @@ class SettingsScreen extends StatelessWidget {
                                   child: ClipRRect(
                                     clipBehavior: Clip.hardEdge,
                                     borderRadius: BorderRadius.circular(45.0),
-                                    child: CacheHelper.getData(key: 'image') != null
+                                    child: CacheHelper.getData(key: 'image') !=
+                                            null
                                         ? Image.network(
-                                      '${CacheHelper.getData(key: 'image')}',
-                                      height: 120,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Image.network(
-                                            'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
-                                      },
-                                    )
+                                            '${CacheHelper.getData(key: 'image')}',
+                                            height: 120,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.network(
+                                                  'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
+                                            },
+                                          )
                                         : Image.network(
-                                        'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
+                                            'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
                                   ),
                                 ),
                                 SizedBox(width: 10),
@@ -80,13 +84,15 @@ class SettingsScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      CacheHelper.getData(key: 'name') ?? 'User Name',
+                                      CacheHelper.getData(key: 'name') ??
+                                          'User Name',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w500,
-                                        color: isDark ? Colors.white : Colors.grey,
+                                        color:
+                                            isDark ? Colors.white : Colors.grey,
                                       ),
                                     ),
                                     SizedBox(height: 5),
@@ -95,7 +101,9 @@ class SettingsScreen extends StatelessWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: isDark ? Colors.white : Colors.black,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
                                         fontSize: 20.0,
                                       ),
                                     ),
@@ -117,60 +125,83 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             ListTile(
                               leading: Icon(Icons.dark_mode, color: textColor),
-                              title: Text("Dark Mode", style: TextStyle(color: textColor)),
+                              title: Text("Dark Mode",
+                                  style: TextStyle(color: textColor)),
                               trailing: CupertinoSwitch(
                                 value: isDark,
                                 onChanged: (state) {
                                   cubit.changeThemeMode(state);
                                 },
                                 activeColor: Colors.white24,
-                                thumbColor: isDark ? Colors.white12 : Colors.white,
+                                thumbColor:
+                                    isDark ? Colors.white12 : Colors.white,
                               ),
                             ),
                             ListTile(
-                              leading: Icon(Icons.notifications, color: textColor),
-                              title: Text("NOTIFICATION", style: TextStyle(color: textColor)),
-                              trailing: Text("On", style: TextStyle(color: Colors.grey)),
+                              leading:
+                                  Icon(Icons.notifications, color: textColor),
+                              title: Text("NOTIFICATION",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Text("On",
+                                  style: TextStyle(color: Colors.grey)),
                             ),
                             ListTile(
-                              leading: Icon(Icons.add_circle_outline, color: textColor),
-                              title: Text("ADD VEHICLE", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              leading: Icon(Icons.add_circle_outline,
+                                  color: textColor),
+                              title: Text("ADD VEHICLE",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(FontAwesomeIcons.tractor, size: 20.0, color: textColor),
-                              title: Text("NEW TRACTOR", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              leading: Icon(FontAwesomeIcons.tractor,
+                                  size: 20.0, color: textColor),
+                              title: Text("NEW TRACTOR",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.agriculture_outlined, color: textColor),
-                              title: Text("BUY USED TRACTOR", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              leading: Icon(Icons.agriculture_outlined,
+                                  color: textColor),
+                              title: Text("BUY USED TRACTOR",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
                               leading: Icon(Icons.sell, color: textColor),
-                              title: Text("SELL USED TRACTOR", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              title: Text("SELL USED TRACTOR",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(Icons.import_export, color: textColor),
-                              title: Text("FARM EQUIPMENT'S", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              leading:
+                                  Icon(Icons.import_export, color: textColor),
+                              title: Text("FARM EQUIPMENT'S",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
-                              leading: Icon(FontAwesomeIcons.retweet, size: 20.0, color: textColor),
-                              title: Text("RENT TRACTOR / EQUIPMENT'S", style: TextStyle(color: textColor)),
-                              trailing: Icon(Icons.keyboard_arrow_right_sharp, color: textColor),
+                              leading: Icon(FontAwesomeIcons.retweet,
+                                  size: 20.0, color: textColor),
+                              title: Text("RENT TRACTOR / EQUIPMENT'S",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Icon(Icons.keyboard_arrow_right_sharp,
+                                  color: textColor),
                             ),
                             ListTile(
                               leading: Icon(Icons.info, color: textColor),
-                              title: Text("About", style: TextStyle(color: textColor)),
-                              trailing: Text("Version:1.0.0", style: TextStyle(color: textColor)),
+                              title: Text("About",
+                                  style: TextStyle(color: textColor)),
+                              trailing: Text("Version:1.0.0",
+                                  style: TextStyle(color: textColor)),
                             ),
                           ],
                         ),
                       ),
-
 
                       Container(
                         color: logoutColor,
@@ -210,7 +241,11 @@ class SettingsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.0.sp),
                               highlightColor: isDark ? asmarFate7 : offWhite,
                               onTap: () {
+                                AuthCubits.get(context).signOut();
                                 CacheHelper.removeData(key: 'token');
+                                CacheHelper.removeData(key: 'image');
+                                CacheHelper.removeData(key: 'name');
+                                CacheHelper.removeData(key: 'email');
                                 HomeCubit.get(context).resetToHome();
                                 Get.offAll(() => LoginSignupScreen());
                               },

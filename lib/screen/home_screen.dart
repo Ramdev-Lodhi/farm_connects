@@ -13,6 +13,9 @@ import '../config/network/styles/colors.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      HomeCubit.get(context).getHomeData();
+    });
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -232,7 +235,9 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
-  Widget gridTractorsBuilder(HomeDataModel? homeDataModel, BuildContext context) {
+
+  Widget gridTractorsBuilder(
+      HomeDataModel? homeDataModel, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return SizedBox(
       height: 220.h,
@@ -283,7 +288,9 @@ class HomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16.0.sp, // Increased font size
                                   fontWeight: FontWeight.bold, // Bold text
-                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                  color: cubit.isDark
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
                               ),
                               // Row for HP and CC details
@@ -296,17 +303,22 @@ class HomeScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.0.sp, // Increased font size
                                       fontWeight: FontWeight.bold, // Bold text
-                                      color: cubit.isDark ? Colors.grey[400] : Colors.black,
+                                      color: cubit.isDark
+                                          ? Colors.grey[400]
+                                          : Colors.black,
                                     ),
                                   ),
-                                  SizedBox(width: 10.w), // Spacing between HP and CC
+                                  SizedBox(width: 10.w),
+                                  // Spacing between HP and CC
                                   // CC text
                                   Text(
                                     'CC: ${product?.engine.capacityCC ?? 'N/A'} CC',
                                     style: TextStyle(
                                       fontSize: 14.0.sp, // Increased font size
                                       fontWeight: FontWeight.bold, // Bold text
-                                      color: cubit.isDark ? Colors.grey[400] : Colors.black,
+                                      color: cubit.isDark
+                                          ? Colors.grey[400]
+                                          : Colors.black,
                                     ),
                                   ),
                                 ],

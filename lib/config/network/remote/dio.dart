@@ -1,21 +1,16 @@
 import 'package:dio/dio.dart';
 
-class DioHelper
-{
+class DioHelper {
   static late Dio dio;
 
-  static init()
-  {
-    dio = Dio(
-      BaseOptions(
-        baseUrl: "http://192.168.194.176:3000/api/",
+  static init() {
+    dio = Dio(BaseOptions(
+        baseUrl: "http://192.168.177.205:3000/api/",
         receiveDataWhenStatusError: true,
         headers: {
           "Content-Type": "application/json",
-          "lang" : 'en',
-        }
-        )
-    );
+          "lang": 'en',
+        }));
   }
 
   static Future<Response> postData({
@@ -23,14 +18,13 @@ class DioHelper
     required Map<String, dynamic> data,
     String lang = 'en',
     String? token,
-}) async
-  {
+  }) async {
     //adding to header map
     //note if it's assignment not add that will cause bad response!
     //so use addAll method if you're trying to add a header.
     dio.options.headers.addAll({
-      'lang' : lang,
-      'Authorization' : token,
+      'lang': lang,
+      'Authorization': token,
     });
 
     return await dio.post(
@@ -69,16 +63,16 @@ class DioHelper
       rethrow;
     }
   }
+
   static Future<Response> putData({
     required String method,
     required Map<String, dynamic> data,
     String lang = 'en',
     String? token,
-  }) async
-  {
+  }) async {
     dio.options.headers.addAll({
-      'lang' : lang,
-      'Authorization' : token,
+      'lang': lang,
+      'Authorization': token,
     });
 
     return await dio.put(
@@ -86,5 +80,4 @@ class DioHelper
       data: data,
     );
   }
-
 }

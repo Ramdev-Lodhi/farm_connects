@@ -65,14 +65,13 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     } else {
       if (_signinFormKey.currentState!.validate()) {
         if (!isRememberMe) {
-          // Show a message if Remember Me is not checked
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                   "Please check 'Remember Me' if you want to stay logged in."),
             ),
           );
-          return; // Prevent submission if checkbox is not checked
+          return;
         }
         context.read<AuthCubits>().Signin(
               signinEmailController.text.trim(),
@@ -174,9 +173,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 600),
                       curve: Curves.bounceInOut,
-                      // height: heightPosition.toDouble(),
                       height: heightPosition.toDouble(),
-                      // isSignupScreen ? 500 : 380,
                       padding: EdgeInsets.all(20),
                       width: MediaQuery.of(context).size.width - 40,
                       margin: EdgeInsets.symmetric(horizontal: 20),
