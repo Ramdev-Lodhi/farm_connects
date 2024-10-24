@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'package:farm_connects/config/network/styles/colors.dart';
+import 'package:farm_connects/screen/profileScreen/profile_screen.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:farm_connects/layout/home_layout.dart';
-import 'package:farm_connects/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../config/server_url.dart';
 import '../config/network/local/cache_helper.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
+
 
 class SettingsScreen extends StatelessWidget {
   @override
@@ -114,7 +114,8 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          print("profile");
+                          Get.to(() => ProfileScreen());
+                          // Navigator.of(context).pop(ProfileScreen());
                         },
                       ),
                       SizedBox(height: 10.0),

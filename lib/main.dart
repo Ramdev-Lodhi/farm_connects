@@ -52,10 +52,11 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit()..getHomeData(),
+          create: (context) => AuthCubits(),
+          child: LoginSignupScreen(),
         ),
         BlocProvider(
-          create: (context) => AuthCubits(),
+          create: (context) => HomeCubit()..getHomeData(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(
