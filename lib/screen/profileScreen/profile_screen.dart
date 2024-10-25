@@ -1,8 +1,10 @@
-import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import '../../config/network/local/cache_helper.dart';
+import '../../config/network/styles/colors.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 
@@ -13,6 +15,10 @@ class ProfileScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
+    Color cardColor = cubit.isDark ? Colors.white12 : Colors.white;
+    Color textColor = cubit.isDark ? Colors.white : Colors.black;
+    Color profileCardColor = cubit.isDark ? Colors.black54 : Colors.white;
+    Color logoutColor = cubit.isDark ? asmarFate7 : offWhite;
         return Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(40.0),
@@ -21,18 +27,13 @@ class ProfileScreen extends StatelessWidget {
               shadowColor: Colors.black.withOpacity(0.2),
               child: AppBar(
                 backgroundColor: cubit.isDark ? Colors.black : Colors.white,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Image.asset(
-                        'assets/images/logo/FarmConnects_logo.png',
-                        height: 100,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ],
+                title: Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Image.asset(
+                    'assets/images/logo/FarmConnects_logo.png',
+                    height: 100,
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 actions: [
                   IconButton(
@@ -58,21 +59,20 @@ class ProfileScreen extends StatelessWidget {
                         "Sell/Rent",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
-                      ), // Optional: icon color
-                      dropdownColor: cubit.isDark ? Colors.black : Colors.white, // Dropdown background color
+                      ),
+                      dropdownColor: cubit.isDark ? Colors.black : Colors.white,
                       items: <String>['Sell', 'Rent'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: cubit.isDark ? Colors.white70 : Colors.black, // Text color
+                              color: cubit.isDark ? Colors.white70 : Colors.black,
                             ),
                           ),
                         );
                       }).toList(),
                       onChanged: (value) {
-                        // Handle selection
                         if (value == 'Sell') {
                           // Handle sell action
                         } else if (value == 'Rent') {
@@ -81,8 +81,8 @@ class ProfileScreen extends StatelessWidget {
                       },
                       style: TextStyle(
                         color: cubit.isDark ? Colors.white70 : Colors.black,
-                      ), // Text color for the selected item
-                      underline: Container(), // Removes the underline
+                      ),
+                      underline: Container(),
                     ),
                   ),
                 ],
@@ -90,8 +90,102 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           body: Container(
-            color: cubit.isDark ? Colors.black : Colors.white, // Background color based on theme
-            // child: cubit.screens[cubit.currentIndex],
+            color: cubit.isDark ? Colors.black : Colors.white,
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  child: Card(
+                    color: profileCardColor,
+                    elevation: 1,
+                    child: Container(
+                      height: 150,
+                      child: Row(
+
+                        children: [
+                          CircleAvatar(
+                            radius: 45.0,
+                            backgroundColor: Colors.transparent,
+                            child: ClipRRect(
+                              clipBehavior: Clip.hardEdge,
+                              borderRadius: BorderRadius.circular(45.0),
+                              child: CacheHelper.getData(key: 'image') !=
+                                  null
+                                  ? Image.network(
+                                '${CacheHelper.getData(key: 'image')}',
+                                height: 120,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return Image.network(
+                                      'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
+                                },
+                              )
+                                  : Image.network(
+                                  'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                CacheHelper.getData(key: 'name') ?? 'User Name',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: cubit.isDark ? Colors.white : Colors.grey,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                CacheHelper.getData(key: 'email') ?? 'someone@example.com',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              // Handle edit action
+                              // Get.to(() => EditProfileScreen()); // Navigate to edit screen
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min, // Ensures the button doesn't take too much space
+                              children: [
+                                Icon(
+                                  Icons.edit, // Edit icon
+                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                ),
+                                SizedBox(width: 5), // Space between icon and text
+                                Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                    color: cubit.isDark ? Colors.white : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
