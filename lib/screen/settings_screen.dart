@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:farm_connects/config/network/styles/colors.dart';
+import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/profileScreen/profile_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,13 +19,13 @@ import '../cubits/home_cubit/home_states.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool isLocationOn = CacheHelper.getData(key: 'pincode') != null ? true : false;
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
         HomeCubit cubit = HomeCubit.get(context);
-        bool isDark = cubit.isDark; // Reference to dark mode state
+        bool isDark = cubit.isDark;
 
-        // Define colors based on theme
         Color cardColor = isDark ? Colors.white12 : Colors.white;
         Color textColor = isDark ? Colors.white : Colors.black;
         Color profileCardColor = isDark ? Colors.black54 : Colors.white;
@@ -48,13 +49,13 @@ class SettingsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Profile image
                       InkWell(
                         child: Card(
                           color: profileCardColor,
                           elevation: 1,
                           child: Container(
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 CircleAvatar(
                                   radius: 45.0,
@@ -79,7 +80,7 @@ class SettingsScreen extends StatelessWidget {
                                             'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                // SizedBox(width: 10.w),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -95,7 +96,7 @@ class SettingsScreen extends StatelessWidget {
                                             isDark ? Colors.white : Colors.grey,
                                       ),
                                     ),
-                                    SizedBox(height: 5),
+                                    SizedBox(height: 5.h),
                                     Text(
                                       "My Account",
                                       maxLines: 1,
@@ -108,6 +109,11 @@ class SettingsScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ],
+                                ),
+                                SizedBox(width: 10.w),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: textColor,
                                 ),
                               ],
                             ),
@@ -139,12 +145,17 @@ class SettingsScreen extends StatelessWidget {
                               ),
                             ),
                             ListTile(
-                              leading:
-                                  Icon(Icons.notifications, color: textColor),
-                              title: Text("NOTIFICATION",
-                                  style: TextStyle(color: textColor)),
-                              trailing: Text("On",
-                                  style: TextStyle(color: Colors.grey)),
+                              leading: Icon(Icons.location_on, color: textColor),
+                              title: Text("Location", style: TextStyle(color: textColor)),
+                              trailing: CupertinoSwitch(
+                                value: isLocationOn,
+                                onChanged: (state) {
+                                  CacheHelper.saveData(key: 'locationSetup', value: state);
+                                },
+                                activeColor: Colors.green,
+                                thumbColor:
+                                isDark ? Colors.white12 : Colors.white,
+                              ),
                             ),
                             ListTile(
                               leading: Icon(Icons.add_circle_outline,
@@ -247,8 +258,13 @@ class SettingsScreen extends StatelessWidget {
                                 CacheHelper.removeData(key: 'image');
                                 CacheHelper.removeData(key: 'name');
                                 CacheHelper.removeData(key: 'email');
+                                CacheHelper.removeData(key: 'state');
+                                CacheHelper.removeData(key: 'district' );
+                                CacheHelper.removeData(key: 'subDistrict');
+                                CacheHelper.removeData(key: 'village');
+                                CacheHelper.removeData(key: 'pincode');
                                 HomeCubit.get(context).resetToHome();
-                                Get.offAll(() => LoginSignupScreen());
+                                Get.offAll(() => OTPScreen());
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10.0.sp),

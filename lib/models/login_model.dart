@@ -19,8 +19,6 @@ class UserData
   late String email;
   late String phone;
   late String image;
-  late int points;
-  late int credit;
   late String token;
 
   UserData.fromJson(Map<String, dynamic> json)
@@ -30,8 +28,6 @@ class UserData
     email = json['email'];
     phone = json['phone'];
     image = json['image'];
-    points = json['points'] ?? 0;
-    credit = json['credit'] ?? 0;
     token = json['token'];
   }
 }

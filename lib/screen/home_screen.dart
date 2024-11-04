@@ -9,24 +9,24 @@ import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../config/network/styles/colors.dart';
+import '../widgets/loadingIndicator.dart';
+import '../widgets/loadingPlaceholder.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      HomeCubit.get(context).getHomeData();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   HomeCubit.get(context).getHomeData();
+    // });
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
           condition: HomeCubit.get(context).homeDataModel != null,
-          // HomeCubit.get(context).categoryModel != null,
           builder: (context) => productsBuilder(
               HomeCubit.get(context).homeDataModel,
-              // HomeCubit.get(context).categoryModel,
               context),
-          fallback: (context) => Center(child: CircularProgressIndicator()),
+          fallback: (context) => Center(child: LoadingPlaceholder()),
         );
       },
     );
@@ -110,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w600,
-                            color: cubit.isUsedTractor
+                            color: cubit.isNewTractor
                                 ? (cubit.isDark ? Colors.white : Colors.black)
                                 : (cubit.isDark ? Colors.white : Colors.black),
                           ),

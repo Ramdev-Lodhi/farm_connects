@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/loadingIndicator.dart';
 import '../../widgets/snackbar_helper.dart';
 
 abstract class Authstates {
@@ -9,7 +10,9 @@ abstract class Authstates {
 
 class LoginInitialState extends Authstates {}
 
-class LoginLoadingState extends Authstates {}
+class LoginLoadingState extends Authstates {
+
+}
 
 class LoginSuccessState extends Authstates {
   final String message;
@@ -56,4 +59,28 @@ class SignupErrorState extends Authstates {
   void showSnackbar(BuildContext context) {
     showCustomSnackbar('Signup Failed', error, isError: true);
   }
+}
+
+class SendOtpLoadingState extends Authstates {}
+
+class SendOtpSuccessState extends Authstates {
+  final String otpHash;
+  SendOtpSuccessState(this.otpHash);
+  @override
+  void showSnackbar(BuildContext context) {
+    showCustomSnackbar('Success', 'OTP sent successfully',
+        isError: false);
+  }
+}
+
+class SendOtpErrorState extends Authstates {
+  final String error;
+  SendOtpErrorState(this.error);
+}
+
+class VerifyOtpLoadingState extends Authstates {}
+class VerifyOtpSuccessState extends Authstates {}
+class VerifyOtpErrorState extends Authstates {
+  final String error;
+  VerifyOtpErrorState(this.error);
 }

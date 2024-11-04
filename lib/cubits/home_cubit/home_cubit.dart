@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../models/login_model.dart';
+import '../../models/profile_model.dart';
 import '../../screen/settings_screen.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../config/network/end_points.dart';
@@ -97,8 +98,8 @@ class HomeCubit extends Cubit<HomeStates> {
     emit(ChangeThemeMode());
   }
 
-  HomeDataModel? homeDataModel = null;
 
+  HomeDataModel? homeDataModel = null;
   void getHomeData() {
     emit(GetHomeDataLoadingSate());
 
@@ -122,7 +123,19 @@ class HomeCubit extends Cubit<HomeStates> {
       emit(GetHomeDataErrorSate());
     });
   }
-
+  // ProfileModel? profileModel = null;
+  // Future<void> getProfileData() async {
+  //   String token = CacheHelper.getData(key: 'token') ?? '';
+  //   try {
+  //     final response = await DioHelper.getData(
+  //       method: 'user/profile',
+  //       token: token,
+  //     );
+  //     print('respense: $response');
+  //     profileModel = ProfileModel.fromJson(response.data);
+  //   } catch (error) {
+  //   }
+  // }
   bool isNewTractor = true;
   bool isUsedTractor = false;
 

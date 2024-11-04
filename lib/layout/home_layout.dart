@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
+import '../widgets/loadingIndicator.dart';
 
 class HomeLayout extends StatelessWidget {
   @override
@@ -57,15 +58,19 @@ class HomeLayout extends StatelessWidget {
                         "Sell/Rent",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
-                      ), // Optional: icon color
-                      dropdownColor: cubit.isDark ? Colors.black : Colors.white, // Dropdown background color
+                      ),
+                      // Optional: icon color
+                      dropdownColor: cubit.isDark ? Colors.black : Colors.white,
+                      // Dropdown background color
                       items: <String>['Sell', 'Rent'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: cubit.isDark ? Colors.white70 : Colors.black, // Text color
+                              color: cubit.isDark
+                                  ? Colors.white70
+                                  : Colors.black, // Text color
                             ),
                           ),
                         );
@@ -80,7 +85,8 @@ class HomeLayout extends StatelessWidget {
                       },
                       style: TextStyle(
                         color: cubit.isDark ? Colors.white70 : Colors.black,
-                      ), // Text color for the selected item
+                      ),
+                      // Text color for the selected item
                       underline: Container(), // Removes the underline
                     ),
                   ),
@@ -88,13 +94,22 @@ class HomeLayout extends StatelessWidget {
               ),
             ),
           ),
-          body: Container(
-            color: cubit.isDark ? Colors.black : Colors.white, // Background color based on theme
-            child: cubit.screens[cubit.currentIndex],
+          body: CustomRefreshIndicator(
+            onRefresh: () async {
+              await cubit
+                ..getHomeData();
+            },
+            child: Container(
+              color: cubit.isDark ? Colors.black : Colors.white,
+              // Background color based on theme
+              child: cubit.screens[cubit.currentIndex],
+            ),
           ),
+
           bottomNavigationBar: Material(
             elevation: 50,
-            color: cubit.isDark ? Colors.black : Colors.white, // Bottom nav bar color
+            color: cubit.isDark ? Colors.black : Colors.white,
+            // Bottom nav bar color
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(10.0),
@@ -110,7 +125,8 @@ class HomeLayout extends StatelessWidget {
                   selectedFontSize: 12.0.sp,
                   currentIndex: cubit.currentIndex,
                   items: cubit.navItems,
-                  unselectedItemColor: cubit.isDark ? Colors.white70 : Colors.black,
+                  unselectedItemColor:
+                      cubit.isDark ? Colors.white70 : Colors.black,
                   selectedItemColor: cubit.isDark ? Colors.white : Colors.black,
                   type: BottomNavigationBarType.fixed,
                   iconSize: MediaQuery.of(context).size.height / 30.0,
@@ -121,5 +137,70 @@ class HomeLayout extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class CustomRefreshIndicator extends StatefulWidget {
+  final Future<void> Function() onRefresh;
+  final Widget child;
+
+  const CustomRefreshIndicator({
+    Key? key,
+    required this.onRefresh,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  _CustomRefreshIndicatorState createState() => _CustomRefreshIndicatorState();
+}
+
+class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator> {
+  bool _isRefreshing = false;
+  bool _isPulling = false; // Track if the user is pulling down
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        // Check if the user is pulling down
+        if (scrollInfo.metrics.pixels < 0 && !_isRefreshing) {
+          setState(() {
+            _isPulling = true;
+          });
+        } else if (scrollInfo.metrics.pixels >= 0 && _isPulling) {
+          setState(() {
+            _isPulling = false;
+          });
+        }
+
+        // Trigger refresh when user releases the pull
+        if (scrollInfo.metrics.pixels < -100 && !_isRefreshing) { // 100 is the threshold
+          _startRefreshing();
+          return true; // Prevent other notifications
+        }
+        return false; // Pass notifications on
+      },
+      child: Stack(
+        children: [
+          widget.child,
+          if (_isRefreshing || _isPulling)
+            Positioned(
+              top: 0,
+              left: MediaQuery.of(context).size.width / 2 - 30,
+              child:LoadingIndicator(size: 60),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _startRefreshing() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+    await widget.onRefresh();
+    setState(() {
+      _isRefreshing = false;
+    });
   }
 }

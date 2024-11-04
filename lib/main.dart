@@ -1,9 +1,14 @@
 import 'package:farm_connects/config/network/styles/styles.dart';
+import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
+import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
+import 'package:farm_connects/screen/otpScreen/Provider/OTPProvider.dart';
+import 'package:farm_connects/screen/otpScreen/VerificationSuccessScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import '../config/network/remote/dio.dart';
 import '../config/network/local/cache_helper.dart';
 import '../layout/home_layout.dart';
@@ -14,20 +19,13 @@ import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 
 void main() async {
-  // Ensure that Flutter bindings are initialized before accessing any services
   WidgetsFlutterBinding.ensureInitialized();
 
   DioHelper.init();
   await CacheHelper.init();
 
   String token = CacheHelper.getData(key: 'token') ?? '';
-  runApp(MyApp(token != '' ? HomeLayout() : LoginSignupScreen()));
-  // runApp(
-  //   GetMaterialApp(
-  //     debugShowCheckedModeBanner: false,
-  //     home: token != '' ? HomeLayout() : LoginSignupScreen(),
-  //   ),
-  // );
+  runApp(MyApp(token != '' ? HomeLayout() : OTPScreen()));
 }
 
 class MyApp extends StatefulWidget {
@@ -53,10 +51,18 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(
           create: (context) => AuthCubits(),
-          child: LoginSignupScreen(),
+          child: OTPScreen(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OTPProvider(),
         ),
         BlocProvider(
           create: (context) => HomeCubit()..getHomeData(),
+        ),
+        BlocProvider(
+          create: (context) => ProfileCubits()..getProfileData()
+            ..loadStates()
+            ..loadDistricts,
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(
@@ -73,6 +79,7 @@ class _MyAppState extends State<MyApp> {
                 themeMode: cubit.isDark ? ThemeMode.dark : ThemeMode.light,
                 darkTheme: darkTheme,
                 home: widget.startWidget,
+                // home: OTPScreen(),
               );
             },
           );

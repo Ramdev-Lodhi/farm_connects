@@ -72,7 +72,7 @@ class DioHelper {
   }) async {
     dio.options.headers.addAll({
       'lang': lang,
-      'Authorization': token,
+      if (token != null) 'Authorization': 'Bearer $token',
     });
 
     return await dio.put(

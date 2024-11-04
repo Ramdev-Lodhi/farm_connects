@@ -8,6 +8,7 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../constants//palette.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
 import '../../widgets/bulidtextfied.dart';
+import '../../widgets/loadingIndicator.dart';
 import '../../widgets/snackbar_helper.dart';
 
 class LoginSignupScreen extends StatefulWidget {
@@ -107,7 +108,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 ? (keyboardOpen ? 450 : 500)
                 : (keyboardOpen ? 340 : 320);
             if (context.read<AuthCubits>().isLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingIndicator(size: 100));
             } else {
               return Scaffold(
                 resizeToAvoidBottomInset: false,
