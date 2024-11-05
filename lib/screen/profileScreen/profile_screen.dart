@@ -114,6 +114,7 @@ class ProfileScreen extends StatelessWidget {
                             CacheHelper.getData(key: 'image') ??
                                 'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg',
                             height: 120,
+                            width: double.infinity,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Icon(Icons.person, size: 45),

@@ -20,6 +20,7 @@ class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
         elevation: 5,
         shadowColor: Colors.black.withOpacity(0.2),
         child: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: isDark ? Colors.black : Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

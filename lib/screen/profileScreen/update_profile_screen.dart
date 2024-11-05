@@ -199,8 +199,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     style: TextStyle(color: textColor, fontSize: 15)),
                 actions: [
                   TextButton(
-                    onPressed: _saveProfile,
-                    child: Text('Next',
+                    onPressed:() {
+                      Get.offAll(()=>HomeLayout());
+                    },
+                    child: Text('Skip',
                         style: TextStyle(color: textColor, fontSize: 15)),
                   ),
                 ],

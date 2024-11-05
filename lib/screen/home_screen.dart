@@ -240,10 +240,11 @@ class HomeScreen extends StatelessWidget {
       HomeDataModel? homeDataModel, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return SizedBox(
-      height: 220.h,
+      height: 279.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal, // Horizontal scroll
-        itemCount: homeDataModel?.data.tractors.length ?? 0,
+        // itemCount: homeDataModel?.data.tractors.length ?? 0,
+        itemCount: 6,
         itemBuilder: (context, index) {
           final product = homeDataModel?.data.tractors[index];
           return Padding(
@@ -281,7 +282,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               // Display the tractor name
                               Text(
-                                product?.name ?? '',
+                                '${product?.brand ?? ''} ${product?.name ?? ''}'.trim(),
                                 maxLines: 1,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -310,6 +311,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   SizedBox(width: 10.w),
                                   // Spacing between HP and CC
+
                                   // CC text
                                   Text(
                                     'CC: ${product?.engine.capacityCC ?? 'N/A'} CC',
@@ -322,6 +324,28 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      print('brandName: ${product?.name}');
+                                      print('brandId: ${product?.id}');
+
+                                    },
+                                    child: Text("Check Tractor Price",
+                                        style: TextStyle(color: Colors.white)),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xFF009688),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),

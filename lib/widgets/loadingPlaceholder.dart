@@ -14,7 +14,7 @@ class LoadingPlaceholder extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Placeholder for the carousel slider
+
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -24,7 +24,7 @@ class LoadingPlaceholder extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.h),
-            // Placeholder for the title "New Tractor"
+
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -35,7 +35,7 @@ class LoadingPlaceholder extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            // Placeholder for grid of tractors
+
             Container(
               height: 220.h,
               child: ListView.builder(
@@ -60,7 +60,7 @@ class LoadingPlaceholder extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.h),
-            // Placeholder for the title "Tractor By Brand"
+
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -71,7 +71,7 @@ class LoadingPlaceholder extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.h),
-            // Placeholder for the grid of brands
+
             GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,

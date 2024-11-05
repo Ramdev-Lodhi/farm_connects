@@ -176,8 +176,8 @@ class ProfileCubits extends Cubit<ProfileState> {
 
       // Check the MIME type
       final mimeType = lookupMimeType(image.path);
-      print('File MIME Type: $mimeType');
-      print('Uploading file: ${image.path}, Filename: ${image.name}');
+      // print('File MIME Type: $mimeType');
+      // print('Uploading file: ${image.path}, Filename: ${image.name}');
       // Validate MIME type
       if (mimeType != null && mimeType.startsWith('image/')) {
         // Create FormData
@@ -201,7 +201,7 @@ class ProfileCubits extends Cubit<ProfileState> {
             ),
           );
 
-          print('response: ${response.data}');
+          // print('response: ${response.data}');
           profileModel = ProfileModel.fromJson(response.data);
           if (profileModel.status) {
             CacheHelper.saveData(

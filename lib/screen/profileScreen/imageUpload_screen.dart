@@ -12,9 +12,7 @@ import '../../widgets/loadingIndicator.dart';
 
 class ImageDialog extends StatefulWidget {
   final ProfileCubits profileCubit;
-
   ImageDialog({required this.profileCubit});
-
   @override
   _ImageDialogState createState() => _ImageDialogState();
 }

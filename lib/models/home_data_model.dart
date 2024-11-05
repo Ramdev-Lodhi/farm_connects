@@ -64,6 +64,7 @@ class Tractors {
   late String id;
   late String image;
   late String name;
+  late String brand;
   late Engine engine;
   late Transmission transmission;
   late Steering steering;
@@ -75,8 +76,9 @@ class Tractors {
 
   Tractors.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    image = json['image'];
+    image = json['tractor_image'];
     name = json['name'];
+    brand = json['brand'];
     engine = Engine.fromJson(json['engine']);
     transmission = Transmission.fromJson(json['transmission']);
     steering = Steering.fromJson(json['steering']);

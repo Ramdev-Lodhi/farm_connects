@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../models/login_model.dart';
 import '../../models/profile_model.dart';
+import '../../screen/BuyScreen/new_tractors_screen.dart';
 import '../../screen/settings_screen.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../config/network/end_points.dart';
@@ -73,7 +74,7 @@ class HomeCubit extends Cubit<HomeStates> {
   List<Widget> screens = [
     // Center(child: Text('Home Screen')),
     HomeScreen(),
-    Center(child: Text('New Machine Screen')),
+    NewTractorScreen(),
     Center(child: Text('Used Machine Screen')),
     Center(child: Text('Rent Screen')),
     SettingsScreen(),
