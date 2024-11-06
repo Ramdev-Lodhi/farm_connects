@@ -50,7 +50,7 @@ class _OTPScreenState extends State<OTPScreen> {
     final otpProvider = Provider.of<OTPProvider>(context, listen: false);
     otpProvider.setPhoneNumber(_phoneNumberController.text);
     otpProvider.sendOTP();
-
+    // BlocProvider.of<AuthCubits>(context).sendOTP(_phoneNumberController.text);
     Get.to(() => OTPVerify());
   }
 
@@ -62,7 +62,7 @@ class _OTPScreenState extends State<OTPScreen> {
       body: SafeArea(
         child: BlocListener<AuthCubits, Authstates>(
           listener: (context, state) async {
-            print("Current state: $state");
+            print("Current state Loginpage: $state");
 
             if (state is Authstates && state.showSnackbar != null) {
               state.showSnackbar(context);
@@ -90,7 +90,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 Get.offAll(() => HomeLayout());
               }
             }
-            if (state is LoginLoadingState || state is SendOtpLoadingState || state is VerifyOtpLoadingState) {
+            if (state is LoginLoadingState || state is SendOtpLoadingState ) {
               setState(() => _isLoading = true);
             } else {
               setState(() => _isLoading = false);
@@ -216,10 +216,6 @@ class _OTPScreenState extends State<OTPScreen> {
                                   onPressed: () {
                                     // AuthCubits.get(context).signInWithGoogle();
                                     openPasswordBottomSheet(context);
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => PasswordScreen()),
-                                    // );
                                   },
                                   style: TextButton.styleFrom(
                                       foregroundColor: Colors.white,
@@ -289,16 +285,6 @@ class _OTPScreenState extends State<OTPScreen> {
                         .setWidth(0.9 * MediaQuery.of(context).size.width),
                     height: 55.h,
                     child: ElevatedButton(
-                      // onPressed: () {
-                      //   final otpProvider =
-                      //       Provider.of<OTPProvider>(context, listen: false);
-                      //   otpProvider.setPhoneNumber(_phoneNumberController.text);
-                      //   otpProvider.sendOTP();
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => OTPVerify()),
-                      //   );
-                      // },
                       onPressed: _sendOTP,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(143, 130, 244, 1),

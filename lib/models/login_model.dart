@@ -15,19 +15,19 @@ class LoginModel
 class UserData
 {
   late String id;
-  late String name;
-  late String email;
-  late String phone;
-  late String image;
+  late String? name;
+  late String? email;
+  late String? phone;
+  late String? image;
   late String token;
 
   UserData.fromJson(Map<String, dynamic> json)
   {
     id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    image = json['image'];
-    token = json['token'];
+    name = json['name'] ?? null;
+    email = json['email'] ?? null;
+    phone = json['phone'] ?? null;
+    image = json['image'] ?? null;
+    token = json['token'] ;
   }
 }

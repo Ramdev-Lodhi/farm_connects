@@ -64,7 +64,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
   }
 
   bool isValidPhone(String phone) {
-    // A simple check for phone number (modify this based on your requirements)
     return phone.length >= 10 && phone.length <= 15 && int.tryParse(phone) != null;
   }
   @override

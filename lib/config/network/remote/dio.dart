@@ -5,7 +5,7 @@ class DioHelper {
 
   static init() {
     dio = Dio(BaseOptions(
-        baseUrl: "http://172.16.101.84:3000/api/",
+        baseUrl: "http://192.168.242.205:3000/api/",
         receiveDataWhenStatusError: true,
         headers: {
           "Content-Type": "application/json",
@@ -19,9 +19,7 @@ class DioHelper {
     String lang = 'en',
     String? token,
   }) async {
-    //adding to header map
-    //note if it's assignment not add that will cause bad response!
-    //so use addAll method if you're trying to add a header.
+
     dio.options.headers.addAll({
       'lang': lang,
       'Authorization': token,

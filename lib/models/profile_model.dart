@@ -26,8 +26,8 @@ class UserData {
 
   UserData.fromJson(Map<String, dynamic> json) {
     id = json['_id'] ?? '';
-    name = json['name'] ?? '';
-    email = json['email'] ?? '';
+    name = json['name'] ?? null;
+    email = json['email'] ?? null;
     mobile = json['mobile'] != null ? json['mobile'] : null;
     image = json['image'] ?? '';
     state = json['state'] != null  ? json['state'] : null;

@@ -39,7 +39,7 @@ class ProfileUpdateError extends ProfileState {
   ProfileUpdateError(this.error);
   @override
   void showSnackbar(BuildContext context) {
-    showCustomSnackbar('Login Failed', error, isError: true);
+    showCustomSnackbar('Error', error, isError: true);
 
   }
 }

@@ -32,6 +32,7 @@ class ProfileCubits extends Cubit<ProfileState> {
         method: 'user/profile',
         token: token,
       );
+      print('response:$response');
       profileModel = ProfileModel.fromJson(response.data);
       emit(ProfileSuccessState());
     } catch (error) {
@@ -76,8 +77,8 @@ class ProfileCubits extends Cubit<ProfileState> {
     emit(ProfileUpdateLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      // print('Name: $name, Email: $email, Mobile: $mobile');
-      // print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
+      print('Name: $name, Email: $email, Mobile: $mobile');
+      print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
       final response = await DioHelper.putData(
           method: 'user/update_profile',
           token: token,
@@ -125,8 +126,8 @@ class ProfileCubits extends Cubit<ProfileState> {
     emit(ProfileUpdateLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      // print('Name: $name, Email: $email, Mobile: $mobile');
-      // print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
+      print('Name: $name, Email: $email, Mobile: $mobile');
+      print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
       final response = await DioHelper.putData(
           method: 'user/update_profile',
           token: token,
@@ -141,7 +142,7 @@ class ProfileCubits extends Cubit<ProfileState> {
             "pincode": pincode,
             "password":password,
           });
-      // print('API Response: ${response.data}');
+      print('API Response: ${response.data}');
       profileModel = ProfileModel.fromJson(response.data);
       // print('profileModel : ${profileModel.status}');
 
@@ -152,7 +153,7 @@ class ProfileCubits extends Cubit<ProfileState> {
         CacheHelper.saveData(
             key: 'email', value: profileModel.data?.email ?? null);
         emit(ProfileUpdateSuccess('Profile Update Successfully'));
-        Get.offAll(() => ProfileScreen());
+        Get.offAll(() => HomeLayout());
       } else {
         emit(ProfileUpdateError('Failed to update profile'));
       }

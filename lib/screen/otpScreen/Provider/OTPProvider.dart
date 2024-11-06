@@ -34,21 +34,12 @@ class OTPProvider with ChangeNotifier {
 
   Future<void> sendOTP() async {
     try {
-      _hash_Code = await _otpService.sendOTP('+'+_dialCode + _phoneNumber);
-
+      await _otpService.sendOTP('+'+_dialCode + _phoneNumber);
       notifyListeners();
     } catch (error) {
       print(error.toString());
     }
   }
 
-  Future<void> verifyOTP() async {
-    try {
-      _isVerified = await _otpService.verifyOTP(
-          '+'+_dialCode + _phoneNumber, _otpCode, _hash_Code);
-      notifyListeners();
-    } catch (error) {
-      print(error.toString());
-    }
-  }
+
 }

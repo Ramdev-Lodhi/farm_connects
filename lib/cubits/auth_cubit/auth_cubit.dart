@@ -123,18 +123,15 @@ class AuthCubits extends Cubit<Authstates> {
         CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
         CacheHelper.saveData(key: 'name', value: loginModel.data?.name ?? "");
         CacheHelper.saveData(key: 'email', value: loginModel.data?.email ?? "");
-        isLoading = false;
         emit(LoginSuccessState("User login successful."));
-        showCustomSnackbar('Login Success', 'User login successful.',
-            isError: false);
+
         // LocationHelper.fetchLocationDetails();
         // Get.offAll(() => HomeLayout());
       } else {
-        isLoading = false;
-        emit(LoginErrorState(loginModel.message ?? 'Login failed.'));
-        showCustomSnackbar(
-            'Login Failed', 'Username and password incorrect Please try again.',
-            isError: true);
+        emit(LoginErrorState('Username and password incorrect Please try again.'));
+        // showCustomSnackbar(
+        //     'Login Failed', 'Username and password incorrect Please try again.',
+        //     isError: true);
         // print("login Failed. Please try again.");
       }
     }).catchError((error) {
@@ -217,34 +214,30 @@ class AuthCubits extends Cubit<Authstates> {
     // Get.offAll(() => LoginSignupScreen());
   }
 
-  Future<String> sendOTP(String phoneNumber) async {
+  Future<void> sendOTP(String phoneNumber) async {
     emit(SendOtpLoadingState());
-    emit(LoginSuccessState("Google login successful."));
     try {
-      // print('phoneNumber:$phoneNumber');
+      print('phoneNumber:$phoneNumber');
       final response = await DioHelper.postData(
         method: "send-otp",
         data: {'phone': phoneNumber},
       );
       print('response:$response');
       if (response.data['status']) {
-        emit(LoginSuccessState("OTP login successful."));
         emit(SendOtpSuccessState(response.data['message']));
-        return response.data['message'];
       } else {
-        emit(LoginSuccessState("Google OTP successful."));
         emit(SendOtpErrorState(response.data['message']));
-        throw Exception('Failed to send OTP: ${response.data['message']}');
       }
     } catch (error) {
       emit(SendOtpErrorState(error.toString()));
-      // print('sendOTP error: $error');
       return Future.error(error);
     }
   }
 
-  Future<bool> verifyOTP(
-      String phoneNumber, String otpCode, String hashCode) async {
+
+
+  Future<void> verifyOTP(
+      String phoneNumber, String otpCode) async {
     emit(VerifyOtpLoadingState());
     try {
       // print('phoneNumber:$phoneNumber');
@@ -256,9 +249,7 @@ class AuthCubits extends Cubit<Authstates> {
           'otp': otpCode,
         },
       );
-
       loginModel = LoginModel.fromJson(response.data);
-
       if (loginModel.status) {
         await CacheHelper.saveData(
             key: 'token', value: loginModel.data?.token ?? "");
@@ -268,20 +259,17 @@ class AuthCubits extends Cubit<Authstates> {
             key: 'name', value: loginModel.data?.name ?? "");
         await CacheHelper.saveData(
             key: 'email', value: loginModel.data?.email ?? "");
-        isLoading = false;
-        emit(LoginSuccessState("OTP login successful."));
+
+        emit(VerifyOtpSuccessState("Login successful."));
         // LocationHelper.fetchLocationDetails();
         // Get.offAll(() => HomeLayout());
-        return true;
       } else {
-        isLoading = false;
-        emit(LoginErrorState(loginModel.message ?? 'Login failed.'));
-        return false;
+        emit(VerifyOtpErrorState(loginModel.message ?? 'Login failed.'));
       }
     } catch (error) {
       emit(VerifyOtpErrorState(error.toString()));
       // print('verifyOTP error: $error');
-      return false;
+
     }
   }
 }
