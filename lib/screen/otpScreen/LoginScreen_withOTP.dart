@@ -90,7 +90,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 Get.offAll(() => HomeLayout());
               }
             }
-            if (state is LoginLoadingState || state is SendOtpLoadingState) {
+            if (state is LoginLoadingState || state is SendOtpLoadingState || state is VerifyOtpLoadingState) {
               setState(() => _isLoading = true);
             } else {
               setState(() => _isLoading = false);

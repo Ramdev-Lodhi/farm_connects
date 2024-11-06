@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -164,11 +165,26 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: 2.h),
               gridBrandsBuilder(homeDataModel, context),
               SizedBox(height: 20.h),
-              // View All Button
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('View All'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(bottom: 0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // print('brandName: ${product?.name}');
+                      // print('brandId: ${product?.id}');
+                      Get.to(()=> AllBrandScreen());
+                    },
+                    child: Text("View All",
+                        style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF009688),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -193,42 +209,52 @@ class HomeScreen extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final product = homeDataModel?.data.brands[index];
-        return Material(
-          elevation: 3.0,
-          borderRadius: BorderRadius.circular(5.0),
-          color: cubit.isDark ? Colors.grey[800] : Colors.white,
-          child: ClipRRect(
+        return GestureDetector(
+          onTap: () {
+            print('brandName: ${product?.name}');
+            print('brandId: ${product?.id}');
+            // Get.to(() => BrandDetailScreen(
+            //   brandName: product?.name ?? '',
+            //   brandId: product?.id ?? '', // Assuming `id` exists in your model
+            // ));
+          },
+          child: Material(
+            elevation: 3.0,
             borderRadius: BorderRadius.circular(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 40.h,
-                  child: CachedNetworkImage(
-                    imageUrl: product?.image ?? '',
-                    fit: BoxFit.contain,
-                    width: double.infinity,
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error_outline),
+            color: cubit.isDark ? Colors.grey[800] : Colors.white,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 40.h,
+                    child: CachedNetworkImage(
+                      imageUrl: product?.image ?? '',
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error_outline),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Center(
-                    child: Text(
-                      product?.name ?? '',
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14.0.sp,
-                        fontWeight: FontWeight.w600,
-                        color: cubit.isDark ? Colors.white : Colors.black,
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Center(
+                      child: Text(
+                        product?.name ?? '',
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          fontWeight: FontWeight.w600,
+                          color: cubit.isDark ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -332,9 +358,8 @@ class HomeScreen extends StatelessWidget {
                                   margin: EdgeInsets.only(bottom: 0),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      print('brandName: ${product?.name}');
-                                      print('brandId: ${product?.id}');
-
+                                      print('Tractor Name: ${product?.name}');
+                                      print('TractorId: ${product?.id}');
                                     },
                                     child: Text("Check Tractor Price",
                                         style: TextStyle(color: Colors.white)),

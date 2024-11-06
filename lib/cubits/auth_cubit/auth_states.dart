@@ -76,6 +76,11 @@ class SendOtpSuccessState extends Authstates {
 class SendOtpErrorState extends Authstates {
   final String error;
   SendOtpErrorState(this.error);
+  @override
+  void showSnackbar(BuildContext context) {
+    showCustomSnackbar('Error', this.error,
+        isError: false);
+  }
 }
 
 class VerifyOtpLoadingState extends Authstates {}
@@ -83,4 +88,5 @@ class VerifyOtpSuccessState extends Authstates {}
 class VerifyOtpErrorState extends Authstates {
   final String error;
   VerifyOtpErrorState(this.error);
+
 }

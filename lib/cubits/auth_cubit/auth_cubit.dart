@@ -219,17 +219,21 @@ class AuthCubits extends Cubit<Authstates> {
 
   Future<String> sendOTP(String phoneNumber) async {
     emit(SendOtpLoadingState());
+    emit(LoginSuccessState("Google login successful."));
     try {
       // print('phoneNumber:$phoneNumber');
       final response = await DioHelper.postData(
         method: "send-otp",
         data: {'phone': phoneNumber},
       );
-      if (response.data['status'] == 'success') {
-        final hashCode = response.data['data'];
-        emit(SendOtpSuccessState(hashCode));
-        return hashCode;
+      print('response:$response');
+      if (response.data['status']) {
+        emit(LoginSuccessState("OTP login successful."));
+        emit(SendOtpSuccessState(response.data['message']));
+        return response.data['message'];
       } else {
+        emit(LoginSuccessState("Google OTP successful."));
+        emit(SendOtpErrorState(response.data['message']));
         throw Exception('Failed to send OTP: ${response.data['message']}');
       }
     } catch (error) {
