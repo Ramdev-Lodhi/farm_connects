@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
+import '../screen/sellScreen/sell_Screen.dart';
 import '../widgets/loadingIndicator.dart';
 
 class HomeLayout extends StatelessWidget {
@@ -78,7 +79,7 @@ class HomeLayout extends StatelessWidget {
                       onChanged: (value) {
                         // Handle selection
                         if (value == 'Sell') {
-                          // Handle sell action
+                          Get.to(SellScreen());
                         } else if (value == 'Rent') {
                           // Handle rent action
                         }
