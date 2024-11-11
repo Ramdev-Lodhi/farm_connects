@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../widgets/loadingIndicator.dart';
+import '../widgets/sell_rent_dialog.dart';
 
 class HomeLayout extends StatelessWidget {
   @override
@@ -46,48 +47,34 @@ class HomeLayout extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: 60.0,
+                    width: 90.0,
                     height: 30,
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      icon: Text(
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SellRentDialog(
+                              onSell: () {
+                                print('Sell button clicked');
+                              },
+                              onRent: () {
+                                print('Rent button clicked');
+                              },
+                              isDark: false, // Pass the theme state dynamically
+                            );
+                          },
+                        );
+                      },
+                      icon:  Text(
                         "Sell/Rent",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
                       ),
-                      // Optional: icon color
-                      dropdownColor: cubit.isDark ? Colors.black : Colors.white,
-                      // Dropdown background color
-                      items: <String>['Sell', 'Rent'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              color: cubit.isDark
-                                  ? Colors.white70
-                                  : Colors.black, // Text color
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        // Handle selection
-                        if (value == 'Sell') {
-                          // Handle sell action
-                        } else if (value == 'Rent') {
-                          // Handle rent action
-                        }
-                      },
-                      style: TextStyle(
-                        color: cubit.isDark ? Colors.white70 : Colors.black,
-                      ),
-                      // Text color for the selected item
-                      underline: Container(), // Removes the underline
                     ),
                   ),
                 ],
