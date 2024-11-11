@@ -41,49 +41,110 @@ class SellRentDialog extends StatelessWidget {
                 height: 10,
               ),
               SizedBox(height: 20),
+              // Sell Button with Background Image
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/rent_sell/sell_bg_image.webp'), // Background image path
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: SizedBox(
+                  width: 300,
+                  height: 150,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onSell();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent, // Make button background transparent
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      padding: EdgeInsets.all(10), // Adjust padding as needed
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomLeft, // Align text to the bottom left
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Sell",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Rent Button with Background Image
               Container(
                 margin: EdgeInsets.only(bottom: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/rent_sell/rent_bg_image.webp'), // Background image path
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 child: SizedBox(
-                  width: 80,
+                  width: 300,
+                  height: 150,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      onSell();
+                      onRent();
                     },
-                    child:
-                    Text("Sell", style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2.0),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Rent",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-
-              SizedBox(height: 10),
-              Container(
-                margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
-                child: SizedBox(
-                  width: 80, // Set the desired width here
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      onSell();
-                    },
-                    child:
-                    Text("Rent", style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
             ],
           ),
         ),

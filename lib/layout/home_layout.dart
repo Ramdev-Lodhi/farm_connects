@@ -97,19 +97,17 @@ class _HomeLayoutState extends State<HomeLayout> {
                         );
                       },
                       child: Container(
-                        width: 48.w,
-                        height: 50.h,
+                        // width: 55.w,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue, width: 2),
-                          // Border color
+                          border: Border.all(color: Colors.black87, width: 2),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: Image.asset(
                           _isSell
-                              ? 'assets/images/logo/sell.png'
-                              : 'assets/images/logo/rent_.png',
-                          width: 42.w,
-                          height: 20.h,
+                              ? 'assets/images/rent_sell/sell.png'
+                              : 'assets/images/rent_sell/rent.png',
+                          // width: 52.w,
+                          // height: 50.h,
                           fit: BoxFit.contain,
                         ),
                       ),
