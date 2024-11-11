@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../screen/sellScreen/sell_Screen.dart';
 
 class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
   final bool isDark;
@@ -78,7 +81,7 @@ class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
                 onChanged: (value) {
                   // Handle selection
                   if (value == 'Sell') {
-                    // Handle sell action
+                    Get.to(SellScreen());
                   } else if (value == 'Rent') {
                     // Handle rent action
                   }

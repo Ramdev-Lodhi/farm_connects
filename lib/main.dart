@@ -17,6 +17,7 @@ import '../cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
+import 'cubits/sell_cubit/sell_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +64,9 @@ class _MyAppState extends State<MyApp> {
           create: (context) => ProfileCubits()..getProfileData()
             ..loadStates()
             ..loadDistricts,
+        ),
+        BlocProvider(
+          create: (context) => SellCubit(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(

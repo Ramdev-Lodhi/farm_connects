@@ -35,28 +35,55 @@ class SellRentDialog extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Divider(
+                thickness: 1.5,
+                color: Colors.black12,
+                height: 10,
+              ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                  onSell(); // Trigger Sell action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+              Container(
+                margin: EdgeInsets.only(bottom: 0),
+                child: SizedBox(
+                  width: 80,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onSell();
+                    },
+                    child:
+                    Text("Sell", style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                    ),
+                  ),
                 ),
-                child: Text("Sell"),
               ),
+
               SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                  onRent(); // Trigger Rent action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+              Container(
+                margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                child: SizedBox(
+                  width: 80, // Set the desired width here
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onSell();
+                    },
+                    child:
+                    Text("Rent", style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                    ),
+                  ),
                 ),
-                child: Text("Rent"),
               ),
+
             ],
           ),
         ),
