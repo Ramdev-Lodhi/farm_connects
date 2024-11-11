@@ -22,8 +22,9 @@ class DioHelper {
 
     dio.options.headers.addAll({
       'lang': lang,
-      'Authorization': token,
+      if (token != null) 'Authorization': 'Bearer $token',
     });
+
 
     return await dio.post(
       method,
@@ -31,16 +32,6 @@ class DioHelper {
     );
   }
 
-//   static Future<Response> getData({
-//     required String method,
-//     Map<String, dynamic>? query,
-//     String? token,
-//     String lang = 'en'
-// }) async
-//   {
-//     dio.options.headers.addAll({'Authorization' : token, 'lang' : lang});
-//     return await dio.get(method, queryParameters: query);
-//   }
 
   static Future<Response> getData({
     required String method,

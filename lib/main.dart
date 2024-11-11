@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
             ..loadDistricts,
         ),
         BlocProvider(
-          create: (context) => SellCubit(),
+          create: (context) => SellCubit()..getModel,
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(
