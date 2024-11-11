@@ -24,9 +24,8 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         return ConditionalBuilder(
           condition: HomeCubit.get(context).homeDataModel != null,
-          builder: (context) => productsBuilder(
-              HomeCubit.get(context).homeDataModel,
-              context),
+          builder: (context) =>
+              productsBuilder(HomeCubit.get(context).homeDataModel, context),
           fallback: (context) => Center(child: LoadingPlaceholder()),
         );
       },
@@ -174,10 +173,10 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {
                       // print('brandName: ${product?.name}');
                       // print('brandId: ${product?.id}');
-                      Get.to(()=> AllBrandScreen());
+                      Get.to(() => AllBrandScreen());
                     },
-                    child: Text("View All",
-                        style: TextStyle(color: Colors.white)),
+                    child:
+                        Text("View All", style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF009688),
                       shape: RoundedRectangleBorder(
@@ -308,7 +307,8 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               // Display the tractor name
                               Text(
-                                '${product?.brand ?? ''} ${product?.name ?? ''}'.trim(),
+                                '${product?.brand ?? ''} ${product?.name ?? ''}'
+                                    .trim(),
                                 maxLines: 1,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -366,7 +366,8 @@ class HomeScreen extends StatelessWidget {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Color(0xFF009688),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(2.0),
+                                        borderRadius:
+                                            BorderRadius.circular(2.0),
                                       ),
                                     ),
                                   ),

@@ -1,12 +1,40 @@
+import 'package:farm_connects/screen/sellScreen/multi_step_sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import '../../config/network/local/cache_helper.dart';
+import '../../cubits/sell_cubit/sell_States.dart';
 import '../../cubits/sell_cubit/sell_cubit.dart';
-import '../../cubits/sell_cubit/sell_states.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
-class SellScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>(); // Form key for validation
+
+class SellScreen extends StatefulWidget {
+  @override
+  _SellScreenState createState() => _SellScreenState();
+}
+
+class _SellScreenState extends State<SellScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the initial value for the location controller from the cache or any other source
+    locationController.text =
+    '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+  }
+
+  @override
+  void dispose() {
+    locationController.dispose();
+    nameController.dispose();
+    mobileController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeCubit = HomeCubit.get(context);
@@ -30,12 +58,12 @@ class SellScreen extends StatelessWidget {
                 ),
               );
             } else if (state is SellFormSuccess) {
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(
-              //     content: Text('Form submitted successfully!'),
-              //     backgroundColor: Colors.green,
-              //   ),
-              // );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Form submitted successfully!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
             }
           },
           builder: (context, state) {
@@ -45,7 +73,7 @@ class SellScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Form(
-                  key: _formKey, // Attach the form key
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -73,31 +101,31 @@ class SellScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomTextField(
-                              controller: cubit.locationController,
-                              hintText: CacheHelper.getData(key: 'state'),
+                              controller: locationController,
+                              hintText: 'location',
                               icon: Icons.location_on,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Location is required';
                                 }
-                                return null; // Valid
+                                return null;
                               },
                             ),
                             const SizedBox(height: 10),
                             CustomTextField(
-                              controller: cubit.nameController,
+                              controller: nameController,
                               hintText: "Name",
                               icon: Icons.person,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Name is required';
                                 }
-                                return null; // Valid
+                                return null;
                               },
                             ),
                             const SizedBox(height: 10),
                             CustomTextField(
-                              controller: cubit.mobileController,
+                              controller: mobileController,
                               hintText: "Mobile Number",
                               icon: Icons.phone,
                               inputType: TextInputType.phone,
@@ -108,7 +136,7 @@ class SellScreen extends StatelessWidget {
                                 if (value.length != 10) {
                                   return 'Mobile number must be 10 digits';
                                 }
-                                return null; // Valid
+                                return null;
                               },
                             ),
                             const SizedBox(height: 20),
@@ -120,8 +148,14 @@ class SellScreen extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      // Form is valid, submit
-                                      cubit.submitForm();
+                                      // Navigate to the MultiStepSellScreen and pass the data
+                                      Get.to(
+                                        MultiStepSellScreen(
+                                          location: locationController.text,
+                                          name: nameController.text,
+                                          mobile: mobileController.text,
+                                        ),
+                                      );
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
