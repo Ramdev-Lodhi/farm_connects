@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:farm_connects/screen/sellScreen/sell_imageUpload.dart';
+import 'package:farm_connects/widgets/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +13,7 @@ import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/sell_cubit/sell_States.dart';
 import '../../cubits/sell_cubit/sell_cubit.dart';
 import '../../widgets/customDropdown.dart';
+import '../../widgets/loadingIndicator.dart';
 
 class MultiStepSellScreen extends StatefulWidget {
   final String location;
@@ -29,18 +32,20 @@ class MultiStepSellScreen extends StatefulWidget {
 
 class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool _isLoading = false;
   int _currentStep = 0;
-  List<XFile>? _images;
+  XFile? _images;
   String? _selectedbrand;
   String? _selectedmodel;
   String? _selectedyear;
   String? _selectedengin;
   String? _selectedtyre;
   String? _selecteddriven;
+  String? _selectedmodelName;
+  String? _selectedModelHP;
+  String? _selectedRC = 'Yes';
 
-
-   List<String> year = [];
+  List<String> year = [];
   final List<String> engines = [
     '0-25%(Poor)',
     '26-50%(Average)',
@@ -65,13 +70,12 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
   List<String> modelNameList = [];
 
   final ImagePicker _picker = ImagePicker();
-  File? _selectedImage; // Declare this variable for the selected image.
+  File? _selectedImage;
 
   @override
   void initState() {
     super.initState();
     year = List.generate(2024 - 1995 + 1, (index) => (1995 + index).toString());
-
     loadModel();
   }
 
@@ -82,132 +86,23 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
               .sellDataModel
               ?.data
               .models
-              .map((model) => model.name)
+              .map((model) => "${model.name} (${model.hpCategory})")
               .toList() ??
           [];
       setState(() {});
     }
   }
-  void _saveSellData(){
-    // if (_formKey.currentState!.validate()) {
-    //   _formKey.currentState!.save();
-    //   var SellCubits = SellCubit.get(context);
-    //   SellCubits.InsertSellData(
-    //       _selectedyear!,
-    //       _selectedbrand!,
-    //       _selecteddriven!,
-    //       _selectedmodel!,
-    //       _selectedtyre!,
-    //       _selectedengin!,
-    //       widget.location,
-    //       widget.name,
-    //       widget.mobile,
-    //       _images! as XFile
-    //
-    //   );
-    // }
-  }
 
-  Future<void> _showImageSourceDialog() async {
+  void _showImageSourceDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Container(
-            height: 250.h, // Adjust height as needed
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(height: 10.h),
-                Text("Select Tractor Images", style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10.h),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    // Pick multiple images, but limit to 4
-                    List<XFile>? images = await _picker.pickMultiImage();
-                    if (images != null && images.length <= 4) {
-                      setState(() {
-                        _images = images; // Save images if 4 or fewer
-                      });
-                    } else if (images != null && images.length > 4) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text("You can select only up to 4 images!")),
-                      );
-                    }
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.photo_library, color: Colors.white),
-                  label: Text("Select from Gallery",
-                      style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.black12,
-                  height: 10,
-                ),
-                // ElevatedButton.icon(
-                //   onPressed: () async {
-                //     // Pick multiple images from camera
-                //     List<XFile>? images = await _picker.pickMultiImage();
-                //     if (images != null && images.length <= 4) {
-                //       setState(() {
-                //         _images = images; // Save images if 4 or fewer
-                //       });
-                //     } else if (images != null && images.length > 4) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(content: Text("You can select only up to 4 images!")),
-                //       );
-                //     }
-                //     Navigator.pop(context);
-                //   },
-                //   icon: Icon(Icons.camera_alt, color: Colors.white),
-                //   label: Text("Take Photos", style: TextStyle(color: Colors.white)),
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: Colors.blue,
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(12.0),
-                //     ),
-                //   ),
-                // ),
-                // Divider(
-                //   thickness: 1.5,
-                //   color: Colors.black12,
-                //   height: 10,
-                // ),
-                // Spacer(),
-                Container(
-                  margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
-                  child: SizedBox(
-                    width: 150, // Set the desired width here
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child:
-                          Text("Close", style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF202A44),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(2.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return SellImageSourceDialog(
+          onImagesSelected: (XFile images) {
+            setState(() {
+              _images = images; // Save the selected images
+            });
+          },
         );
       },
     );
@@ -217,16 +112,22 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<SellCubit, SellFormState>(
       listener: (context, state) {
-        if (state is SellFormSuccess) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Submission Successful")));
-        } else if (state is SellFormError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        if (state is SellFormState && state.showSnackbar != null) {
+          state.showSnackbar(context);
+        }
+        if (state is SellImageLoading || state is SellFormLoading) {
+          setState(() {
+            _isLoading = true;
+          });
+        } else if (state is SellFormLoading) {
+          setState(() {
+            _isLoading = false;
+          });
+        } else {
+          _isLoading = false;
         }
       },
       builder: (context, state) {
-        // Fetch the brand list from the cubit's state
         brandList = HomeCubit.get(context)
                 .homeDataModel
                 ?.data
@@ -238,42 +139,38 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
         return Scaffold(
           body: Form(
             key: _formKey,
-            child: Column(
+            child: Stack(
               children: [
-                Expanded(
-                  child: Stepper(
-                    type: StepperType.horizontal,
-                    currentStep: _currentStep,
-                    onStepTapped: (step) {
-                      setState(() {
-                        _currentStep = step;
-                      });
-                    },
-                    controlsBuilder:
-                        (BuildContext context, ControlsDetails details) {
-                      return SizedBox
-                          .shrink(); // Custom controls (empty container)
-                    },
-                    steps: [
-                      Step(
-                        label: Text('Tractor Type',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        title: Text(""),
-                        content: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          elevation: 4.0,
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
+                Column(
+                  children: [
+                    Expanded(
+                      child: Stepper(
+                        type: StepperType.horizontal,
+                        currentStep: _currentStep,
+                        onStepTapped: (step) {
+                          setState(() {
+                            _currentStep = step;
+                          });
+                        },
+                        controlsBuilder:
+                            (BuildContext context, ControlsDetails details) {
+                          return SizedBox
+                              .shrink(); // Custom controls (empty container)
+                        },
+                        steps: [
+                          Step(
+                            label: Text('Tractor Type',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            title: Text(""),
+                            content: Column(
                               children: [
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 Text("Which Tractor Do You Own",
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold)),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   hint: "Select Brand",
                                   items: brandList,
@@ -284,16 +181,33 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                   },
                                   label: "Brand",
                                 ),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   value: _selectedmodel,
                                   hint: 'Select Model Name',
                                   items: modelNameList,
-                                  onChanged: (value) =>
-                                      setState(() => _selectedmodel = value),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedmodel = value;
+                                      final selectedModel = SellCubit.get(
+                                              context)
+                                          .sellDataModel
+                                          ?.data
+                                          .models
+                                          .firstWhere((model) =>
+                                              "${model.name} (${model.hpCategory})" ==
+                                              _selectedmodel);
+
+                                      if (selectedModel != null) {
+                                        _selectedmodelName = selectedModel.name;
+                                        _selectedModelHP =
+                                            selectedModel.hpCategory;
+                                      }
+                                    });
+                                  },
                                   label: "Model",
                                 ),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   value: _selectedyear,
                                   hint: 'Select Year',
@@ -304,32 +218,24 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                 ),
                               ],
                             ),
+                            isActive: _currentStep == 0,
+                            state: _currentStep > 0
+                                ? StepState.complete
+                                : StepState.indexed,
                           ),
-                        ),
-                        isActive: _currentStep == 0,
-                        state: _currentStep > 0
-                            ? StepState.complete
-                            : StepState.indexed,
-                      ),
-                      Step(
-                        label: Text("Condition State",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        title: Text(""),
-                        content: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          elevation: 4.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
+                          Step(
+                            label: Text("Condition State",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            title: Text(""),
+                            content: Column(
                               children: [
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 Text("Share Tractor Conditions With Buyers",
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold)),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   value: _selectedengin,
                                   hint: 'Select Engine Condition',
@@ -338,7 +244,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                       setState(() => _selectedengin = value),
                                   label: "Engine Condition",
                                 ),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   value: _selectedtyre,
                                   hint: 'Select Tyre Condition',
@@ -347,7 +253,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                       setState(() => _selectedtyre = value),
                                   label: 'Tyre Condition',
                                 ),
-                                SizedBox(height: ScreenUtil().setHeight(16)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
                                 CustomDropdown(
                                   value: _selecteddriven,
                                   hint: 'Select Hours Driven',
@@ -358,173 +264,233 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                 ),
                               ],
                             ),
+                            isActive: _currentStep == 1,
+                            state: _currentStep > 1
+                                ? StepState.complete
+                                : StepState.indexed,
                           ),
-                        ),
-                        isActive: _currentStep == 1,
-                        state: _currentStep > 1
-                            ? StepState.complete
-                            : StepState.indexed,
-                      ),
-                      Step(
-                        label: Text("Image",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        title: Text(""),
-                        content: state is SellFormSubmitting
-                            ? CircularProgressIndicator()
-                            : Column(
-                                children: [
-                                  Text("Upload Tractor Images",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
-                                  SizedBox(height: ScreenUtil().setHeight(16)),
-                                  ElevatedButton.icon(
-                                    onPressed: () => _showImageSourceDialog(),
-                                    icon: Icon(Icons.photo_camera_sharp),
-                                    label: Text("Select Photos",
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blueAccent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
+                          Step(
+                            label: Text("Image",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            title: Text(""),
+                            content: Column(
+                              children: [
+                                SizedBox(height: ScreenUtil().setHeight(20)),
+                                Text("Upload Tractor Images",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
+                                ElevatedButton.icon(
+                                  onPressed: _showImageSourceDialog,
+                                  icon: Icon(Icons.photo_camera_sharp),
+                                  label: Text("Select Photos",
+                                      style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blueAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
                                     ),
                                   ),
-                                  SizedBox(height: 10),
-                                  // Display the selected images if any
-                                  _images != null && _images!.isNotEmpty
-                                      ? Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 8.0,
-                                          children: _images!
-                                              .map((image) => Container(
-                                                    width: 100,
-                                                    height: 100,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Colors.grey),
-                                                    ),
-                                                    child: Image.file(
-                                                      File(image.path),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ))
-                                              .toList(),
-                                        )
-                                      : Column(
-                                          children: [
-                                            Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.0),
-                                              ),
-                                              elevation: 4.0,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                child: Column(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.image_outlined,
-                                                      size: 50,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      "Please select images of the tractor to proceed.You can Select Four image at a time",
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ],
-                                                ),
+                                ),
+                                SizedBox(height: 10),
+                                _images != null
+                                    ? Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                        ),
+                                        child: Image.file(
+                                          File(_images!.path),
+                                          // Display the selected image
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : Column(
+                                        children: [
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            elevation: 4.0,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.image_outlined,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    "Please select images of the tractor to proceed.You can Select Four image at a time",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                ],
-                              ),
-                        isActive: _currentStep == 2,
-                        state: _currentStep == 2
-                            ? StepState.complete
-                            : StepState.indexed,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_currentStep > 0) {
-                                setState(() => _currentStep -= 1);
-                              } else {
-                                Get.back();
-                              }
-                            },
-                            child: Text("Cancel",
-                                style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
+                                          ),
+                                        ],
+                                      ),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
+                                Text("Do you Have RC?",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Radio<String>(
+                                      value: 'Yes',
+                                      groupValue: _selectedRC,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedRC = value;
+                                        });
+                                      },
+                                    ),
+                                    Text("Yes"),
+                                    Radio<String>(
+                                      value: 'No',
+                                      groupValue: _selectedRC,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedRC = value;
+                                        });
+                                      },
+                                    ),
+                                    Text("No"),
+                                  ],
+                                ),
+                              ],
                             ),
+                            isActive: _currentStep == 2,
+                            state: _currentStep == 2
+                                ? StepState.complete
+                                : StepState.indexed,
                           ),
-                        ),
+                        ],
                       ),
-                      SizedBox(width: ScreenUtil().setWidth(2)),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_currentStep == 0) {
-                                if (_selectedbrand != null &&
-                                    _selectedmodel != null &&
-                                    _selectedyear != null) {
-                                  setState(() => _currentStep += 1);
-                                }
-                              } else if (_currentStep == 1) {
-                                if (_selectedengin != null &&
-                                    _selectedtyre != null &&
-                                    _selecteddriven != null) {
-                                  setState(() => _currentStep += 1);
-                                }
-                              } else if (_currentStep == 2) {
-                                if (_images != null && _images!.isNotEmpty) {
-
-                                  _saveSellData;
-                                }
-                              }
-                            },
-                            child: _currentStep == 2
-                                ? Text("Submit",
-                                    style: TextStyle(color: Colors.white))
-                                : Text("Continue",
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (_currentStep > 0) {
+                                    setState(() => _currentStep -= 1);
+                                  } else {
+                                    Get.back();
+                                  }
+                                },
+                                child: Text("Cancel",
                                     style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2.0),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2.0),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          SizedBox(width: ScreenUtil().setWidth(2)),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 0),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_currentStep == 0) {
+                                    if (_selectedbrand != null &&
+                                        _selectedmodel != null &&
+                                        _selectedyear != null) {
+                                      setState(() => _currentStep += 1);
+                                    } else {
+                                      showCustomSnackbar(
+                                          'Alert', 'All Fields are required',
+                                          isError: true);
+                                    }
+                                  } else if (_currentStep == 1) {
+                                    if (_selectedengin != null &&
+                                        _selectedtyre != null &&
+                                        _selecteddriven != null) {
+                                      setState(() => _currentStep += 1);
+                                    } else {
+                                      showCustomSnackbar(
+                                          'Alert', 'All Fields are required',
+                                          isError: true);
+                                    }
+                                  } else if (_currentStep == 2) {
+                                    if (_images != null) {
+                                      // print(_images);
+                                      List<String> locationParts =
+                                          widget.location.split(', ');
+                                      String state = locationParts[0];
+                                      String city = locationParts.length > 1
+                                          ? locationParts[1]
+                                          : '';
+                                      var sellCubit = SellCubit.get(context);
+                                      sellCubit.InsertSellData(
+                                        _selectedyear!,
+                                        _selectedbrand!,
+                                        _selecteddriven!,
+                                        _selectedModelHP!,
+                                        _selectedmodelName!,
+                                        _selectedtyre!,
+                                        _selectedengin!,
+                                        state,
+                                        city,
+                                        _selectedRC,
+                                        widget.name,
+                                        widget.mobile,
+                                        _images! as XFile,
+                                      );
+                                    } else {
+                                      showCustomSnackbar(
+                                          'Alert', 'Select the Images',
+                                          isError: true);
+                                    }
+                                  }
+                                },
+                                child: _currentStep == 2
+                                    ? Text("Submit",
+                                        style: TextStyle(color: Colors.white))
+                                    : Text("Continue",
+                                        style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                if (_isLoading)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: Center(child: LoadingIndicator(size: 100)),
+                    ),
+                  ),
               ],
             ),
           ),

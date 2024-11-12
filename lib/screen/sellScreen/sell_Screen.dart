@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import '../../config/network/local/cache_helper.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../cubits/sell_cubit/sell_States.dart';
 import '../../cubits/sell_cubit/sell_cubit.dart';
 import '../../widgets/custom_text_field.dart';
@@ -25,6 +26,9 @@ class _SellScreenState extends State<SellScreen> {
     // Set the initial value for the location controller from the cache or any other source
     locationController.text =
     '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+    nameController.text = CacheHelper.getData(key: 'name')?? "";
+    var profileCubit = ProfileCubits.get(context);
+    mobileController.text = profileCubit.profileModel.data?.mobile ?? "";
   }
 
   @override
@@ -50,20 +54,8 @@ class _SellScreenState extends State<SellScreen> {
         ),
         body: BlocConsumer<SellCubit, SellFormState>(
           listener: (context, state) {
-            if (state is SellFormError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is SellFormSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Form submitted successfully!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+            if (state is SellFormState && state.showSnackbar != null) {
+              state.showSnackbar(context);
             }
           },
           builder: (context, state) {

@@ -24,10 +24,12 @@
   class ModelName {
     late String id;
     late String name;
+    late String hpCategory;
 
     ModelName.fromJson(Map<String, dynamic> json) {
       id = json['_id'];
       name = json['name'];
+      hpCategory = json['engine']['HP_category'];
     }
   }
 
@@ -37,6 +39,7 @@
     late String location;
     late String brand;
     late String modelname;
+    late String modelHP;
     late String year;
     late String engine_Condition;
     late String tyre_Condition;
@@ -49,6 +52,7 @@
       location = json['location'] ?? '';
       brand = json['brand'] ?? '';
       modelname = json['modelname'] ?? '';
+      modelHP = json['modelHP'] ?? '';
       year = json['year'] ?? '';
       engine_Condition = json['engine_condition'] ?? '';
       tyre_Condition = json['tyre_condition'] ?? '';

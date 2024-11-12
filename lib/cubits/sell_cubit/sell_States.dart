@@ -1,5 +1,13 @@
   // sell_state.dart
-  abstract class SellFormState {}
+  import 'package:flutter/cupertino.dart';
+
+import '../../widgets/snackbar_helper.dart';
+
+abstract class SellFormState {
+    void showSnackbar(BuildContext context) {
+
+    }
+  }
   class SellFormInitial extends SellFormState {
     SellFormInitial();
   }
@@ -11,10 +19,29 @@
   }
 
   class SellMultiFormSubmitting extends SellFormState {}
+  class SellImageLoading extends SellFormState {}
+  class SellLoading extends SellFormState {
 
-  class SellFormSuccess extends SellFormState {}
+
+  }
+
+  class SellFormSuccess extends SellFormState {
+    final String message;
+
+    SellFormSuccess(this.message);
+
+    @override
+    void showSnackbar(BuildContext context) {
+      showCustomSnackbar('Success', message, isError: false);
+    }
+  }
 
   class SellFormError extends SellFormState {
-    final String errorMessage;
-    SellFormError(this.errorMessage);
+    final String error;
+    SellFormError(this.error);
+    @override
+    void showSnackbar(BuildContext context) {
+      showCustomSnackbar('Error', error, isError: true);
+
+    }
   }
