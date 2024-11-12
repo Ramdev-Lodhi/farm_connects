@@ -9,9 +9,10 @@ import 'package:get/get.dart';
 import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
-import '../config/network/styles/colors.dart';
+
 import '../widgets/loadingIndicator.dart';
 import '../widgets/loadingPlaceholder.dart';
+import 'BuyScreen/tractor_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -290,14 +291,19 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 170.w,
-                          child: CachedNetworkImage(
-                            imageUrl: product?.image ?? '',
-                            fit: BoxFit.contain,
-                            width: double.infinity,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
+                        GestureDetector(
+                          onTap: (){
+                            Get.to(()=> TractorsDetails(tractor: product!));
+                          },
+                          child: SizedBox(
+                            height: 170.w,
+                            child: CachedNetworkImage(
+                              imageUrl: product?.image ?? '',
+                              fit: BoxFit.contain,
+                              width: double.infinity,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
                           ),
                         ),
                         Padding(

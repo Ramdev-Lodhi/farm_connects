@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +8,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
-import '../screen/sellScreen/sell_Screen.dart';
 import '../widgets/loadingIndicator.dart';
+import '../widgets/sell_rent_dialog.dart';
 
-class HomeLayout extends StatelessWidget {
+class HomeLayout extends StatefulWidget {
+  @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  late Timer _timer;
+  bool _isSell = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startButtonTextChange();
+  }
+
+  void _startButtonTextChange() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      setState(() {
+        _isSell = !_isSell;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
@@ -46,51 +77,42 @@ class HomeLayout extends StatelessWidget {
                       color: cubit.isDark ? Colors.white : Colors.black,
                     ),
                   ),
-                  Container(
-                    width: 60.0,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      icon: Text(
-                        "Sell/Rent",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      // Optional: icon color
-                      dropdownColor: cubit.isDark ? Colors.black : Colors.white,
-                      // Dropdown background color
-                      items: <String>['Sell', 'Rent'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              color: cubit.isDark
-                                  ? Colors.white70
-                                  : Colors.black, // Text color
-                            ),
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SellRentDialog(
+                              onSell: () {
+                                Get.to(() => SellScreen());
+                              },
+                              onRent: () {
+                                print('Rent button clicked');
+                              },
+                              isDark: false,
+                            );
+                          },
                         );
-                      }).toList(),
-                      onChanged: (value) {
-                        // Handle selection
-                        if (value == 'Sell') {
-                          Get.to(SellScreen());
-                        } else if (value == 'Rent') {
-                          // Handle rent action
-                        }
                       },
-                      style: TextStyle(
-                        color: cubit.isDark ? Colors.white70 : Colors.black,
+                      child: Container(
+                        // width: 55.w,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black87, width: 2),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Image.asset(
+                          _isSell
+                              ? 'assets/images/rent_sell/sell.png'
+                              : 'assets/images/rent_sell/rent.png',
+                          // width: 52.w,
+                          // height: 50.h,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                      // Text color for the selected item
-                      underline: Container(), // Removes the underline
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -106,7 +128,6 @@ class HomeLayout extends StatelessWidget {
               child: cubit.screens[cubit.currentIndex],
             ),
           ),
-
           bottomNavigationBar: Material(
             elevation: 50,
             color: cubit.isDark ? Colors.black : Colors.white,
@@ -175,7 +196,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator> {
         }
 
         // Trigger refresh when user releases the pull
-        if (scrollInfo.metrics.pixels < -100 && !_isRefreshing) { // 100 is the threshold
+        if (scrollInfo.metrics.pixels < -100 && !_isRefreshing) {
+          // 100 is the threshold
           _startRefreshing();
           return true; // Prevent other notifications
         }
@@ -188,7 +210,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator> {
             Positioned(
               top: 0,
               left: MediaQuery.of(context).size.width / 2 - 30,
-              child:LoadingIndicator(size: 60),
+              child: LoadingIndicator(size: 60),
             ),
         ],
       ),

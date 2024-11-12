@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:farm_connects/config/network/styles/colors.dart';
+import './colors.dart';
 
 ThemeData lightTheme = ThemeData(
   fontFamily: 'Poppens',

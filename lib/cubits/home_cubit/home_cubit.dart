@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../constants/styles/colors.dart';
 import '../../models/login_model.dart';
 import '../../models/profile_model.dart';
 import '../../screen/BuyScreen/new_tractors_screen.dart';
@@ -13,7 +14,7 @@ import '../../cubits/home_cubit/home_states.dart';
 import '../../config/network/end_points.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
-import '../../config/network/styles/colors.dart';
+
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
@@ -115,7 +116,7 @@ class HomeCubit extends Cubit<HomeStates> {
       token: token,
       lang: lang,
     ).then((response) {
-      // print('Home Data Response: ${response.data}');
+      print('Home Data Response: ${response.data}');
       homeDataModel = HomeDataModel.fromJson(response.data);
       // print('Home Data Response: ${homeDataModel}');
       emit(GetHomeDataSuccessSate());

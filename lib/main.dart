@@ -1,8 +1,8 @@
-import 'package:farm_connects/config/network/styles/styles.dart';
+
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
-import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
-import 'package:farm_connects/screen/otpScreen/Provider/OTPProvider.dart';
-import 'package:farm_connects/screen/otpScreen/VerificationSuccessScreen.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/Provider/OTPProvider.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/VerificationSuccessScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +17,7 @@ import '../cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
+import 'constants/styles/styles.dart';
 import 'cubits/sell_cubit/sell_cubit.dart';
 
 void main() async {

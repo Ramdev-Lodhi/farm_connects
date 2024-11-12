@@ -5,21 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:farm_connects/cubits/auth_cubit/auth_states.dart';
-import 'package:farm_connects/screen/otpScreen/passwordScreen.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/passwordScreen.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
-import '../../config/location/location_permission.dart';
-import '../../config/network/local/cache_helper.dart';
-import '../../constants/palette.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/home_cubit/home_cubit.dart';
-import '../../layout/home_layout.dart';
-import '../../widgets/loadingIndicator.dart';
-import '../../widgets/snackbar_helper.dart';
-import '../profileScreen/edit_profile_screen.dart';
-import '../profileScreen/update_profile_screen.dart';
+import '../../../config/location/location_permission.dart';
+import '../../../config/network/local/cache_helper.dart';
+import '../../../constants/palette.dart';
+import '../../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/home_cubit/home_cubit.dart';
+import '../../../layout/home_layout.dart';
+import '../../../widgets/loadingIndicator.dart';
+import '../../../widgets/snackbar_helper.dart';
+import '../../profileScreen/edit_profile_screen.dart';
+import '../../profileScreen/update_profile_screen.dart';
 import './Provider/OTPProvider.dart';
-import './OTPVerify.dart';
-import './country_code_picker.dart';
+import 'OTPVerify.dart';
+import 'country_code_picker.dart';
 
 
 class OTPScreen extends StatefulWidget {

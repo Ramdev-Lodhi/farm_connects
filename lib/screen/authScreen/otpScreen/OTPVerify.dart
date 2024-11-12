@@ -1,26 +1,21 @@
 import 'package:farm_connects/layout/home_layout.dart';
-import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:otp_text_field/otp_field_style.dart';
-import '../../config/location/location_permission.dart';
-import '../../config/network/local/cache_helper.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/auth_cubit/auth_states.dart';
-import '../../cubits/home_cubit/home_cubit.dart';
-import '../../cubits/profile_cubit/profile_cubits.dart';
-import '../../widgets/loadingIndicator.dart';
-import '../../widgets/snackbar_helper.dart';
-import '../profileScreen/update_profile_screen.dart';
+import '../../../config/location/location_permission.dart';
+import '../../../config/network/local/cache_helper.dart';
+import '../../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/auth_cubit/auth_states.dart';
+import '../../../cubits/home_cubit/home_cubit.dart';
+import '../../../cubits/profile_cubit/profile_cubits.dart';
+import '../../../widgets/loadingIndicator.dart';
+import '../../../widgets/snackbar_helper.dart';
+import '../../profileScreen/update_profile_screen.dart';
 import './Provider/OTPProvider.dart';
-import './VerificationSuccessScreen.dart';
-
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
+
 
 class OTPVerify extends StatefulWidget {
   @override

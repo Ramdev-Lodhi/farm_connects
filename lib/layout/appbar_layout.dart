@@ -1,10 +1,14 @@
+import 'package:farm_connects/layout/home_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'dart:async';
 
 import '../screen/sellScreen/sell_Screen.dart';
+import '../widgets/sell_rent_dialog.dart';
 
-class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
+class AppBarLayout extends StatefulWidget implements PreferredSizeWidget {
   final bool isDark;
   final VoidCallback? onSearchPressed;
   final VoidCallback? onDropdownChanged;
@@ -16,15 +20,46 @@ class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
+  _AppBarLayoutState createState() => _AppBarLayoutState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(56.0);
+}
+
+class _AppBarLayoutState extends State<AppBarLayout> {
+  late Timer _timer;
+  bool _isSell = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startButtonTextChange();
+  }
+
+  void _startButtonTextChange() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      setState(() {
+        _isSell = !_isSell;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  PreferredSize(
+    return PreferredSize(
       preferredSize: Size.fromHeight(40.0),
       child: Material(
         elevation: 5,
         shadowColor: Colors.black.withOpacity(0.2),
         child: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: isDark ? Colors.black : Colors.white,
+          backgroundColor: widget.isDark ? Colors.black : Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -39,66 +74,50 @@ class AppBarLayout extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                // Handle search action
-              },
+              onPressed: widget.onSearchPressed,
               icon: Icon(
                 CupertinoIcons.search,
                 size: 24.0,
-                color: isDark ? Colors.white : Colors.black,
+                color: widget.isDark ? Colors.white : Colors.black,
               ),
             ),
-            Container(
-              width: 60.0,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                icon: Text(
-                  "Sell/Rent",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
-                // Optional: icon color
-                dropdownColor: isDark ? Colors.black : Colors.white,
-                // Dropdown background color
-                items: <String>['Sell', 'Rent'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        color: isDark
-                            ? Colors.white70
-                            : Colors.black, // Text color
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SellRentDialog(
+                        onSell: () {
+                          Get.to(() => SellScreen());
+                        },
+                        onRent: () {
+                          print('Rent button clicked');
+                        },
+                        isDark: widget.isDark,
+                      );
+                    },
                   );
-                }).toList(),
-                onChanged: (value) {
-                  // Handle selection
-                  if (value == 'Sell') {
-                    Get.to(SellScreen());
-                  } else if (value == 'Rent') {
-                    // Handle rent action
-                  }
                 },
-                style: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black,
+                child: Container(
+                  width: 55.w,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black87, width: 2),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Image.asset(
+                    _isSell
+                        ? 'assets/images/rent_sell/sell.png'
+                        : 'assets/images/rent_sell/rent.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                // Text color for the selected item
-                underline: Container(), // Removes the underline
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(56.0);
 }

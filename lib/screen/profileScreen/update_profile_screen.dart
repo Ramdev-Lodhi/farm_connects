@@ -16,7 +16,7 @@ import '../../cubits/auth_cubit/auth_states.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../layout/home_layout.dart';
-import '../otpScreen/LoginScreen_withOTP.dart';
+import '../authScreen/otpScreen/LoginScreen_withOTP.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   @override
