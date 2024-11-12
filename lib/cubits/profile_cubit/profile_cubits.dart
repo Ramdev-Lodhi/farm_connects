@@ -175,7 +175,7 @@ class ProfileCubits extends Cubit<ProfileState> {
       String token = CacheHelper.getData(key: 'token') ?? '';
       print('Image selected: ${image.path}');
 
-      // Check the MIME type
+
       final mimeType = lookupMimeType(image.path);
       // print('File MIME Type: $mimeType');
       // print('Uploading file: ${image.path}, Filename: ${image.name}');

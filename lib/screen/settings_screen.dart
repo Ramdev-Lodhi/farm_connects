@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:farm_connects/config/network/styles/colors.dart';
-import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
+
+import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/profileScreen/profile_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +10,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../config/network/local/cache_helper.dart';
+import '../constants/styles/colors.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
+import '../cubits/profile_cubit/profile_cubits.dart';
 import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
@@ -63,21 +65,30 @@ class SettingsScreen extends StatelessWidget {
                                   child: ClipRRect(
                                     clipBehavior: Clip.hardEdge,
                                     borderRadius: BorderRadius.circular(45.0),
-                                    child: CacheHelper.getData(key: 'image') !=
+                                    child: ProfileCubits.get(context).profileModel.data?.image !=
                                             null
                                         ? Image.network(
-                                            '${CacheHelper.getData(key: 'image')}',
+                                            '${ProfileCubits.get(context).profileModel.data?.image}',
                                             height: 120,
                                             width: double.infinity,
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return Image.network(
-                                                  'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'); // Fallback image
+                                                  'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg');
                                             },
                                           )
                                         : Image.network(
-                                            'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg'), // Default profile image
+                                      '${CacheHelper.getData(key: 'image')}',
+                                      height: 120,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.network(
+                                            'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg');
+                                      },
+                                    ),
                                   ),
                                 ),
                                 // SizedBox(width: 10.w),

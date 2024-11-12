@@ -1,10 +1,10 @@
-import 'package:farm_connects/screen/otpScreen/LoginScreen_withOTP.dart';
+import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/auth_cubit/auth_cubit.dart';
 
 class PasswordScreen extends StatefulWidget {
   @override

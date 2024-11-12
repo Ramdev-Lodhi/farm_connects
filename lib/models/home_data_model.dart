@@ -65,6 +65,7 @@ class Tractors {
   late String image;
   late String name;
   late String brand;
+  late String price;
   late Engine engine;
   late Transmission transmission;
   late Steering steering;
@@ -79,6 +80,7 @@ class Tractors {
     image = json['tractor_image'];
     name = json['name'];
     brand = json['brand'];
+    price= json['price'];
     engine = Engine.fromJson(json['engine']);
     transmission = Transmission.fromJson(json['transmission']);
     steering = Steering.fromJson(json['steering']);
@@ -87,6 +89,7 @@ class Tractors {
     wheelTyres = WheelTyres.fromJson(json['wheelTyres']);
     otherInformation = OtherInformation.fromJson(json['otherInformation']);
     powerTakeoff = PowerTakeoff.fromJson(json['powerTakeoff']);
+
   }
 }
 

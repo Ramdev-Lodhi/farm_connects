@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/home_cubit/home_states.dart';
-import '../../config/network/styles/colors.dart';
 import '../../widgets/loadingIndicator.dart';
 import '../../widgets/loadingPlaceholder.dart';
 import 'brand_screen.dart';

@@ -9,6 +9,6 @@ Color metal = HexColor('BEC2CC');
 Color offWhite = HexColor('F6F7F8');
 Color asmar = HexColor('001400');
 Color asmarFate7 = HexColor('19282d');
-const Color tPrimaryColor = Color(0xFF6200EA); // Example primary color
-const Color tAccentColor = Color(0xFF03DAC6); // Example accent color
-
+Color btn = Color(0xFF009688);
+const Color tPrimaryColor = Color(0xFF6200EA);
+const Color tAccentColor = Color(0xFF03DAC6);

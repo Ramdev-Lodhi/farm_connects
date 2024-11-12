@@ -29,14 +29,14 @@ class _HomeLayoutState extends State<HomeLayout> {
   void _startButtonTextChange() {
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       setState(() {
-        _isSell = !_isSell; // Toggle between Sell and Rent
+        _isSell = !_isSell;
       });
     });
   }
 
   @override
   void dispose() {
-    _timer.cancel(); // Cancel the timer when the widget is disposed
+    _timer.cancel();
     super.dispose();
   }
 
@@ -91,7 +91,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                               onRent: () {
                                 print('Rent button clicked');
                               },
-                              isDark: false, // Pass the theme state dynamically
+                              isDark: false,
                             );
                           },
                         );

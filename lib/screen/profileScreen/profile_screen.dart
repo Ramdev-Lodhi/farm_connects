@@ -8,12 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../config/network/local/cache_helper.dart';
-import '../../config/network/styles/colors.dart';
-import '../../cubits/home_cubit/home_states.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../layout/appbar_layout.dart';
-import '../../config/location/location_permission.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 import 'imageUpload_screen.dart';
 
@@ -111,8 +108,8 @@ class ProfileScreen extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(45.0),
                           child: Image.network(
-                            CacheHelper.getData(key: 'image') ??
-                                'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg',
+                              ProfileCubits.get(context).profileModel.data?.image ??
+                            CacheHelper.getData(key: 'image'),
                             height: 120,
                             width: double.infinity,
                             fit: BoxFit.cover,

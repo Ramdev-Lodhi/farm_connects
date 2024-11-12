@@ -1,7 +1,6 @@
 import 'package:farm_connects/cubits/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
-import '../Data/OTPService.dart';
-import 'package:provider/provider.dart';
+
 
 class OTPProvider with ChangeNotifier {
   AuthCubits _otpService = AuthCubits();
@@ -40,6 +39,4 @@ class OTPProvider with ChangeNotifier {
       print(error.toString());
     }
   }
-
-
 }
