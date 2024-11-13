@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
+import '../sellScreen/used_tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -243,7 +244,8 @@ class UsedTractorScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          print('brandName: ${product?.year}');
+          // print('brandName: ${HomeDataModel}');
+          Get.to(()=> UsedTractorDetails(selltractor: product));
           // print('brandId: ${product?.id}');
           // Get.to(() => BrandDetailScreen(
           //   brandName: product?.name ?? '',
