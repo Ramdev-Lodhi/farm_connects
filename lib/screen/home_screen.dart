@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:farm_connects/layout/home_layout.dart';
 import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
+import 'package:farm_connects/screen/BuyScreen/new_tractors_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../constants/styles/colors.dart';
 import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
@@ -13,184 +16,181 @@ import '../cubits/home_cubit/home_states.dart';
 import '../widgets/loadingIndicator.dart';
 import '../widgets/loadingPlaceholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
+import 'BuyScreen/tractors_by_brand_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   HomeCubit.get(context).getHomeData();
-    // });
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        final cubit = HomeCubit.get(context);
         return ConditionalBuilder(
-          condition: HomeCubit.get(context).homeDataModel != null,
+          condition: cubit.homeDataModel != null,
           builder: (context) =>
-              productsBuilder(HomeCubit.get(context).homeDataModel, context),
+              ProductsBuilder(homeDataModel: cubit.homeDataModel),
           fallback: (context) => Center(child: LoadingPlaceholder()),
         );
       },
     );
   }
+}
 
-  Widget productsBuilder(HomeDataModel? homeDataModel, context) {
-    HomeCubit cubit = HomeCubit.get(context);
+class ProductsBuilder extends StatefulWidget {
+  final HomeDataModel? homeDataModel;
+
+  const ProductsBuilder({Key? key, required this.homeDataModel})
+      : super(key: key);
+
+  @override
+  State<ProductsBuilder> createState() => _ProductsBuilderState();
+}
+
+class _ProductsBuilderState extends State<ProductsBuilder>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = HomeCubit.get(context);
+
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 5.0,
-      ),
-      child: Container(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CarouselSlider(
-                items: homeDataModel?.data.banners.map((e) {
-                  return CachedNetworkImage(
-                    imageUrl: e.image,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error_outline),
-                  );
-                }).toList(),
-                options: CarouselOptions(
-                  height: screenHeight / 5.2,
-                  autoPlayAnimationDuration: Duration(seconds: 1),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 4),
-                  enableInfiniteScroll: true,
-                  initialPage: 0,
-                  reverse: false,
-                  viewportFraction: 1.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              //Categories
-              Text(
-                'New Tractor',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 24.0.sp,
-                  color: cubit.isDark ? Colors.white : Colors.black,
-                ),
-              ),
-              SizedBox(
-                height: 10.0.h,
-              ),
-              gridTractorsBuilder(homeDataModel, context),
-              SizedBox(
-                height: 20.0.h,
-              ),
-              //products
-              Text(
-                'Tractor By Brand',
-                style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24.0.sp,
-                    color: cubit.isDark ? Colors.white : Colors.black),
-              ),
-              SizedBox(
-                height: 2.0.h,
-              ),
-              Row(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCarousel(widget.homeDataModel, screenHeight),
+            _sectionHeader(context, 'New Tractor'),
+            gridTractorsBuilder(widget.homeDataModel, context),
+            _viewAllButton(context,
+                label: "View All Tractors",
+                onTap: () => Get.to(() => HomeLayout())),
+            _sectionHeader(context, 'Tractor By Brand'),
+            _tractorTypeTabBar(context),
+            SizedBox(
+              height: 320.h,
+              child: TabBarView(
+                controller: _tabController,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      cubit.toggleNewTractor(!cubit.isNewTractor);
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          'New Tractors',
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.w600,
-                            color: cubit.isNewTractor
-                                ? (cubit.isDark ? Colors.white : Colors.black)
-                                : (cubit.isDark ? Colors.white : Colors.black),
-                          ),
-                        ),
-                        // Underline
-                        if (cubit.isNewTractor) ...[
-                          SizedBox(height: 1),
-                          // Space between text and underline
-                          Container(
-                            height: 2,
-                            width: 100, // Adjust width as needed
-                            color: Colors.green, // Color of the underline
-                          ),
-                        ]
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 10.0.w),
-                  GestureDetector(
-                    onTap: () {
-                      cubit.toggleUsedTractor(!cubit.isUsedTractor);
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          'Used Tractor',
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.w600,
-                            color: cubit.isUsedTractor
-                                ? (cubit.isDark ? Colors.white : Colors.black)
-                                : (cubit.isDark ? Colors.white : Colors.black),
-                          ),
-                        ),
-                        // Underline
-                        if (cubit.isUsedTractor) ...[
-                          SizedBox(height: 1),
-                          // Space between text and underline
-                          Container(
-                            height: 2,
-                            width: 100, // Adjust width as needed
-                            color: Colors.green, // Color of the underline
-                          ),
-                        ]
-                      ],
-                    ),
-                  ),
+                  _newTractorsViewBrands(widget.homeDataModel, context),
+                  _usedTractorsBrands(widget.homeDataModel, context),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              SizedBox(height: 2.h),
-              gridBrandsBuilder(homeDataModel, context),
-              SizedBox(height: 20.h),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(bottom: 0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // print('brandName: ${product?.name}');
-                      // print('brandId: ${product?.id}');
-                      Get.to(() => AllBrandScreen());
-                    },
-                    child:
-                        Text("View All", style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF009688),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2.0),
-                      ),
-                    ),
-                  ),
-                ),
+  Widget _buildCarousel(HomeDataModel? model, double screenHeight) {
+    return CarouselSlider(
+      items: model?.data.banners.map((e) {
+        return CachedNetworkImage(
+          imageUrl: e.image,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => Icon(Icons.error_outline),
+        );
+      }).toList(),
+      options: CarouselOptions(
+        height: screenHeight / 5.2,
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 4),
+        viewportFraction: 1.0,
+      ),
+    );
+  }
+
+  Widget _sectionHeader(BuildContext context, String title) {
+    final cubit = HomeCubit.get(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.h),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 24.0.sp,
+          color: cubit.isDark ? Colors.white : Colors.black,
+        ),
+      ),
+    );
+  }
+
+  Widget _viewAllButton(BuildContext context,
+      {required String label, required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Align(
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: 200,
+          child: ElevatedButton(
+            onPressed: onTap,
+            child: Text(label, style: TextStyle(color: btn)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                side: BorderSide(color: btn, width: 1),
               ),
-            ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _tractorTypeTabBar(BuildContext context) {
+    return TabBar(
+      controller: _tabController,
+      labelColor: Colors.black,
+      unselectedLabelColor: Colors.black,
+      indicatorColor: Colors.black,
+      tabs: [
+        Tab(text: 'New Tractors'),
+        Tab(text: 'Used Tractors'),
+      ],
+    );
+  }
+
+  Widget _newTractorsViewBrands(
+      HomeDataModel? homeDataModel, BuildContext context) {
+    return Column(
+      children: [
+        gridBrandsBuilder(widget.homeDataModel, context),
+        _viewAllButton(context,
+            label: "View All Brands",
+            onTap: () => Get.to(() => AllBrandScreen())),
+      ],
+    );
+  }
+
+  Widget _usedTractorsBrands(
+      HomeDataModel? homeDataModel, BuildContext context) {
+    return Column(
+      children: [
+        gridBrandsBuilder(widget.homeDataModel, context),
+        _viewAllButton(context,
+            label: "View All Brands",
+            onTap: () => Get.to(() => AllBrandScreen())),
+      ],
     );
   }
 
@@ -210,13 +210,9 @@ class HomeScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = homeDataModel?.data.brands[index];
         return GestureDetector(
-          onTap: () {
-            print('brandName: ${product?.name}');
-            print('brandId: ${product?.id}');
-            // Get.to(() => BrandDetailScreen(
-            //   brandName: product?.name ?? '',
-            //   brandId: product?.id ?? '', // Assuming `id` exists in your model
-            // ));
+          onTap: () async {
+            Get.to(() => TractorsByBrandScreen(
+                brandName: product?.name, brandId: product?.id));
           },
           child: Material(
             elevation: 3.0,
@@ -275,27 +271,27 @@ class HomeScreen extends StatelessWidget {
           final product = homeDataModel?.data.tractors[index];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.0.w),
-            child: Card(
-              elevation: 1,
-              child: Material(
-                elevation: 3.0,
-                borderRadius: BorderRadius.circular(8.0),
-                color: cubit.isDark ? Colors.grey[800] : Colors.white,
-                child: Container(
-                  width: 300.w, // Adjust the card width
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            Get.to(()=> TractorsDetails(tractor: product!));
-                          },
-                          child: SizedBox(
+            child: GestureDetector(
+              onTap: () {
+                Get.to(() => TractorsDetails(tractor: product!));
+              },
+              child: Card(
+                elevation: 1,
+                child: Material(
+                  elevation: 3.0,
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                  child: Container(
+                    width: 300.w, // Adjust the card width
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
                             height: 170.w,
                             child: CachedNetworkImage(
                               imageUrl: product?.image ?? '',
@@ -305,84 +301,89 @@ class HomeScreen extends StatelessWidget {
                                   Icon(Icons.error_outline),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // Display the tractor name
-                              Text(
-                                '${product?.brand ?? ''} ${product?.name ?? ''}'
-                                    .trim(),
-                                maxLines: 1,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp, // Increased font size
-                                  fontWeight: FontWeight.bold, // Bold text
-                                  color: cubit.isDark
-                                      ? Colors.white
-                                      : Colors.black,
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Display the tractor name
+                                Text(
+                                  '${product?.brand ?? ''} ${product?.name ?? ''}'
+                                      .trim(),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp, // Increased font size
+                                    fontWeight: FontWeight.bold, // Bold text
+                                    color: cubit.isDark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
-                              ),
-                              // Row for HP and CC details
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // HP text
-                                  Text(
-                                    'HP: ${product?.engine.hpCategory ?? 'N/A'}',
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp, // Increased font size
-                                      fontWeight: FontWeight.bold, // Bold text
-                                      color: cubit.isDark
-                                          ? Colors.grey[400]
-                                          : Colors.black,
+                                // Row for HP and CC details
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // HP text
+                                    Text(
+                                      'HP: ${product?.engine.hpCategory ?? 'N/A'}',
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        // Increased font size
+                                        fontWeight: FontWeight.bold,
+                                        // Bold text
+                                        color: cubit.isDark
+                                            ? Colors.grey[400]
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  // Spacing between HP and CC
+                                    SizedBox(width: 10.w),
+                                    // Spacing between HP and CC
 
-                                  // CC text
-                                  Text(
-                                    'CC: ${product?.engine.capacityCC ?? 'N/A'} CC',
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp, // Increased font size
-                                      fontWeight: FontWeight.bold, // Bold text
-                                      color: cubit.isDark
-                                          ? Colors.grey[400]
-                                          : Colors.black,
+                                    // CC text
+                                    Text(
+                                      'CC: ${product?.engine.capacityCC ?? 'N/A'} CC',
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        // Increased font size
+                                        fontWeight: FontWeight.bold,
+                                        // Bold text
+                                        color: cubit.isDark
+                                            ? Colors.grey[400]
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(bottom: 0),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      print('Tractor Name: ${product?.name}');
-                                      print('TractorId: ${product?.id}');
-                                    },
-                                    child: Text("Check Tractor Price",
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF009688),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(2.0),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print('Tractor Name: ${product?.name}');
+                                        print('TractorId: ${product?.id}');
+                                      },
+                                      child: Text("Check Tractor Price",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF009688),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(2.0),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

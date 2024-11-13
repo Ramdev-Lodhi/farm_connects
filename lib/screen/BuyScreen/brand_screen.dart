@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:farm_connects/screen/BuyScreen/tractors_by_brand_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../layout/appbar_layout.dart';
 import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
@@ -58,10 +60,8 @@ class AllBrandScreen extends StatelessWidget {
               onTap: () {
                 print('brandName: ${product?.name}');
                 print('brandId: ${product?.id}');
-                // Get.to(() => BrandDetailScreen(
-                //   brandName: product?.name ?? '',
-                //   brandId: product?.id ?? '', // Assuming `id` exists in your model
-                // ));
+                Get.to(() => TractorsByBrandScreen(brandName: product?.name, brandId: product?.id));
+
               },
               child: Material(
                 elevation: 3.0,

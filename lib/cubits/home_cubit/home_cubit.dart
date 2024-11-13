@@ -126,19 +126,7 @@ class HomeCubit extends Cubit<HomeStates> {
       emit(GetHomeDataErrorSate());
     });
   }
-  // ProfileModel? profileModel = null;
-  // Future<void> getProfileData() async {
-  //   String token = CacheHelper.getData(key: 'token') ?? '';
-  //   try {
-  //     final response = await DioHelper.getData(
-  //       method: 'user/profile',
-  //       token: token,
-  //     );
-  //     print('respense: $response');
-  //     profileModel = ProfileModel.fromJson(response.data);
-  //   } catch (error) {
-  //   }
-  // }
+
   bool isNewTractor = true;
   bool isUsedTractor = false;
 
@@ -154,4 +142,7 @@ class HomeCubit extends Cubit<HomeStates> {
     isNewTractor = !value;
     emit(HomeInitialState());
   }
+
+
+
 }

@@ -17,6 +17,7 @@ class DataModel
   List<Banner> banners = [];
   List<Brand> brands = [];
   List<Tractors> tractors = [];
+  List<TractorsByBrand> tractorsbyBrand = [];
 
   DataModel.fromJson(Map<String, dynamic> json)
   {
@@ -29,6 +30,7 @@ class DataModel
     json['tractors'].forEach((element){
       tractors.add(Tractors.fromJson(element));
     });
+
   }
 }
 
@@ -92,6 +94,7 @@ class Tractors {
 
   }
 }
+
 
 class Engine {
   late int noOfCylinder;
@@ -189,4 +192,34 @@ class PowerTakeoff {
   }
 }
 
+class TractorsByBrand{
+  late String id;
+  late String image;
+  late String name;
+  late String brand;
+  late String price;
+  late Engine engine;
+  late Transmission transmission;
+  late Steering steering;
+  late DimensionsWeight dimensionsWeight;
+  late Hydraulics hydraulics;
+  late WheelTyres wheelTyres;
+  late OtherInformation otherInformation;
+  late PowerTakeoff powerTakeoff;
 
+  TractorsByBrand.fromJson(Map<String, dynamic> json) {
+    id = json['_id'];
+    image = json['tractor_image'];
+    name = json['name'];
+    brand = json['brand'];
+    price= json['price'];
+    engine = Engine.fromJson(json['engine']);
+    transmission = Transmission.fromJson(json['transmission']);
+    steering = Steering.fromJson(json['steering']);
+    dimensionsWeight = DimensionsWeight.fromJson(json['dimensionsWeight']);
+    hydraulics = Hydraulics.fromJson(json['hydraulics']);
+    wheelTyres = WheelTyres.fromJson(json['wheelTyres']);
+    otherInformation = OtherInformation.fromJson(json['otherInformation']);
+    powerTakeoff = PowerTakeoff.fromJson(json['powerTakeoff']);
+  }
+}
