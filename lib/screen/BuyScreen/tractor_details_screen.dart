@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../constants/palette.dart';
 import '../../models/home_data_model.dart';
 import 'customExpansionTile.dart';
 
@@ -20,19 +21,17 @@ class _TractorsDetailsState extends State<TractorsDetails> {
       length: 6,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text('${widget.tractor.brand} ${widget.tractor.name}'),
+          // automaticallyImplyLeading: false,
+          title: Text('${widget.tractor.brand} ${widget.tractor.name}',style: TextStyle(fontWeight: FontWeight.bold)),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
-              color: Colors.blue,
+              color: Palette.tabbarColor,
               child: TabBar(
                 isScrollable: true,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
                 indicatorColor: Colors.black,
-                indicatorPadding: EdgeInsets.zero,
-                labelPadding: EdgeInsets.symmetric(horizontal: 16),
                 tabs: [
                   Tab(text: 'Overview'),
                   Tab(text: 'Features'),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:farm_connects/screen/BuyScreen/tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,6 @@ class NewTractorScreen extends StatelessWidget {
                     (index) => tractorItemBuilder(tractors[index], context),
               ),
             ),
-
             // Display brands list
             if (brands.isNotEmpty) ...[
               Padding(
@@ -241,17 +241,13 @@ class NewTractorScreen extends StatelessWidget {
   }
   Widget tractorItemBuilder(Tractors? product, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
-
     return Padding(
       padding: EdgeInsets.symmetric( vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
           print('brandName: ${product?.name}');
           print('brandId: ${product?.id}');
-          // Get.to(() => BrandDetailScreen(
-          //   brandName: product?.name ?? '',
-          //   brandId: product?.id ?? '', // Assuming `id` exists in your model
-          // ));
+          Get.to(()=> TractorsDetails(tractor: product!));
         },
         child: Card(
           elevation: 1,
