@@ -14,6 +14,8 @@ abstract class SellFormState {
   class SellFormLoading extends SellFormState {
     SellFormLoading();
   }
+
+
   class SellFormSubmitting extends SellFormState {
     SellFormSubmitting();
   }
@@ -45,3 +47,8 @@ abstract class SellFormState {
 
     }
   }
+
+
+  class SellScreenLoading extends SellFormState {}
+  class SellScreenSuccess extends SellFormState {}
+  class SellScreenError extends SellFormState {}

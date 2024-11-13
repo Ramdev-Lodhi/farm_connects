@@ -9,6 +9,7 @@ import '../../constants/styles/colors.dart';
 import '../../models/login_model.dart';
 import '../../models/profile_model.dart';
 import '../../screen/BuyScreen/new_tractors_screen.dart';
+import '../../screen/sellScreen/used_tractor_screen.dart';
 import '../../screen/settings_screen.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../config/network/end_points.dart';
@@ -76,7 +77,7 @@ class HomeCubit extends Cubit<HomeStates> {
     // Center(child: Text('Home Screen')),
     HomeScreen(),
     NewTractorScreen(),
-    Center(child: Text('Used Machine Screen')),
+    UsedTractorScreen(),
     Center(child: Text('Rent Screen')),
     SettingsScreen(),
   ];

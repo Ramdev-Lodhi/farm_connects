@@ -34,6 +34,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   int _currentStep = 0;
+  final TextEditingController priceController = TextEditingController();
   XFile? _images;
   String? _selectedbrand;
   String? _selectedmodel;
@@ -371,6 +372,35 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                     Text("No"),
                                   ],
                                 ),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
+                                Text("Enter Price Of your Tractor",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                TextFormField(
+                                  controller: priceController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.currency_rupee,
+                                        color: Palette.iconColor),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintText: "Enter the Price of Tractor",
+                                    hintStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black),
+                                  ),
+                                )
                               ],
                             ),
                             isActive: _currentStep == 2,
@@ -435,7 +465,6 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                     }
                                   } else if (_currentStep == 2) {
                                     if (_images != null) {
-                                      // print(_images);
                                       List<String> locationParts =
                                           widget.location.split(', ');
                                       String state = locationParts[0];
@@ -456,6 +485,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                         _selectedRC,
                                         widget.name,
                                         widget.mobile,
+                                        priceController.text,
                                         _images! as XFile,
                                       );
                                     } else {
