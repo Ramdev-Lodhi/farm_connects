@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
+import 'package:flutter/services.dart';
+import '../../widgets/snackbar_helper.dart';
 import '../sellScreen/used_tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -334,10 +336,20 @@ class UsedTractorScreen extends StatelessWidget {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('brandName: ${product?.RC}');
-                                  // print('brandId: ${product?.id}');
+                                  if (product?.mobile != null) {
+                                    // Copy the phone number to clipboard
+                                    Clipboard.setData(ClipboardData(text: product!.mobile))
+                                        .then((_) {
+                                      showCustomSnackbar(
+                                          'Alert', 'Phone number copied to clipboard!');
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Phone number is not available.')),
+                                    );
+                                  }
                                 },
-                                child: Text("Check Tractor Price",
+                                child: Text("Contact Seller",
                                     style: TextStyle(color: Colors.white)),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF009688),

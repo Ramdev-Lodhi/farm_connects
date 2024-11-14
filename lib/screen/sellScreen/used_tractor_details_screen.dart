@@ -1,8 +1,10 @@
 import 'package:farm_connects/models/sell_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../models/home_data_model.dart';
+import '../../widgets/snackbar_helper.dart';
 import '../BuyScreen/customExpansionTile.dart';
 
 class UsedTractorDetails extends StatefulWidget {
@@ -133,7 +135,20 @@ class _TractorsDetailsState extends State<UsedTractorDetails> {
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (selltractor?.mobile != null) {
+                      // Copy the phone number to clipboard
+                      Clipboard.setData(ClipboardData(text: selltractor!.mobile))
+                          .then((_) {
+                        showCustomSnackbar(
+                            'Alert', 'Phone number copied to clipboard!');
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Phone number is not available.')),
+                      );
+                    }
+                  },
                   child: Text("Contact Seller ",
                       style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
