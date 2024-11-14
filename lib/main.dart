@@ -1,5 +1,6 @@
 
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
+import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/Provider/OTPProvider.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/VerificationSuccessScreen.dart';
@@ -68,6 +69,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => SellCubit()..getModel,
+        ),
+        BlocProvider(
+          create: (context) => RentCubit(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(

@@ -16,6 +16,7 @@ class DataModel
 {
   List<Banner> banners = [];
   List<Brand> brands = [];
+  List<ServicesType> services = [];
   List<Tractors> tractors = [];
   List<TractorsByBrand> tractorsbyBrand = [];
 
@@ -26,6 +27,9 @@ class DataModel
     });
     json['brands'].forEach((element){
       brands.add(Brand.fromJson(element));
+    });
+    json['services'].forEach((element){
+      services.add(ServicesType.fromJson(element));
     });
     json['tractors'].forEach((element){
       tractors.add(Tractors.fromJson(element));
@@ -45,7 +49,17 @@ class Banner
     image = json['banner'];
   }
 }
+class ServicesType
+{
+  late String id;
+  late String service;
 
+  ServicesType.fromJson(Map<String, dynamic> json)
+  {
+    id = json['_id'];
+    service = json['service'];
+  }
+}
 class Brand
 {
   late String id;

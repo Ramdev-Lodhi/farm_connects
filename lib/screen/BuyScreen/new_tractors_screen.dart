@@ -56,7 +56,8 @@ class NewTractorScreen extends StatelessWidget {
             if (brands.isNotEmpty) ...[
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
+                child:
+                Row(
                   children: [
                     Icon(
                       Icons.branding_watermark_outlined,
@@ -176,7 +177,6 @@ class NewTractorScreen extends StatelessWidget {
                   SizedBox(height: 8.0),
 
                   GridView.count(
-
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     crossAxisCount: 3,

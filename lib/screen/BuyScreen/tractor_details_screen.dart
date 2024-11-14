@@ -176,8 +176,6 @@ class _TractorsDetailsState extends State<TractorsDetails> {
     );
   }
 
-
-
   Widget _buildReviewSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

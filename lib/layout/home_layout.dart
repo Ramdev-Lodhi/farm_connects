@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
 import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,7 +90,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                                 Get.to(() => SellScreen());
                               },
                               onRent: () {
-                                print('Rent button clicked');
+                                Get.to(() => RentFormScreen());
                               },
                               isDark: false,
                             );

@@ -12,7 +12,6 @@ import '../constants/styles/colors.dart';
 import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
-
 import '../widgets/loadingIndicator.dart';
 import '../widgets/loadingPlaceholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
