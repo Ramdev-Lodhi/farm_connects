@@ -34,6 +34,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   int _currentStep = 0;
+  final TextEditingController priceController = TextEditingController();
   XFile? _images;
   String? _selectedbrand;
   String? _selectedmodel;
@@ -83,11 +84,11 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
     if (_selectedbrand != null) {
       await BlocProvider.of<SellCubit>(context).getModel(_selectedbrand!);
       modelNameList = SellCubit.get(context)
-              .sellDataModel
-              ?.data
-              .models
-              .map((model) => "${model.name} (${model.hpCategory})")
-              .toList() ??
+          .sellDataModel
+          ?.data
+          .models
+          .map((model) => "${model.name} (${model.hpCategory})")
+          .toList() ??
           [];
       setState(() {});
     }
@@ -129,11 +130,11 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
       },
       builder: (context, state) {
         brandList = HomeCubit.get(context)
-                .homeDataModel
-                ?.data
-                .brands
-                .map((brand) => brand.name)
-                .toList() ??
+            .homeDataModel
+            ?.data
+            .brands
+            .map((brand) => brand.name)
+            .toList() ??
             [];
 
         return Scaffold(
@@ -190,13 +191,13 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                     setState(() {
                                       _selectedmodel = value;
                                       final selectedModel = SellCubit.get(
-                                              context)
+                                          context)
                                           .sellDataModel
                                           ?.data
                                           .models
                                           .firstWhere((model) =>
-                                              "${model.name} (${model.hpCategory})" ==
-                                              _selectedmodel);
+                                      "${model.name} (${model.hpCategory})" ==
+                                          _selectedmodel);
 
                                       if (selectedModel != null) {
                                         _selectedmodelName = selectedModel.name;
@@ -297,50 +298,50 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                 SizedBox(height: 10),
                                 _images != null
                                     ? Container(
-                                        width: 100,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                        ),
-                                        child: Image.file(
-                                          File(_images!.path),
-                                          // Display the selected image
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    border:
+                                    Border.all(color: Colors.grey),
+                                  ),
+                                  child: Image.file(
+                                    File(_images!.path),
+                                    // Display the selected image
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                                     : Column(
-                                        children: [
-                                          Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                            elevation: 4.0,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                children: [
-                                                  Icon(
-                                                    Icons.image_outlined,
-                                                    size: 50,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    "Please select images of the tractor to proceed.You can Select Four image at a time",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                  children: [
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(12.0),
                                       ),
+                                      elevation: 4.0,
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.image_outlined,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "Please select images of the tractor to proceed.You can Select Four image at a time",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(height: ScreenUtil().setHeight(20)),
                                 Text("Do you Have RC?",
                                     style: TextStyle(
@@ -371,6 +372,35 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                     Text("No"),
                                   ],
                                 ),
+                                SizedBox(height: ScreenUtil().setHeight(20)),
+                                Text("Enter Price Of your Tractor",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                TextFormField(
+                                  controller: priceController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.currency_rupee,
+                                        color: Palette.iconColor),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintText: "Enter the Price of Tractor",
+                                    hintStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black),
+                                  ),
+                                )
                               ],
                             ),
                             isActive: _currentStep == 2,
@@ -437,7 +467,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                     if (_images != null) {
                                       // print(_images);
                                       List<String> locationParts =
-                                          widget.location.split(', ');
+                                      widget.location.split(', ');
                                       String state = locationParts[0];
                                       String city = locationParts.length > 1
                                           ? locationParts[1]
@@ -456,6 +486,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                         _selectedRC,
                                         widget.name,
                                         widget.mobile,
+                                        priceController.text,
                                         _images! as XFile,
                                       );
                                     } else {
@@ -467,9 +498,9 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
                                 },
                                 child: _currentStep == 2
                                     ? Text("Submit",
-                                        style: TextStyle(color: Colors.white))
+                                    style: TextStyle(color: Colors.white))
                                     : Text("Continue",
-                                        style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(color: Colors.white)),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
                                   shape: RoundedRectangleBorder(
@@ -498,4 +529,5 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen> {
       },
     );
   }
+
 }

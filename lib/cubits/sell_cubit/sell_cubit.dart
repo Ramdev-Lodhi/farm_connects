@@ -22,6 +22,7 @@ class SellCubit extends Cubit<SellFormState> {
   static SellCubit get(context) => BlocProvider.of(context);
 
   SellDataModel? sellDataModel = null;
+  SellAllTractorData? sellAllTractorData = null;
 
   // Fetch profile data
   Future<void> getBrand() async {
@@ -47,7 +48,7 @@ class SellCubit extends Cubit<SellFormState> {
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
       final response =
-          await DioHelper.postData(method: Sell_Model, token: token, data: {
+      await DioHelper.postData(method: Sell_Model, token: token, data: {
         'name': selectedBrand,
       });
       print('response: $response');
@@ -73,6 +74,7 @@ class SellCubit extends Cubit<SellFormState> {
       RC,
       String name,
       String mobile,
+      String price,
       XFile _images) async {
     emit(SellFormLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
@@ -104,8 +106,9 @@ class SellCubit extends Cubit<SellFormState> {
           'RC': RC,
           'tyreCondition': tyre,
           'hoursDriven': driven,
+          'price' : price
         });
-      // print('File MIME Type: ${formData.image}');
+        // print('File MIME Type: ${formData.image}');
         final response = await DioHelper.dio.post(
           'sell/selltractor',
           data: formData,
@@ -119,6 +122,7 @@ class SellCubit extends Cubit<SellFormState> {
 
         if (response.statusCode == 200) {
           emit(SellFormSuccess('Data Added Successfully'));
+          // sellDataModel = SellDataModel.fromJson(response.data);
           Get.offAll(()=>HomeLayout());
         } else {
           emit(SellFormError('Failed to insert data, please try again.'));
@@ -128,5 +132,26 @@ class SellCubit extends Cubit<SellFormState> {
       emit(SellFormError(error.toString()));
       print('Error: $error'); // Optionally log the error for debugging
     }
+  }
+  void getSellData() {
+    emit(SellScreenLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+    print('Token: $token');
+    // print('Request URL: $HOME');
+    DioHelper.getData(
+      method: 'sell/getSelltractor',
+      token: token,
+      lang: lang,
+    ).then((response) {
+      print('Parsed SellDataModel: ${response.data}');
+      sellAllTractorData = SellAllTractorData.fromJson(response.data);
+      // You might want to log the parsed data or handle it further
+      // print('Home Data Response: ${homeDataModel}');
+      emit(SellScreenSuccess());
+    }).catchError((error) {
+      print('Error: ${error.response?.statusCode} ${error.response?.data}');
+      emit(SellScreenError());
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:farm_connects/models/home_data_model.dart';
 import 'package:farm_connects/screen/home_screen.dart';
+import '../../screen/sellScreen/used_tractor_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class HomeCubit extends Cubit<HomeStates> {
     // Center(child: Text('Home Screen')),
     HomeScreen(),
     NewTractorScreen(),
-    Center(child: Text('Used Machine Screen')),
+    UsedTractorScreen(),
     Center(child: Text('Rent Screen')),
     SettingsScreen(),
   ];

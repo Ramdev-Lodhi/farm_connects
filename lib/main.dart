@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
             ..loadDistricts,
         ),
         BlocProvider(
-          create: (context) => SellCubit()..getModel,
+          create: (context) => SellCubit()..getModel..getSellData(),
         ),
         BlocProvider(
           create: (context) => RentCubit(),
