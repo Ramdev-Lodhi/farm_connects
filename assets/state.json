@@ -51,16 +51,16 @@
     {
       "id": 7,
       "name": {
-        "default": "Dadra and Nagar Haveli",
-        "en": "Dadra and Nagar Haveli",
+        "default": "Dadra & Nagar Haveli",
+        "en": "Dadra & Nagar Haveli",
         "hi": "दादरा नगर हवेली"
       }
     },
     {
       "id": 8,
       "name": {
-        "default": "Daman and Diu",
-        "en": "Daman and Diu",
+        "default": "Daman & Diu",
+        "en": "Daman & Diu",
         "hi": "दमन और दीव"
       }
     },

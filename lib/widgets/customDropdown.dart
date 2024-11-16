@@ -168,10 +168,14 @@ class _CustomDropdownState extends State<CustomDropdown> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              selectedItem ?? widget.hint,
-              style: TextStyle(
-                color: selectedItem == null ? Colors.grey : Colors.black,
+            Flexible(
+              flex: 1,
+              child: Text(
+                selectedItem ?? widget.hint,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: selectedItem == null ? Colors.grey : Colors.black,
+                ),
               ),
             ),
             Icon(Icons.arrow_drop_down),

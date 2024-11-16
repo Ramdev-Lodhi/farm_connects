@@ -9,14 +9,44 @@ import 'package:mime/mime.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
-
+import '../../models/rent_model.dart';
 
 class RentCubit extends Cubit<RentStates> {
   RentCubit() : super(RentFormInitial());
 
   static RentCubit get(context) => BlocProvider.of(context);
+  late RentDataModel? rentDataModel = null;
+
+  void GetRentData() {
+    emit(RentScreenLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+    String pincode = CacheHelper.getData(key: 'pincode') ?? '';
+    print('Token: $token');
+    // print('Request URL: $HOME');
+    DioHelper.postData(
+      method: 'rent/getrentItem',
+      token: token,
+      data: {
+        "pincode":pincode
+      },
+    ).then((response) {
+      print('Parsed SellDataModel: ${response.data}');
+      rentDataModel = RentDataModel.fromJson(response.data);
+      // You might want to log the parsed data or handle it further
+      // print('Home Data Response: ${homeDataModel}');
+      emit(RentScreenSuccess());
+    }).catchError((error) {
+      print('Error: ${error.response?.statusCode} ${error.response?.data}');
+      emit(RentScreenError());
+    });
+  }
+
 
   Future<void> InsertRentData(
+      String name,
+      String email,
+      String mobile,
       String state,
       String district,
       String sub_district,
@@ -47,7 +77,12 @@ class RentCubit extends Cubit<RentStates> {
           'village': village,
           'pincode': pincode,
           'serviceType': service,
-          'price': price
+          'price': price,
+          'userInfo': {
+            'name': name,
+            'email': email,
+            'mobile': mobile,
+          },
         });
         // print('File MIME Type: ${formData.image}');
         final response = await DioHelper.dio.post(

@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => SellCubit()..getModel..getSellData(),
         ),
         BlocProvider(
-          create: (context) => RentCubit(),
+          create: (context) => RentCubit()..GetRentData(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(

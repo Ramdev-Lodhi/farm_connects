@@ -51,7 +51,7 @@ class UsedTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length < 2 ? tractors.length : 2,
-                    (index) => tractorItemBuilder(tractors[index], context),
+                (index) => tractorItemBuilder(tractors[index], context),
               ),
             ),
 
@@ -98,7 +98,7 @@ class UsedTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
-                    (index) => tractorItemBuilder(tractors[index + 2], context),
+                (index) => tractorItemBuilder(tractors[index + 2], context),
               ),
             ),
 
@@ -148,7 +148,7 @@ class UsedTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 (tractors.length - 6).clamp(0, 6),
-                    (index) => tractorItemBuilder(tractors[index + 6], context),
+                (index) => tractorItemBuilder(tractors[index + 6], context),
               ),
             ),
             Padding(
@@ -194,7 +194,7 @@ class UsedTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length > 12 ? tractors.length - 12 : 0,
-                    (index) => tractorItemBuilder(tractors[index + 12], context),
+                (index) => tractorItemBuilder(tractors[index + 12], context),
               ),
             ),
           ],
@@ -339,10 +339,11 @@ class UsedTractorScreen extends StatelessWidget {
                                 onPressed: () {
                                   if (product?.mobile != null) {
                                     // Copy the phone number to clipboard
-                                    Clipboard.setData(ClipboardData(text: product!.mobile))
+                                    Clipboard.setData(ClipboardData(
+                                            text: product!.mobile))
                                         .then((_) {
-                                      showCustomSnackbar(
-                                          'Alert', 'Phone number copied to clipboard!');
+                                      showCustomSnackbar('Alert',
+                                          'Phone number copied to clipboard!');
                                     });
                                   }
                                 },
@@ -420,7 +421,7 @@ class UsedTractorScreen extends StatelessWidget {
                                 fontSize: 14.0.sp,
                                 fontWeight: FontWeight.w600,
                                 color:
-                                cubit.isDark ? Colors.white : Colors.black,
+                                    cubit.isDark ? Colors.white : Colors.black,
                               ),
                             ),
                           ),

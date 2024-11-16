@@ -38,6 +38,9 @@ class _RentFormScreenState extends State<RentFormScreen>
   String? _selectedPricetype;
   String? _price;
   XFile? _images;
+  String? _name;
+  String? _email;
+  String? _mobile;
   List<District> districts = [];
   List<SubDistrict> filteredSubDistricts = [];
   List<String> filteredVillages = [];
@@ -64,6 +67,9 @@ class _RentFormScreenState extends State<RentFormScreen>
     BlocProvider.of<ProfileCubits>(context).loadStates();
     var profileData = ProfileCubits.get(context).profileModel.data;
     if (profileData != null) {
+      _name = profileData.name ?? CacheHelper.getData(key: 'name') ;
+      _email =  profileData.email ?? CacheHelper.getData(key: 'email') ;
+      _mobile = profileData.mobile;
       selectedState = profileData.state != null
           ? profileData.state
           : CacheHelper.getData(key: 'state');
@@ -126,6 +132,9 @@ class _RentFormScreenState extends State<RentFormScreen>
       if(_images != null){
         var rentCubit = RentCubit.get(context);
         rentCubit.InsertRentData(
+            _name!,
+            _email!,
+            _mobile!,
             selectedState!,
             selectedDistrict!,
             selectedSubDistrict!,
@@ -175,7 +184,7 @@ class _RentFormScreenState extends State<RentFormScreen>
                       unselectedLabelColor: Colors.white70,
                       indicatorColor: Colors.black,
                       tabs: const [
-                        Tab(text: 'Address'),
+                        Tab(text: 'Owner Details'),
                         Tab(text: 'Rent Data'),
                       ],
                     ),
@@ -301,71 +310,136 @@ class _RentFormScreenState extends State<RentFormScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            'Information',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: ScreenUtil().setHeight(12)),
+          _buildTextField(
+            keyboardtype: TextInputType.emailAddress,
+            initialValue: _name,
+            label: 'Name',
+            onSaved: (value) => _name = value,
+            onChanged: (value) {
+              setState(() {
+                _name = value;
+              });
+            },
+          ),
+          SizedBox(height: ScreenUtil().setHeight(12)),
+          _buildTextField(
+            keyboardtype: TextInputType.emailAddress,
+            initialValue: _email,
+            label: 'Email',
+            onSaved: (value) => _email = value,
+            onChanged: (value) {
+              setState(() {
+                _email = value;
+              });
+            },
+          ),
+          SizedBox(height: ScreenUtil().setHeight(12)),
+          _buildTextField(
+            keyboardtype: TextInputType.number,
+            initialValue: _mobile,
+            label: 'Mobile',
+            onSaved: (value) => _mobile = value,
+            onChanged: (value) {
+              setState(() {
+                _mobile = value;
+              });
+            },
+          ),
+          SizedBox(height: 8.0),
+          Text(
             'Address',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),
-          CustomDropdown(
-            hint: "Select State",
-            items: profileCubit.stateNames,
-            value: selectedState,
-            onChanged: (value) {
-              setState(() {
-                selectedState = value;
-                selectedDistrict = null;
-                filteredSubDistricts = [];
-              });
-              loadDistricts();
-            },
-            label: "State",
+          Row(
+            children: [
+              Flexible(
+                flex: 1,
+                child: CustomDropdown(
+                  hint: "Select State",
+                  items: profileCubit.stateNames,
+                  value: selectedState,
+                  onChanged: (value) {
+                    print(selectedState);
+                    setState(() {
+                      selectedState = value;
+                      selectedDistrict = null;
+                      filteredSubDistricts = [];
+                    });
+                    loadDistricts();
+                  },
+                  label: "State",
+                ),
+              ),
+              SizedBox(width: ScreenUtil().setWidth(8)),
+              Flexible(
+                flex: 1,
+                child: CustomDropdown(
+                  hint: "Select District",
+                  items: districts.map((d) => d.district).toList(),
+                  value: selectedDistrict,
+
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDistrict = value;
+                      selectedSubDistrict = null;
+                      filteredSubDistricts = districts
+                          .firstWhere((district) => district.district == value)
+                          .subDistricts;
+                    });
+                  },
+                  label: "District",
+                ),
+              ),
+            ],
           ),
           SizedBox(height: ScreenUtil().setHeight(16)),
-          CustomDropdown(
-            hint: "Select District",
-            items: districts.map((d) => d.district).toList(),
-            value: selectedDistrict,
-            onChanged: (value) {
-              setState(() {
-                selectedDistrict = value;
-                selectedSubDistrict = null;
-                filteredSubDistricts = districts
-                    .firstWhere((district) => district.district == value)
-                    .subDistricts;
-              });
-            },
-            label: "District",
-          ),
+
           SizedBox(height: ScreenUtil().setHeight(16)),
-          CustomDropdown(
-            hint: "Select Sub-District",
-            items: filteredSubDistricts.map((s) => s.subDistrict).toList(),
-            value: selectedSubDistrict,
-            onChanged: (value) {
-              setState(() {
-                selectedSubDistrict = value;
-                filteredVillages = filteredSubDistricts
-                    .firstWhere((s) => s.subDistrict == value)
-                    .villages;
-              });
-            },
-            label: "Sub-District",
+          Row(
+            children: [
+              Expanded(
+                child: CustomDropdown(
+                  hint: "Select Sub-District",
+                  items: filteredSubDistricts.map((s) => s.subDistrict).toList(),
+                  value: selectedSubDistrict,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSubDistrict = value;
+                      filteredVillages = filteredSubDistricts
+                          .firstWhere((s) => s.subDistrict == value)
+                          .villages;
+                    });
+                  },
+                  label: "Sub-District",
+                ),
+              ),
+              SizedBox(width: ScreenUtil().setWidth(5)),
+              Expanded(
+                child: CustomDropdown(
+                  hint: "Select Village",
+                  items: filteredVillages.isNotEmpty
+                      ? filteredVillages
+                      : ['No villages'],
+                  value: selectedVillage ?? 'No village selected',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedVillage = value;
+                    });
+                  },
+                  label: "Village",
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: ScreenUtil().setHeight(16)),
-          CustomDropdown(
-            hint: "Select Village",
-            items: filteredVillages.isNotEmpty
-                ? filteredVillages
-                : ['No villages'],
-            value: selectedVillage ?? 'No village selected',
-            onChanged: (value) {
-              setState(() {
-                selectedVillage = value;
-              });
-            },
-            label: "Village",
-          ),
+
           SizedBox(height: ScreenUtil().setHeight(12)),
           _buildTextField(
+            keyboardtype: TextInputType.number,
             initialValue: _pincode,
             label: 'Pincode',
             onSaved: (value) => _pincode = value,
@@ -384,12 +458,14 @@ class _RentFormScreenState extends State<RentFormScreen>
   Widget _buildTextField({
     String? initialValue,
     required String label,
+    required TextInputType keyboardtype,
     required FormFieldSetter<String> onSaved,
     required FormFieldSetter<String> onChanged,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        keyboardType: keyboardtype,
         initialValue: initialValue,
         decoration: InputDecoration(
           labelText: label,
@@ -436,6 +512,7 @@ class _RentFormScreenState extends State<RentFormScreen>
                 child: Container(
                   height: 48,
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: _priceController,
                     decoration: InputDecoration(
                       labelText: 'Price',

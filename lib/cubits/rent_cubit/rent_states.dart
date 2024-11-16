@@ -8,6 +8,11 @@ abstract class RentStates {
 
   }
 }
+class RentScreenLoading extends RentStates {}
+
+class RentScreenSuccess extends RentStates {}
+
+class RentScreenError extends RentStates {}
 class RentFormInitial extends RentStates {
   RentFormInitial();
 }

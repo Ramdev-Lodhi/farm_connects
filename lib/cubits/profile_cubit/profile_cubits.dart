@@ -238,10 +238,18 @@ class ProfileCubits extends Cubit<ProfileState> {
   }
 
   Future<List<District>> loadDistricts(String selectedState) async {
-    String jsonString =
-        await rootBundle.loadString('assets/states/$selectedState.json');
-    final List<dynamic> districtJson = json.decode(jsonString)['districts'];
-    return districtJson.map((district) => District.fromJson(district)).toList();
+    try {
+      print(selectedState);
+      String jsonString =
+      await rootBundle.loadString('assets/states/$selectedState.json');
+      final List<dynamic> districtJson = json.decode(jsonString)['districts'];
+      return districtJson
+          .map((district) => District.fromJson(district))
+          .toList();
+    } catch (e) {
+      print("Error loading districts: $e");
+      return [];
+    }
   }
 }
 
@@ -267,8 +275,10 @@ class SubDistrict {
 
   factory SubDistrict.fromJson(Map<String, dynamic> json) {
     return SubDistrict(
-      subDistrict: json['subDistrict'],
-      villages: List<String>.from(json['villages']),
+      subDistrict: json['subDistrict'] ?? '', // Default to empty string if null
+      villages: json['villages'] != null
+          ? List<String>.from(json['villages'])
+          : [], // Default to empty list if null
     );
   }
 }

@@ -3,15 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
-import '../../config/location/location_permission.dart';
 import '../../config/network/remote/dio.dart';
-import '../../cubits/auth_cubit/auth_states.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/profile_cubit/profile_states.dart';
-import '../../layout/home_layout.dart';
 import '../../models/login_model.dart';
 import '../../widgets/customDropdown.dart';
 import '../../widgets/snackbar_helper.dart';
