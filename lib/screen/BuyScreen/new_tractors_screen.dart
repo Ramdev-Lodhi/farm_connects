@@ -206,7 +206,6 @@ class NewTractorScreen extends StatelessWidget {
   Widget budgetOption(String label, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Selected budget: $label");
       },
       child: Container(
 
@@ -245,8 +244,6 @@ class NewTractorScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric( vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          print('brandName: ${product?.name}');
-          print('brandId: ${product?.id}');
           Get.to(()=> TractorsDetails(tractor: product!));
         },
         child: Card(
@@ -332,8 +329,6 @@ class NewTractorScreen extends StatelessWidget {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('brandName: ${product?.name}');
-                                  print('brandId: ${product?.id}');
 
                                 },
                                 child: Text("Check Tractor Price",

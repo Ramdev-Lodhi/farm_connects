@@ -72,7 +72,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       _pincode =profileData.pincode != null ? profileData.pincode :  CacheHelper.getData(key: 'pincode');
 
     } else {
-      print("Profile data is null");
     }
   }
 
@@ -85,8 +84,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void _saveProfile() {
-    // print('Name: $_name, Email: $_email, Mobile: $_mobile,Password: $_password');
-    // print('State: $selectedState, District: $selectedDistrict, Sub-District: $selectedSubDistrict, Village: $selectedVillage, Pincode: $_pincode');
 
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -146,12 +143,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       isLoading = true;
     });
     try {
-      print('mobile:$phoneNumber and otp :$otpCode');
       final response = await DioHelper.postData(
           method: "verify-otp",
           data: {'phone': '+91' + phoneNumber, 'otp': otpCode});
       var loginModel = LoginModel.fromJson(response.data);
-      print('response:$response and loginModel :${loginModel.status}');
       if (loginModel.status) {
         return true;
       } else {
@@ -170,7 +165,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   // Future<void> fetchPincode() async {
   //     pincode = await LocationHelper.fetchLocationDetails();
-  //     print("Fetched pincode: $pincode");
   //     setState(() {});
   // }
 
@@ -577,7 +571,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             TextButton(
               onPressed: () async {
                 if (otpCode != null && otpCode?.length == 6) {
-                  print('mobile:$_mobile and otp :$otpCode');
                   bool isVerified = await verifyOTP(_mobile!, otpCode!);
                   if (isVerified) {
                     mobileverified = true;

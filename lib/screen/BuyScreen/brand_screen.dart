@@ -58,8 +58,6 @@ class AllBrandScreen extends StatelessWidget {
             final product = homeDataModel?.data.brands[index];
             return GestureDetector(
               onTap: () {
-                print('brandName: ${product?.name}');
-                print('brandId: ${product?.id}');
                 Get.to(() => TractorsByBrandScreen(brandName: product?.name, brandId: product?.id));
 
               },

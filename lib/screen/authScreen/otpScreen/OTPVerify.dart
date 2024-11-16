@@ -40,7 +40,6 @@ class _OTPVerifyState extends State<OTPVerify> {
       body: SafeArea(
         child: BlocListener<AuthCubits, Authstates>(
           listener: (context, state) async {
-            print("Current state: $state");
             if (state is VerifyOtpSuccessState) {
               showCustomSnackbar('Success', 'Login successful.', isError: false);
             }
@@ -48,14 +47,10 @@ class _OTPVerifyState extends State<OTPVerify> {
 
               await LocationHelper.fetchLocationDetails();
               CacheHelper.getData(key: 'token');
-              print(CacheHelper.getData(key: 'name'));
-              print(CacheHelper.getData(key: 'email'));
               HomeCubit.get(context).getHomeData();
               await ProfileCubits.get(context).getProfileData();
               var profileData = ProfileCubits.get(context).profileModel.data;
-              print('profiledata:$profileData');
               if (profileData != null) {
-                print('profiledata:${profileData.mobile},${profileData.name},${profileData.email},${profileData.password}');
                 if (profileData.mobile != null &&
                     profileData.email != null &&
                     profileData.name != null) {
@@ -64,7 +59,6 @@ class _OTPVerifyState extends State<OTPVerify> {
                   Get.offAll(() => UpdateProfileScreen());
                 }
               } else {
-                print('HomeLayout:$profileData');
                 Get.offAll(() => HomeLayout());
               }
             }else{
@@ -178,7 +172,6 @@ class _OTPVerifyState extends State<OTPVerify> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // print(phonenumber);
                                   BlocProvider.of<AuthCubits>(context)
                                       .sendOTP(phonenumber);
                                   // otpProvider.sendOTP();

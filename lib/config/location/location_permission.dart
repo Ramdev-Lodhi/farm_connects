@@ -12,7 +12,6 @@ class LocationHelper {
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.deniedForever) {
-        print("Location permissions are permanently denied.");
         return null;
       }
 
@@ -35,7 +34,6 @@ class LocationHelper {
         CacheHelper.saveData(key: 'village', value: place.subLocality ?? 'N/A');
         CacheHelper.saveData(key: 'pincode', value: place.postalCode ?? 'N/A');
 
-        print("Location details saved successfully.");
         // return {
         //   'state': place.administrativeArea ?? 'N/A',
         //   'district': place.subAdministrativeArea ?? 'N/A',
@@ -45,7 +43,6 @@ class LocationHelper {
         // };
       }
     } catch (e) {
-      print("Error fetching location details: $e");
     }
     return null;
   }

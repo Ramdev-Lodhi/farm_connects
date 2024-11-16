@@ -39,7 +39,6 @@ class UsedTractorScreen extends StatelessWidget {
     final tractors = sellAllTractorData?.data.SellTractor ?? [];
     final brands = HomeCubit.get(context).homeDataModel?.data.brands ?? [];
 
-// print('sell = ${sellAllTractorData?.data.SellTractor}');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: SingleChildScrollView(
@@ -206,7 +205,6 @@ class UsedTractorScreen extends StatelessWidget {
   Widget budgetOption(String label, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Selected budget: $label");
       },
       child: Container(
         margin: EdgeInsets.all(8.0),
@@ -246,10 +244,7 @@ class UsedTractorScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          print('brandName: ${product?.year}');
-// print('brandName: ${HomeDataModel}');
           Get.to(() => UsedTractorDetails(selltractor: product));
-// print('brandId: ${product?.id}');
 // Get.to(() => BrandDetailScreen(
 //   brandName: product?.name ?? '',
 //   brandId: product?.id ?? '', // Assuming `id` exists in your model

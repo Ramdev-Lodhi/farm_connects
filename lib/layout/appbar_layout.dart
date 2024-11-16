@@ -93,7 +93,6 @@ class _AppBarLayoutState extends State<AppBarLayout> {
                           Get.to(() => SellScreen());
                         },
                         onRent: () {
-                          print('Rent button clicked');
                         },
                         isDark: widget.isDark,
                       );

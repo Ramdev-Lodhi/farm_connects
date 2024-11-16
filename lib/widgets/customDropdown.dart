@@ -40,7 +40,6 @@ class _CustomDropdownState extends State<CustomDropdown> {
       filteredItems = widget.items.where((item) {
         return item.toLowerCase().contains(text.toLowerCase());
       }).toList();
-      // print("Filtered items: $filteredItems");
     });
   }
 

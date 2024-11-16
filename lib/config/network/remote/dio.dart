@@ -48,7 +48,6 @@ class DioHelper {
     try {
       return await dio.get(method, queryParameters: query);
     } catch (error) {
-      print('Error in getData: $error');
       rethrow;
     }
   }

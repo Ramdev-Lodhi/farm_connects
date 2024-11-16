@@ -110,20 +110,15 @@ class HomeCubit extends Cubit<HomeStates> {
     String token = CacheHelper.getData(key: 'token') ?? '';
     String lang = CacheHelper.getData(key: 'lang') ?? 'en';
 
-    print('Token: $token');
-    // print('Request URL: $HOME');
 
     DioHelper.getData(
       method: HOME,
       token: token,
       lang: lang,
     ).then((response) {
-      print('Home Data Response: ${response.data}');
       homeDataModel = HomeDataModel.fromJson(response.data);
-      // print('Home Data Response: ${homeDataModel}');
       emit(GetHomeDataSuccessSate());
     }).catchError((error) {
-      print('Error: ${error.response?.statusCode} ${error.response?.data}');
       emit(GetHomeDataErrorSate());
     });
   }

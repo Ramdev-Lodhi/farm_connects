@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
 import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
+import '../cubits/rent_cubit/rent_cubit.dart';
+import '../cubits/sell_cubit/sell_cubit.dart';
 import '../widgets/loadingIndicator.dart';
 import '../widgets/sell_rent_dialog.dart';
 
@@ -24,6 +27,12 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     super.initState();
+    ProfileCubits.get(context)
+      ..getProfileData();
+    RentCubit.get(context)
+      ..GetRentData();
+    SellCubit.get(context)
+      ..getSellData();
     _startButtonTextChange();
   }
 
@@ -120,8 +129,20 @@ class _HomeLayoutState extends State<HomeLayout> {
           ),
           body: CustomRefreshIndicator(
             onRefresh: () async {
+              if(cubit.currentIndex == 0 || cubit.currentIndex == 1){
               await cubit
                 ..getHomeData();
+
+              } else if(cubit.currentIndex == 2){
+              await SellCubit.get(context)
+                ..getSellData();
+              }else if(cubit.currentIndex == 3){
+              await RentCubit.get(context)
+                ..GetRentData();
+              }else{
+                await ProfileCubits.get(context)
+                  ..getProfileData();
+              }
             },
             child: Container(
               color: cubit.isDark ? Colors.black : Colors.white,

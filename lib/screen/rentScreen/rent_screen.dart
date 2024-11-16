@@ -178,8 +178,6 @@ class RentScreen extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            print('price: ${product?.price}');
-                            print('Id: ${product?.id}');
                           },
                           child: Text("Contact Owner",
                               style: TextStyle(color: Colors.white)),

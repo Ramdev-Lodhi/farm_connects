@@ -32,7 +32,6 @@ class ProfileCubits extends Cubit<ProfileState> {
         method: 'user/profile',
         token: token,
       );
-      print('response:$response');
       profileModel = ProfileModel.fromJson(response.data);
       emit(ProfileSuccessState());
     } catch (error) {
@@ -45,7 +44,6 @@ class ProfileCubits extends Cubit<ProfileState> {
     emit(ProfileUpdateLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      print('password changepass: $password');
       final response = await DioHelper.putData(
           method: 'user/change_password',
           token: token,
@@ -77,8 +75,6 @@ class ProfileCubits extends Cubit<ProfileState> {
     emit(ProfileUpdateLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      print('Name: $name, Email: $email, Mobile: $mobile');
-      print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
       final response = await DioHelper.putData(
           method: 'user/update_profile',
           token: token,
@@ -92,9 +88,7 @@ class ProfileCubits extends Cubit<ProfileState> {
             "village": village,
             "pincode": pincode,
           });
-      // print('API Response: ${response.data}');
       profileModel = ProfileModel.fromJson(response.data);
-      // print('profileModel : ${profileModel.status}');
 
       if (profileModel.status) {
         CacheHelper.saveData(
@@ -126,8 +120,6 @@ class ProfileCubits extends Cubit<ProfileState> {
     emit(ProfileUpdateLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      print('Name: $name, Email: $email, Mobile: $mobile');
-      print('State: $state, District: $district, Sub-District: $sub_district, Village: $village, Pincode: $pincode');
       final response = await DioHelper.putData(
           method: 'user/update_profile',
           token: token,
@@ -142,9 +134,7 @@ class ProfileCubits extends Cubit<ProfileState> {
             "pincode": pincode,
             "password":password,
           });
-      print('API Response: ${response.data}');
       profileModel = ProfileModel.fromJson(response.data);
-      // print('profileModel : ${profileModel.status}');
 
       if (profileModel.status) {
         CacheHelper.saveData(
@@ -173,12 +163,9 @@ class ProfileCubits extends Cubit<ProfileState> {
     if (image != null) {
       emit(ProfileImageLaodingState());
       String token = CacheHelper.getData(key: 'token') ?? '';
-      print('Image selected: ${image.path}');
 
 
       final mimeType = lookupMimeType(image.path);
-      // print('File MIME Type: $mimeType');
-      // print('Uploading file: ${image.path}, Filename: ${image.name}');
       // Validate MIME type
       if (mimeType != null && mimeType.startsWith('image/')) {
         // Create FormData
@@ -202,7 +189,6 @@ class ProfileCubits extends Cubit<ProfileState> {
             ),
           );
 
-          // print('response: ${response.data}');
           profileModel = ProfileModel.fromJson(response.data);
           if (profileModel.status) {
             CacheHelper.saveData(
@@ -210,10 +196,8 @@ class ProfileCubits extends Cubit<ProfileState> {
             emit(ProfileImageUpdatedState());
           }
         } catch (e) {
-          print('Error uploading image: $e');
         }
       } else {
-        print('Error: Invalid image type.');
         // Handle invalid image type (e.g., show a message to the user)
       }
     }
@@ -229,17 +213,14 @@ class ProfileCubits extends Cubit<ProfileState> {
       // Populate state names
       stateNames = List<String>.from(
           statesJson.map((state) => state['name']['en'] as String));
-      // print('StateName:$stateNames');
       emit(ProfileUpdateLoading());
     } catch (error) {
       emit(ProfileUpdateLoading());
-      // print(error.toString());
     }
   }
 
   Future<List<District>> loadDistricts(String selectedState) async {
     try {
-      print(selectedState);
       String jsonString =
       await rootBundle.loadString('assets/states/$selectedState.json');
       final List<dynamic> districtJson = json.decode(jsonString)['districts'];
@@ -247,7 +228,6 @@ class ProfileCubits extends Cubit<ProfileState> {
           .map((district) => District.fromJson(district))
           .toList();
     } catch (e) {
-      print("Error loading districts: $e");
       return [];
     }
   }

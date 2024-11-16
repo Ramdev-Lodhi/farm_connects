@@ -47,7 +47,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (_mobile != null && _mobile == profileData.mobile) {
         mobileverified = true;
       }
-      // print(profileData.state);
       selectedState =  profileData.state != null ? profileData.state : CacheHelper.getData(key: 'state') ;
       selectedDistrict = profileData.district != null ? profileData.district : CacheHelper.getData(key: 'district');
       selectedSubDistrict =profileData.sub_district != null ? profileData.sub_district : CacheHelper.getData(key: 'subDistrict');
@@ -57,7 +56,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _pincode =profileData.pincode != null ?profileData.pincode :  CacheHelper.getData(key: 'pincode');
 
     } else {
-      print("Profile data is null");
     }
   }
 
@@ -70,8 +68,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _saveProfile() {
-    // print('Name: $_name, Email: $_email, Mobile: $_mobile');
-    // print('State: $selectedState, District: $selectedDistrict, Sub-District: $selectedSubDistrict, Village: $selectedVillage, Pincode: $_pincode');
 
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -130,12 +126,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       isLoading = true;
     });
     try {
-      print('mobile:$phoneNumber and otp :$otpCode');
       final response = await DioHelper.postData(
           method: "verify-otp",
           data: {'phone': '+91' + phoneNumber, 'otp': otpCode});
       var loginModel = LoginModel.fromJson(response.data);
-      print('response:$response and loginModel :${loginModel.status}');
       if (loginModel.status) {
         return true;
       } else {
@@ -154,7 +148,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // Future<void> fetchPincode() async {
   //     pincode = await LocationHelper.fetchLocationDetails();
-  //     print("Fetched pincode: $pincode");
   //     setState(() {});
   // }
 
@@ -430,7 +423,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             TextButton(
               onPressed: () async {
                 if (otpCode != null && otpCode?.length == 6) {
-                  print('mobile:$_mobile and otp :$otpCode');
                   bool isVerified = await verifyOTP(_mobile!, otpCode!);
                   if (isVerified) {
                     mobileverified = true;

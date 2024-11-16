@@ -88,7 +88,6 @@ class _RentFormScreenState extends State<RentFormScreen>
           ? profileData.pincode
           : CacheHelper.getData(key: 'pincode');
     } else {
-      print("Profile data is null");
     }
   }
 
@@ -122,9 +121,6 @@ class _RentFormScreenState extends State<RentFormScreen>
   }
 
   void _saveProfile() {
-    print('Price:$_price per $_selectedPricetype');
-    print(
-        'State: $selectedState, District: $selectedDistrict, Sub-District: $selectedSubDistrict, Village: $selectedVillage, Pincode: $_pincode');
     if (selectedState != null &&
         selectedDistrict != null &&
         selectedSubDistrict != null &&
@@ -364,7 +360,6 @@ class _RentFormScreenState extends State<RentFormScreen>
                   items: profileCubit.stateNames,
                   value: selectedState,
                   onChanged: (value) {
-                    print(selectedState);
                     setState(() {
                       selectedState = value;
                       selectedDistrict = null;

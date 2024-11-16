@@ -149,8 +149,6 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          // print('brandName: ${product?.name}');
-          // print('brandId: ${product?.id}');
           Get.to(() => TractorsDetails(tractor: product!));
         },
         child: Card(
@@ -235,8 +233,6 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('brandName: ${product?.name}');
-                                  print('brandId: ${product?.id}');
                                   // Navigate to check price screen
                                 },
                                 child: const Text("Check Tractor Price",
@@ -336,9 +332,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          // print('brandName: ${HomeDataModel}');
           Get.to(()=> UsedTractorDetails(selltractor: product));
-          // print('brandId: ${product?.id}');
           // Get.to(() => BrandDetailScreen(
           //   brandName: product?.name ?? '',
           //   brandId: product?.id ?? '', // Assuming `id` exists in your model

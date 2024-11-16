@@ -95,11 +95,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           resizeToAvoidBottomInset: false,
           body:
               BlocConsumer<AuthCubits, Authstates>(listener: (context, state) {
-            print("Current state: $state");
             state.showSnackbar(context);
           }, builder: (context, state) {
-            print("State in builder: $state");
-            print(context.read<AuthCubits>().isLoading);
             final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
             final topPosition = isSignupScreen
                 ? (keyboardOpen ? 50 : 150)

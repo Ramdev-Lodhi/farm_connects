@@ -33,13 +33,11 @@ class SellCubit extends Cubit<SellFormState> {
         method: 'Sell',
         token: token,
       );
-      print('response: $response');
 
       // Ensure proper assignment to sellDataModel instance
       sellDataModel = SellDataModel.fromJson(response.data);
     } catch (error) {
       // Add error handling
-      print('Error fetching brand data: $error');
       emit(SellFormError('Failed to load brand data'));
     }
   }
@@ -51,12 +49,9 @@ class SellCubit extends Cubit<SellFormState> {
       await DioHelper.postData(method: Sell_Model, token: token, data: {
         'name': selectedBrand,
       });
-      print('response: $response');
       sellDataModel = SellDataModel.fromJson(response.data);
-      print('model: ${sellDataModel?.data.models}');
     } catch (error) {
       // Add error handling
-      print('Error fetching model data: $error');
       emit(SellFormError('Failed to load Model data'));
     }
   }
@@ -79,12 +74,9 @@ class SellCubit extends Cubit<SellFormState> {
     emit(SellFormLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
-      print("Images: $_images");
 
       // Create FormData to send the request
       final mimeType = lookupMimeType(_images.path);
-      print('File MIME Type: $mimeType');
-      print('Uploading file: ${_images.path}, Filename: ${_images.name}');
       // Validate MIME type
       if (mimeType != null && mimeType.startsWith('image/')) {
         // Create FormData
@@ -108,7 +100,6 @@ class SellCubit extends Cubit<SellFormState> {
           'hoursDriven': driven,
           'price' : price
         });
-        // print('File MIME Type: ${formData.image}');
         final response = await DioHelper.dio.post(
           'sell/selltractor',
           data: formData,
@@ -130,27 +121,21 @@ class SellCubit extends Cubit<SellFormState> {
       }
     } catch (error) {
       emit(SellFormError(error.toString()));
-      print('Error: $error'); // Optionally log the error for debugging
     }
   }
   void getSellData() {
     emit(SellScreenLoading());
     String token = CacheHelper.getData(key: 'token') ?? '';
     String lang = CacheHelper.getData(key: 'lang') ?? 'en';
-    print('Token: $token');
-    // print('Request URL: $HOME');
     DioHelper.getData(
       method: 'sell/getSelltractor',
       token: token,
       lang: lang,
     ).then((response) {
-      print('Parsed SellDataModel: ${response.data}');
       sellAllTractorData = SellAllTractorData.fromJson(response.data);
       // You might want to log the parsed data or handle it further
-      // print('Home Data Response: ${homeDataModel}');
       emit(SellScreenSuccess());
     }).catchError((error) {
-      print('Error: ${error.response?.statusCode} ${error.response?.data}');
       emit(SellScreenError());
     });
   }

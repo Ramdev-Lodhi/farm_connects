@@ -366,8 +366,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                     margin: EdgeInsets.only(bottom: 0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        print('Tractor Name: ${product?.name}');
-                                        print('TractorId: ${product?.id}');
                                       },
                                       child: Text("Check Tractor Price",
                                           style:
@@ -497,7 +495,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                     margin: EdgeInsets.only(bottom: 0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        print('d: ${product?.id}');
                                       },
                                       child: Text("Contact Owner",
                                           style:

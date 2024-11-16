@@ -39,7 +39,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
       if (isValidEmail(phoneOrEmail)) {
         String email = phoneOrEmail;
-        print("Logging in with Email: $email");
         BlocProvider.of<AuthCubits>(context).SigninWithPassword(
           email,
           password,
@@ -50,12 +49,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
           mobile,
           password,
         );
-        print("Logging in with Mobile: $mobile");
       } else {
-        print("Invalid Phone/Email format");
       }
     } else {
-      print("Validation failed");
     }
   }
   bool isValidEmail(String email) {

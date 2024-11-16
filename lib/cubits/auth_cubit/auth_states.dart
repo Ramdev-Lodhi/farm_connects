@@ -33,7 +33,6 @@ class LoginErrorState extends Authstates {
   @override
   void showSnackbar(BuildContext context) {
     showCustomSnackbar('Login Failed', message, isError: true);
-    print("emitcalling");
   }
 }
 

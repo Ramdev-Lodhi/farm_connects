@@ -56,14 +56,12 @@ class AuthCubits extends Cubit<Authstates> {
     }).catchError((error) {
       isLoading = false;
       emit(SignupErrorState(error.toString()));
-      // print('error : ' + error.toString());
     });
   }
 
   Future<void> Signin(String email, String password) async {
     emit(LoginLoadingState());
     isLoading = true;
-    print("LoginLoadingState emitted");
     DioHelper.postData(
       method: LOGIN,
       data: {
@@ -72,9 +70,7 @@ class AuthCubits extends Cubit<Authstates> {
       },
       lang: 'en',
     ).then((value) {
-      // print(value);
       loginModel = LoginModel.fromJson(value.data);
-      // print(loginModel.status);
       if (loginModel.status) {
         CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
         CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
@@ -92,7 +88,6 @@ class AuthCubits extends Cubit<Authstates> {
         showCustomSnackbar(
             'Login Failed', 'Username and password incorrect Please try again.',
             isError: true);
-        // print("login Failed. Please try again.");
       }
     }).catchError((error) {
       isLoading = false;
@@ -100,13 +95,11 @@ class AuthCubits extends Cubit<Authstates> {
       showCustomSnackbar(
           'Login Failed', 'Username and password incorrect Please try again.',
           isError: true);
-      // print('error : ' + error.toString());
     });
   }
   Future<void> SigninWithPassword(String phoneOrEmail , String password) async {
     emit(LoginLoadingState());
     isLoading = true;
-    print("phoneOrEmail : $phoneOrEmail");
     DioHelper.postData(
       method: 'loginpassword',
       data: {
@@ -115,9 +108,7 @@ class AuthCubits extends Cubit<Authstates> {
       },
       lang: 'en',
     ).then((value) {
-      print(value);
       loginModel = LoginModel.fromJson(value.data);
-      print(loginModel.status);
       if (loginModel.status) {
         CacheHelper.saveData(key: 'token', value: loginModel.data?.token ?? "");
         CacheHelper.saveData(key: 'image', value: loginModel.data?.image ?? "");
@@ -132,7 +123,6 @@ class AuthCubits extends Cubit<Authstates> {
         // showCustomSnackbar(
         //     'Login Failed', 'Username and password incorrect Please try again.',
         //     isError: true);
-        // print("login Failed. Please try again.");
       }
     }).catchError((error) {
       isLoading = false;
@@ -140,7 +130,6 @@ class AuthCubits extends Cubit<Authstates> {
       showCustomSnackbar(
           'Login Failed', 'Username and password incorrect Please try again.',
           isError: true);
-      // print('error : ' + error.toString());
     });
   }
 
@@ -159,7 +148,6 @@ class AuthCubits extends Cubit<Authstates> {
           await googleUser.authentication;
 
       String token = googleAuth.idToken ?? '';
-      // print('token Google Login$token');
       if (token.isEmpty) {
         isLoading = false;
         emit(LoginErrorState('Failed to obtain Google token.'));
@@ -170,7 +158,6 @@ class AuthCubits extends Cubit<Authstates> {
     } catch (error) {
       isLoading = false;
       emit(LoginErrorState(error.toString()));
-      // print('Error Google Login${error.toString()}');
     }
   }
 
@@ -183,7 +170,6 @@ class AuthCubits extends Cubit<Authstates> {
         },
       );
 
-      // print('Google loginModel  $response.data');
       loginModel = LoginModel.fromJson(response.data);
       if (loginModel.status) {
         await CacheHelper.saveData(
@@ -217,12 +203,10 @@ class AuthCubits extends Cubit<Authstates> {
   Future<void> sendOTP(String phoneNumber) async {
     emit(SendOtpLoadingState());
     try {
-      print('phoneNumber:$phoneNumber');
       final response = await DioHelper.postData(
         method: "send-otp",
         data: {'phone': phoneNumber},
       );
-      print('response:$response');
       if (response.data['status']) {
         emit(SendOtpSuccessState(response.data['message']));
       } else {
@@ -240,8 +224,6 @@ class AuthCubits extends Cubit<Authstates> {
       String phoneNumber, String otpCode) async {
     emit(VerifyOtpLoadingState());
     try {
-      // print('phoneNumber:$phoneNumber');
-      // print('otpCode:$otpCode');
       final response = await DioHelper.postData(
         method: "verify-otp",
         data: {
@@ -268,7 +250,6 @@ class AuthCubits extends Cubit<Authstates> {
       }
     } catch (error) {
       emit(VerifyOtpErrorState(error.toString()));
-      // print('verifyOTP error: $error');
 
     }
   }

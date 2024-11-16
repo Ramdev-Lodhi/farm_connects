@@ -7,7 +7,6 @@ class HomeDataModel
   {
     status = json['status'];
     data = DataModel.fromJson(json['data']);
-    print('Homedata=${data}');
   }
 
 }

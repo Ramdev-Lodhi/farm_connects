@@ -125,7 +125,6 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
         _selectedbrand != null &&
         _selectedmodel != null &&
         _selectedyear != null) {
-// print(_images);
       List<String> locationParts = widget.location.split(', ');
       String state = locationParts[0];
       String city = locationParts.length > 1 ? locationParts[1] : '';

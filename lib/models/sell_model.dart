@@ -5,7 +5,6 @@ class SellDataModel {
   SellDataModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = SellDataModelData.fromJson(json['data']);
-    print('Homedata=${data}');
   }
 }
 
@@ -24,7 +23,6 @@ class SellAllTractorData {
   SellAllTractorData.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = SellAllTractors.fromJson(json['data']);
-    print('Homedata=${data}');
   }
 }
 class SellAllTractors {

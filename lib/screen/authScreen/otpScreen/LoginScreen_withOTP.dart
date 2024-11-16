@@ -62,7 +62,6 @@ class _OTPScreenState extends State<OTPScreen> {
       body: SafeArea(
         child: BlocListener<AuthCubits, Authstates>(
           listener: (context, state) async {
-            print("Current state Loginpage: $state");
 
             if (state is Authstates && state.showSnackbar != null) {
               state.showSnackbar(context);
@@ -70,14 +69,10 @@ class _OTPScreenState extends State<OTPScreen> {
             if (state is LoginSuccessState) {
               await LocationHelper.fetchLocationDetails();
               CacheHelper.getData(key: 'token');
-              print(CacheHelper.getData(key: 'name'));
-              print(CacheHelper.getData(key: 'email'));
               HomeCubit.get(context).getHomeData();
               await ProfileCubits.get(context).getProfileData();
               var profileData = ProfileCubits.get(context).profileModel.data;
-              // print('profiledata:$profileData');
               if (profileData != null) {
-                print('profiledata:${profileData.mobile},${profileData.name},${profileData.password}');
                 if (profileData.mobile != null &&
                     profileData.email != null &&
                     profileData.name != null ) {
@@ -86,7 +81,6 @@ class _OTPScreenState extends State<OTPScreen> {
                   Get.offAll(() => UpdateProfileScreen());
                 }
               }else{
-                print('HomeLayout:$profileData');
                 Get.offAll(() => HomeLayout());
               }
             }

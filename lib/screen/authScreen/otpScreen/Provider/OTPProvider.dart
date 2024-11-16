@@ -36,7 +36,6 @@ class OTPProvider with ChangeNotifier {
       await _otpService.sendOTP('+'+_dialCode + _phoneNumber);
       notifyListeners();
     } catch (error) {
-      print(error.toString());
     }
   }
 }
