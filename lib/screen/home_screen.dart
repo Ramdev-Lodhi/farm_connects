@@ -9,9 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants/styles/colors.dart';
+import '../cubits/rent_cubit/rent_cubit.dart';
 import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
+import '../models/rent_model.dart';
 import '../widgets/loadingIndicator.dart';
 import '../widgets/loadingPlaceholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
@@ -64,7 +66,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   @override
   Widget build(BuildContext context) {
     final cubit = HomeCubit.get(context);
-
+    final Rentcubit = RentCubit.get(context);
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
@@ -92,6 +94,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                 ],
               ),
             ),
+            _sectionHeader(context, 'Custom Hiring Service'),
+            _customHiringService(Rentcubit.rentDataModel, context),
           ],
         ),
       ),
@@ -366,6 +370,136 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         print('TractorId: ${product?.id}');
                                       },
                                       child: Text("Check Tractor Price",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF009688),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _customHiringService(
+      RentDataModel? rentDataModel, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+    return SizedBox(
+      height: 279.h,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal, // Horizontal scroll
+        // itemCount: homeDataModel?.data.tractors.length ?? 0,
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          final product = rentDataModel?.data.rentData[index];
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+            child: GestureDetector(
+              onTap: () {
+                // Get.to(() => TractorsDetails(tractor: product!));
+              },
+              child: Card(
+                elevation: 1,
+                child: Material(
+                  elevation: 3.0,
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                  child: Container(
+                    width: 300.w, // Adjust the card width
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 170.w,
+                            child: CachedNetworkImage(
+                              imageUrl: product?.image ?? '',
+                              fit: BoxFit.contain,
+                              width: double.infinity,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      '${product?.servicetype ?? ''} '.trim(),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16.0.sp,
+                                        // Increased font size
+                                        fontWeight: FontWeight.bold,
+                                        // Bold text
+                                        color: cubit.isDark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Text(
+                                      'Price: ${product?.price ?? 'N/A'}',
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+
+                                        fontWeight: FontWeight.bold,
+
+                                        color: cubit.isDark
+                                            ? Colors.grey[400]
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Text(
+                                  'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    // fontWeight: FontWeight.bold,
+                                    color: cubit.isDark
+                                        ? Colors.grey[400]
+                                        : Colors.black,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print('d: ${product?.id}');
+                                      },
+                                      child: Text("Contact Owner",
                                           style:
                                               TextStyle(color: Colors.white)),
                                       style: ElevatedButton.styleFrom(
