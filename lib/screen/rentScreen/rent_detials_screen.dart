@@ -6,12 +6,16 @@ import '../../config/network/local/cache_helper.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
+
 class RentDetialsScreen extends StatefulWidget {
   final RentData? rentdata;
+
   RentDetialsScreen({required this.rentdata});
+
   @override
   State<RentDetialsScreen> createState() => _TractorsDetailsState();
 }
+
 class _TractorsDetailsState extends State<RentDetialsScreen> {
   int _expandedIndex = -1;
   final _formKey = GlobalKey<FormState>();
@@ -19,6 +23,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -26,8 +31,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
       child: Scaffold(
         appBar: AppBar(
           // automaticallyImplyLeading: false,
-          title: Text(
-              '${widget.rentdata?.servicetype}',
+          title: Text('${widget.rentdata?.servicetype}',
               style: TextStyle(fontWeight: FontWeight.bold)),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -52,18 +56,19 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                 _buildOverviewSection(widget.rentdata)),
             _buildVerticalScrollableContent(
                 _buildownerSection(widget.rentdata)),
-
           ],
         ),
       ),
     );
   }
+
   Widget _buildVerticalScrollableContent(Widget child) {
     return SingleChildScrollView(
       child: child,
     );
   }
-  Widget _buildOverviewSection(RentData? rentdata  ) {
+
+  Widget _buildOverviewSection(RentData? rentdata) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -87,8 +92,9 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
               _buildIconWithText(
                   Icons.location_on, 'Location', ' ${rentdata?.state}'),
               _buildIconWithText(
-                  Icons.timeline, 'Price', ' ${rentdata?.price}'),
-              _buildIconWithText(Icons.power, 'Status', ' ${rentdata?.rentedStatus}'),
+                  Icons.currency_rupee, 'Price', ' ${rentdata?.price}'),
+              _buildIconWithText(
+                  Icons.check_circle, 'Status', ' ${rentdata?.rentedStatus}'),
             ],
           ),
           Center(
@@ -102,8 +108,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return rentContactDialog(
-                            rentdata, context);
+                        return rentContactDialog(rentdata, context);
                       },
                     );
                   },
@@ -123,6 +128,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
       ),
     );
   }
+
   Widget _buildIconWithText(IconData icon, String text, String value) {
     return Row(
       children: [
@@ -170,7 +176,8 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   },
                 ),
                 TextFormField(
-                  initialValue: '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                  initialValue:
+                      '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
                   decoration: InputDecoration(
                     labelText: 'Location',
                     prefixIcon: Icon(Icons.location_on),
@@ -184,7 +191,9 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   },
                 ),
                 TextFormField(
-                  initialValue: ProfileCubits.get(context).profileModel.data?.mobile ?? "",
+                  initialValue:
+                      ProfileCubits.get(context).profileModel.data?.mobile ??
+                          "",
                   decoration: InputDecoration(
                     labelText: 'Mobile',
                     prefixIcon: Icon(Icons.phone),
@@ -221,11 +230,12 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                     width: 150, // Set the desired width here
                     child: ElevatedButton(
                       onPressed: () {
-    if (_formKey.currentState!.validate()) {
-      // Get.to(()=> UsedTractorDetails(selltractor: selltractors));
-    }
+                        if (_formKey.currentState!.validate()) {
+                          // Get.to(()=> UsedTractorDetails(selltractor: selltractors));
+                        }
                       },
-                      child: Text("Contact Owner", style: TextStyle(color: Colors.white)),
+                      child: Text("Contact Owner",
+                          style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF202A44),
                         shape: RoundedRectangleBorder(
@@ -266,10 +276,19 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
               1: FlexColumnWidth(2), // Flex for the second column
             },
             children: [
+              _buildTableRow(
+                  Icons.person, 'Name', '${rentdata?.userInfo?.name}'),
+              _buildTableRow(
+                  Icons.phone, 'Mobile', '${rentdata?.userInfo?.mobile}'),
+              _buildTableRow(
+                  Icons.email, 'Email', '${rentdata?.userInfo?.email}'),
               _buildTableRow(Icons.location_on, 'State', '${rentdata?.state}'),
-              _buildTableRow(Icons.my_location, 'District', '${rentdata?.district}'),
-              _buildTableRow(Icons.location_city, 'SubDistrict', '${rentdata?.sub_district}'),
-              _buildTableRow(Icons.maps_home_work, 'Pincode', '${rentdata?.pincode}'),
+              _buildTableRow(
+                  Icons.my_location, 'District', '${rentdata?.district}'),
+              _buildTableRow(Icons.location_city, 'SubDistrict',
+                  '${rentdata?.sub_district}'),
+              _buildTableRow(
+                  Icons.maps_home_work, 'Pincode', '${rentdata?.pincode}'),
             ],
           ),
         ),
@@ -297,5 +316,4 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
       ],
     );
   }
-
 }

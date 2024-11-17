@@ -52,7 +52,7 @@ class RentData {
     pincode = json['pincode'];
 
     // Safely initialize nested objects
-    userInfo = json['engine'] != null ? UserInfo.fromJson(json['engine']) : null;
+    userInfo = json['userInfo'] != null ? UserInfo.fromJson(json['userInfo']) : null;
     serviceRequests = json['transmission'] != null
         ? ServiceRequests.fromJson(json['transmission'])
         : null;
