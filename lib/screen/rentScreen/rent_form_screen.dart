@@ -8,6 +8,7 @@ import '../../config/network/local/cache_helper.dart';
 import '../../constants/palette.dart'; // Ensure you have the palette constants
 import '../../constants/styles/colors.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
+import '../../cubits/location_cubit/location_cubits.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../cubits/rent_cubit/rent_cubit.dart';
 import '../../cubits/rent_cubit/rent_states.dart';
@@ -64,7 +65,7 @@ class _RentFormScreenState extends State<RentFormScreen>
     loadDistricts();
     _selectedService;
     _selectedPricetype;
-    BlocProvider.of<ProfileCubits>(context).loadStates();
+    BlocProvider.of<LocationCubits>(context).loadStates();
     var profileData = ProfileCubits.get(context).profileModel.data;
     if (profileData != null) {
       _name = profileData.name ?? CacheHelper.getData(key: 'name') ;
@@ -87,6 +88,7 @@ class _RentFormScreenState extends State<RentFormScreen>
       _pincode = profileData.pincode != null
           ? profileData.pincode
           : CacheHelper.getData(key: 'pincode');
+      loadDistricts();
     } else {
     }
   }
@@ -99,8 +101,20 @@ class _RentFormScreenState extends State<RentFormScreen>
 
   Future<void> loadDistricts() async {
     if (selectedState != null) {
-      districts = await BlocProvider.of<ProfileCubits>(context)
+      districts = await BlocProvider.of<LocationCubits>(context)
           .loadDistricts(selectedState!);
+
+      if (selectedDistrict != null) {
+        filteredSubDistricts = districts
+            .firstWhere((district) => district.district == selectedDistrict)
+            .subDistricts;  // Filter sub-districts based on selected district
+      }
+
+      if (selectedSubDistrict != null) {
+        filteredVillages = filteredSubDistricts
+            .firstWhere((subDistrict) => subDistrict.subDistrict == selectedSubDistrict)
+            .villages;  // Filter villages based on selected sub-district
+      }
       setState(() {});
     }
   }
@@ -300,6 +314,7 @@ class _RentFormScreenState extends State<RentFormScreen>
 
   Widget _buildAddressSection() {
     var profileCubit = ProfileCubits.get(context);
+    var locationCubits = LocationCubits.get(context);
     return Form(
       key: _formKey,
       child: Column(
@@ -357,7 +372,7 @@ class _RentFormScreenState extends State<RentFormScreen>
                 flex: 1,
                 child: CustomDropdown(
                   hint: "Select State",
-                  items: profileCubit.stateNames,
+                  items: locationCubits.stateNames,
                   value: selectedState,
                   onChanged: (value) {
                     setState(() {

@@ -19,6 +19,7 @@ import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import 'constants/styles/styles.dart';
+import 'cubits/location_cubit/location_cubits.dart';
 import 'cubits/sell_cubit/sell_cubit.dart';
 
 void main() async {
@@ -63,9 +64,11 @@ class _MyAppState extends State<MyApp> {
           create: (context) => HomeCubit()..getHomeData(),
         ),
         BlocProvider(
-          create: (context) => ProfileCubits()..getProfileData()
-            ..loadStates()
+          create: (context) => LocationCubits()..loadStates()
             ..loadDistricts,
+        ),
+        BlocProvider(
+          create: (context) => ProfileCubits()..getProfileData(),
         ),
         BlocProvider(
           create: (context) => SellCubit()..getModel..getSellData(),

@@ -5,6 +5,7 @@ import 'package:farm_connects/config/network/local/cache_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/network/remote/dio.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
+import '../../cubits/location_cubit/location_cubits.dart';
 import '../../cubits/profile_cubit/profile_states.dart';
 import '../../models/login_model.dart';
 import '../../widgets/customDropdown.dart';
@@ -37,8 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     loadDistricts();
+
     // fetchPincode();
-    BlocProvider.of<ProfileCubits>(context).loadStates();
+    BlocProvider.of<LocationCubits>(context).loadStates();
     var profileData = ProfileCubits.get(context).profileModel.data;
     if (profileData != null) {
       _name = profileData.name ?? CacheHelper.getData(key: 'name') ;
@@ -54,15 +56,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ? CacheHelper.getData(key: 'village')
           : 'No villages';
       _pincode =profileData.pincode != null ?profileData.pincode :  CacheHelper.getData(key: 'pincode');
-
+      loadDistricts();
     } else {
     }
   }
 
   Future<void> loadDistricts() async {
     if (selectedState != null) {
-      districts = await BlocProvider.of<ProfileCubits>(context)
+      districts = await BlocProvider.of<LocationCubits>(context)
           .loadDistricts(selectedState!);
+
+      if (selectedDistrict != null) {
+        filteredSubDistricts = districts
+            .firstWhere((district) => district.district == selectedDistrict)
+            .subDistricts;  // Filter sub-districts based on selected district
+      }
+
+      if (selectedSubDistrict != null) {
+        filteredVillages = filteredSubDistricts
+            .firstWhere((subDistrict) => subDistrict.subDistrict == selectedSubDistrict)
+            .villages;  // Filter villages based on selected sub-district
+      }
       setState(() {});
     }
   }
@@ -162,6 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         var profileCubit = ProfileCubits.get(context);
+        var locationCubits = LocationCubits.get(context);
 
         Color textColor = cubit.isDark ? Colors.white : Colors.black;
         return Scaffold(
@@ -272,13 +287,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: ScreenUtil().setHeight(8)),
                   CustomDropdown(
                     hint: "Select State",
-                    items: profileCubit.stateNames,
+                    items: locationCubits.stateNames,
                     value: selectedState,
                     onChanged: (value) {
                       setState(() {
                         selectedState = value;
-                        selectedDistrict = null;
                         filteredSubDistricts = [];
+                        selectedDistrict = null;
+                        selectedSubDistrict = null;
+                        selectedVillage = null;
                       });
                       loadDistricts();
                     },
@@ -292,11 +309,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onChanged: (value) {
                       setState(() {
                         selectedDistrict = value;
-                        selectedSubDistrict = null;
                         filteredSubDistricts = districts
-                            .firstWhere(
-                                (district) => district.district == value)
+                            .firstWhere((district) => district.district == value)
                             .subDistricts;
+                        selectedSubDistrict = null;
+                        selectedVillage = null;
                       });
                     },
                     label: "District",
@@ -304,9 +321,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: ScreenUtil().setHeight(16)),
                   CustomDropdown(
                     hint: "Select Sub-District",
-                    items:
-                        filteredSubDistricts.map((s) => s.subDistrict).toList(),
-                    value: selectedSubDistrict,
+                    items: filteredSubDistricts.isNotEmpty
+                        ? filteredSubDistricts.map((s) => s.subDistrict).toList()
+                        : ['No sub-districts available'],
+                    value: selectedSubDistrict ?? 'No sub-district selected',
                     onChanged: (value) {
                       setState(() {
                         selectedSubDistrict = value;
@@ -322,7 +340,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     hint: "Select Village",
                     items: filteredVillages.isNotEmpty
                         ? filteredVillages
-                        : ['No villages'],
+                        : ['No villages available'],
                     value: selectedVillage ?? 'No village selected',
                     onChanged: (value) {
                       setState(() {
@@ -330,7 +348,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       });
                     },
                     label: "Village",
-
                   ),
                   SizedBox(height: ScreenUtil().setHeight(12)),
                   _buildTextField(
