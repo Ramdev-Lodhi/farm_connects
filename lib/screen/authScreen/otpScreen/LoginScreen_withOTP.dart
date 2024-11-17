@@ -12,6 +12,7 @@ import '../../../config/network/local/cache_helper.dart';
 import '../../../constants/palette.dart';
 import '../../../cubits/auth_cubit/auth_cubit.dart';
 import '../../../cubits/home_cubit/home_cubit.dart';
+import '../../../cubits/sell_cubit/sell_cubit.dart';
 import '../../../layout/home_layout.dart';
 import '../../../widgets/loadingIndicator.dart';
 import '../../../widgets/snackbar_helper.dart';
@@ -70,6 +71,7 @@ class _OTPScreenState extends State<OTPScreen> {
               await LocationHelper.fetchLocationDetails();
               CacheHelper.getData(key: 'token');
               HomeCubit.get(context).getHomeData();
+              SellCubit.get(context).getSellData();
               await ProfileCubits.get(context).getProfileData();
               var profileData = ProfileCubits.get(context).profileModel.data;
               if (profileData != null) {

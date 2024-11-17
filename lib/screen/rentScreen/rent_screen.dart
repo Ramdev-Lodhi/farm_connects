@@ -3,7 +3,10 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_states.dart';
+import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:flutter/services.dart';
+import '../../config/network/local/cache_helper.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/rent_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +17,11 @@ import '../../widgets/loadingPlaceholder.dart';
 import '../BuyScreen/brand_screen.dart';
 
 class RentScreen extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RentCubit, RentStates>(
@@ -110,88 +118,100 @@ class RentScreen extends StatelessWidget {
   Widget ItemBuilder(RentData? product, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.0.h),
-      child: Card(
-        elevation: 1,
-        child: Material(
-          elevation: 3.0,
-          borderRadius: BorderRadius.circular(8.0),
-          color: cubit.isDark ? Colors.grey[800] : Colors.white,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6.0),
-                      child: SizedBox(
-                        height: 120.w,
-                        width: 120.w,
-                        child: CachedNetworkImage(
-                          imageUrl: product?.image ?? '',
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline),
+    return GestureDetector(
+      onTap: (){
+        Get.to(() => RentDetialsScreen(rentdata: product));
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.0.h),
+        child: Card(
+          elevation: 1,
+          child: Material(
+            elevation: 3.0,
+            borderRadius: BorderRadius.circular(8.0),
+            color: cubit.isDark ? Colors.grey[800] : Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: SizedBox(
+                          height: 120.w,
+                          width: 120.w,
+                          child: CachedNetworkImage(
+                            imageUrl: product?.image ?? '',
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title (Service type or name)
-                        Text(
-                          '${product?.servicetype}'.trim(),
-                          maxLines: 1,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.bold,
-                            color: cubit.isDark ? Colors.white : Colors.black,
-                          ),
-                        ),
-
-                        SizedBox(height: 8.0),
-                        Text("₹ ${product?.price}",
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title (Service type or name)
+                          Text(
+                            '${product?.servicetype}'.trim(),
+                            maxLines: 1,
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8.0),
-                        Text(
-                          'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color:
-                                cubit.isDark ? Colors.white70 : Colors.black54,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                          },
-                          child: Text("Contact Owner",
-                              style: TextStyle(color: Colors.white)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF009688),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2.0),
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: cubit.isDark ? Colors.white : Colors.black,
                             ),
                           ),
-                        ),
-                      ],
+
+                          SizedBox(height: 8.0),
+                          Text("₹ ${product?.price}",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color:
+                                  cubit.isDark ? Colors.white70 : Colors.black54,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return rentContactDialog(
+                                      product, context);
+                                },
+                              );
+                            },
+                            child: Text("Contact Owner",
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF009688),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -212,49 +232,54 @@ class RentScreen extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final service = services[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
-            child: Material(
-              elevation: 3.0,
-              borderRadius: BorderRadius.circular(5.0),
-              color: cubit.isDark ? Colors.grey[800] : Colors.white,
-              child: ClipRRect(
+          return GestureDetector(
+            onTap: (){
+              print(service.service);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
+              child: Material(
+                elevation: 3.0,
                 borderRadius: BorderRadius.circular(5.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    width: 110.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 50.h,
-                          width: 60.w,
-                          child: CachedNetworkImage(
-                            imageUrl:  '',
-                            fit: BoxFit.contain,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
+                color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      width: 110.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 50.h,
+                            width: 60.w,
+                            child: CachedNetworkImage(
+                              imageUrl:  '',
+                              fit: BoxFit.contain,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Center(
-                            child: Text(
-                              service.service ?? '',
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    cubit.isDark ? Colors.white : Colors.black,
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Center(
+                              child: Text(
+                                service.service ?? '',
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      cubit.isDark ? Colors.white : Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -262,6 +287,109 @@ class RentScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+  Widget rentContactDialog(rent, BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Container(
+        height: 450.0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10.0),
+                TextFormField(
+                  initialValue: CacheHelper.getData(key: 'name') ?? "",
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  initialValue: '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                  decoration: InputDecoration(
+                    labelText: 'Location',
+                    prefixIcon: Icon(Icons.location_on),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Location';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  initialValue: ProfileCubits.get(context).profileModel.data?.mobile ?? "",
+                  decoration: InputDecoration(
+                    labelText: 'Mobile',
+                    prefixIcon: Icon(Icons.phone),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Mobile';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Budget',
+                    prefixIcon: Icon(Icons.currency_rupee),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Budget';
+                    }
+                    return null;
+                  },
+                ),
+                Divider(
+                  thickness: 1.5,
+                  color: Colors.black12,
+                  height: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                  child: SizedBox(
+                    width: 150, // Set the desired width here
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          Get.to(() => RentDetialsScreen(rentdata: rent));
+                        }
+                      },
+                      child: Text("Contact Owner", style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF202A44),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(2.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
