@@ -649,7 +649,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       child: Text("Contact Seller",
                           style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF202A44),
+                        backgroundColor: Color(0xFF009688),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(2.0),
                         ),
