@@ -53,9 +53,9 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
     HomeCubit cubits = HomeCubit.get(context);
     final tractors = sellAllTractorData?.data.SellTractor ?? [];
     final brands = HomeCubit.get(context).homeDataModel?.data.brands ?? [];
-    final filteredTractors = selectedBrand != null
-        ? tractors.where((tractor) => tractor.brand == selectedBrand).toList()
-        : tractors;
+    // final filteredTractors = selectedBrand != null
+    //     ? tractors.where((tractor) => tractor.brand == selectedBrand).toList()
+    //     : tractors;
 // print('sell = ${sellAllTractorData?.data.SellTractor}');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -67,8 +67,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
 // Display first two tractors
             Column(
               children: List.generate(
-                filteredTractors.length < 2 ? filteredTractors.length : 2,
-                (index) => tractorItemBuilder(filteredTractors[index], context),
+                tractors.length < 2 ? tractors.length : 2,
+                (index) => tractorItemBuilder(tractors[index], context),
               ),
             ),
 
@@ -114,11 +114,11 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
 // Display remaining tractors
             Column(
               children: List.generate(
-                filteredTractors.length > 6
+                tractors.length > 6
                     ? 4
-                    : (filteredTractors.length - 2).clamp(0, 4),
+                    : (tractors.length - 2).clamp(0, 4),
                 (index) =>
-                    tractorItemBuilder(filteredTractors[index + 2], context),
+                    tractorItemBuilder(tractors[index + 2], context),
               ),
             ),
 
