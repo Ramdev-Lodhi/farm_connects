@@ -184,7 +184,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
               children: [
                 // Top TabBar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  padding: const EdgeInsets.only(top: 40),
                   child: Container(
                     color: Palette.tabbarColor,
                     child: TabBar(
