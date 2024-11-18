@@ -561,103 +561,109 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Container(
-        height: 450.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10.0),
-                TextFormField(
-                  initialValue: CacheHelper.getData(key: 'name') ?? "",
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
+      insetPadding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 400.0,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  TextFormField(
+                    initialValue: CacheHelper.getData(key: 'name') ?? "",
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Name';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  initialValue:
-                      '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
-                  decoration: InputDecoration(
-                    labelText: 'Location',
-                    prefixIcon: Icon(Icons.location_on),
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    initialValue:
+                        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Location';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Location';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  initialValue:
-                      ProfileCubits.get(context).profileModel.data?.mobile ??
-                          "",
-                  decoration: InputDecoration(
-                    labelText: 'Mobile',
-                    prefixIcon: Icon(Icons.phone),
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    initialValue:
+                        ProfileCubits.get(context).profileModel.data?.mobile ??
+                            "",
+                    decoration: InputDecoration(
+                      labelText: 'Mobile',
+                      prefixIcon: Icon(Icons.phone),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Mobile';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Mobile';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Budget',
-                    prefixIcon: Icon(Icons.currency_rupee),
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Budget',
+                      prefixIcon: Icon(Icons.currency_rupee),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Budget';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Budget';
-                    }
-                    return null;
-                  },
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.black12,
-                  height: 10,
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
-                  child: SizedBox(
-                    width: 150, // Set the desired width here
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Get.to(() =>
-                              UsedTractorDetails(selltractor: selltractors));
-                        }
-                      },
-                      child: Text("Contact Seller",
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF202A44),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(2.0),
+                  Divider(
+                    thickness: 1.5,
+                    color: Colors.black12,
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                    child: SizedBox(
+                      width: 150, // Set the desired width here
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Get.to(() =>
+                                UsedTractorDetails(selltractor: selltractors));
+                          }
+                        },
+                        child: Text("Contact Seller",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF009688),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
