@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../widgets/snackbar_helper.dart';
+import '../BuyScreen/tractors_by_brand_screen.dart';
 import '../sellScreen/used_tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -399,7 +400,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
             child: GestureDetector(
               onTap: () {
                 selectedBrand = product.name;
-                // Rebuild the screen to show filtered tractors
+                  Get.to(() => TractorsByBrandScreen(brandName: product.name, brandId: product.id));
+
                 setState(() {});
               },
               child: Material(

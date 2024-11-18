@@ -95,6 +95,20 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             ],
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+              Text("Price: ",
+                  style:
+                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+              SizedBox(width: 8),
+              Icon(Icons.currency_rupee, size: 25),
+              SizedBox(width: 4),
+              Text("${tractor.price}",
+                  style:
+                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          SizedBox(height: 20),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

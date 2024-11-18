@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/screen/BuyScreen/tractor_details_screen.dart';
+import 'package:farm_connects/screen/BuyScreen/tractors_by_brand_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -370,47 +371,51 @@ class NewTractorScreen extends StatelessWidget {
           final product = brands[index];
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 8.0),
-            child: Material(
-
-              elevation: 3.0,
-              borderRadius: BorderRadius.circular(5.0),
-              color: cubit.isDark ? Colors.grey[800] : Colors.white,
-              child: ClipRRect(
+            child: GestureDetector(
+              onTap: (){
+                Get.to(() => TractorsByBrandScreen(brandName: product.name, brandId: product.id));
+              },
+              child: Material(
+                elevation: 3.0,
                 borderRadius: BorderRadius.circular(5.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    width: 110.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 50.h,
-                          width: 60.w,
-                          child: CachedNetworkImage(
-                            imageUrl: product.image ?? '',
-                            fit: BoxFit.contain,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
+                color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      width: 110.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 50.h,
+                            width: 60.w,
+                            child: CachedNetworkImage(
+                              imageUrl: product.image ?? '',
+                              fit: BoxFit.contain,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Center(
-                            child: Text(
-                              product.name ?? '',
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w600,
-                                color: cubit.isDark ? Colors.white : Colors.black,
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Center(
+                              child: Text(
+                                product.name ?? '',
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

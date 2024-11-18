@@ -11,11 +11,8 @@ import '../../cubits/home_cubit/home_cubit.dart';
 import '../../config/network/remote/dio.dart';
 import '../../models/login_model.dart';
 import '../../widgets/customDropdown.dart';
+import '../../widgets/loadingIndicator.dart';
 import '../../widgets/snackbar_helper.dart';
-import '../../config/location/location_permission.dart';
-import '../../cubits/auth_cubit/auth_states.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import '../../layout/home_layout.dart';
 import '../authScreen/otpScreen/LoginScreen_withOTP.dart';
 
@@ -46,6 +43,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   bool isLoading = false;
   bool _isPasswordVisible = false;
   bool _isCPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -188,6 +186,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         if (state is ProfileState && state.showSnackbar != null) {
           state.showSnackbar(context);
         }
+        if (state is ProfileUpdateLoading ) {
+          setState(() => _isLoading = true);
+        } else {
+          setState(() => _isLoading = false);
+        }
       },
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
@@ -217,257 +220,269 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTextField(
-                    initialValue: _name,
-                    label: 'Name',
-                    onSaved: (value) => _name = value,
-                    onChanged:(value) {
-                      setState(() {
-                        _name = value;
-                      });
-                    },
-                  ),
-                  _buildTextField(
-                    initialValue: profileCubit.profileModel.data?.email,
-                    label: 'Email',
-                    onSaved: (value) => _email = value,
-                    onChanged:(value) {
-                      setState(() {
-                        _email = value;
-                      });
-                    },
-                  ),
+          body: Stack(
+            children: [
+             SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField(
+                      initialValue: _name,
+                      label: 'Name',
+                      onSaved: (value) => _name = value,
+                      onChanged:(value) {
+                        setState(() {
+                          _name = value;
+                        });
+                      },
+                    ),
+                    _buildTextField(
+                      initialValue: profileCubit.profileModel.data?.email,
+                      label: 'Email',
+                      onSaved: (value) => _email = value,
+                      onChanged:(value) {
+                        setState(() {
+                          _email = value;
+                        });
+                      },
+                    ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: Row(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                initialValue:
+                                    profileCubit.profileModel.data?.mobile,
+                                decoration: InputDecoration(
+                                  labelText: 'Mobile',
+                                  labelStyle: TextStyle(
+                                    fontWeight:
+                                        FontWeight.bold, // Makes the label bold
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 12),
+                                  // suffixIcon: mobileverified &&
+                                  //         _mobile ==
+                                  //             profileCubit
+                                  //                 .profileModel.data?.mobile
+                                  //     ? Icon(Icons.verified, color: Colors.green)
+                                  //     : Icon(Icons.cancel, color: Colors.red),
+                                ),
+                                onSaved: (value) => _mobile = value,
+                                onChanged: (value) {
+                                  _mobile = value;
+                                  // if (_mobile !=
+                                  //     profileCubit.profileModel.data?.mobile) {
+                                  //   mobileverified = false;
+                                  // }
+                                  if (value.length == 10 && !isOTPSent) {
+                                    mobileverified = true;
+                                    // sendOTP(
+                                    //     value); // Call sendOTP when mobile number is valid
+                                  }
+                                },
+                                validator: (value) => value?.isEmpty ?? true
+                                    ? 'Please enter your Mobile'
+                                    : null,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     if (_mobile != null && _mobile!.length == 10) {
+                          //       _showOTPDialog();
+                          //       sendOTP(_mobile!);
+                          //     } else {
+                          //       showCustomSnackbar('Error',
+                          //           'Please enter a valid mobile number.',
+                          //           isError: true);
+                          //     }
+                          //   },
+                          //   child: Text(
+                          //     'OTP',
+                          //     style: TextStyle(color: Colors.white),
+                          //   ),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Colors.blue,
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(3.0),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: ScreenUtil().setHeight(8)),
+                    CustomDropdown(
+                      hint: "Select State",
+                      items: locationCubits.stateNames,
+                      value: selectedState,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedState = value;
+                          selectedDistrict = null;
+                          filteredSubDistricts = [];
+                        });
+                        loadDistricts();
+                      },
+                      label: "State",
+                    ),
+                    SizedBox(height: ScreenUtil().setHeight(16)),
+                    CustomDropdown(
+                      hint: "Select District",
+                      items: districts.map((d) => d.district).toList(),
+                      value: selectedDistrict,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDistrict = value;
+                          selectedSubDistrict = null;
+                          filteredSubDistricts = districts
+                              .firstWhere(
+                                  (district) => district.district == value)
+                              .subDistricts;
+                        });
+                      },
+                      label: "District",
+                    ),
+                    SizedBox(height: ScreenUtil().setHeight(16)),
+                    CustomDropdown(
+                      hint: "Select Sub-District",
+                      items:
+                          filteredSubDistricts.map((s) => s.subDistrict).toList(),
+                      value: selectedSubDistrict,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSubDistrict = value;
+                          filteredVillages = filteredSubDistricts
+                              .firstWhere((s) => s.subDistrict == value)
+                              .villages;
+                        });
+                      },
+                      label: "Sub-District",
+                    ),
+                    SizedBox(height: ScreenUtil().setHeight(16)),
+                    CustomDropdown(
+                      hint: "Select Village",
+                      items: filteredVillages.isNotEmpty
+                          ? filteredVillages
+                          : ['No villages'],
+                      value: selectedVillage ?? 'No village selected',
+                      onChanged: (value) {
+                        setState(() {
+                          selectedVillage = value;
+                        });
+                      },
+                      label: "Village",
+                    ),
+                    SizedBox(height: ScreenUtil().setHeight(12)),
+                    _buildTextField(
+                      initialValue: _pincode,
+                      label: 'Pincode',
+                      onSaved: (value) => _pincode = value,
+                        onChanged:(value) {
+                          setState(() {
+                            _pincode = value;
+                          });
+                        },
+                    ),
+                  if(_checkpassword == null)
+                    _buildPasswordTextField(
+                      initialValue: _password,
+                      label: 'Password',
+                      suffixIcon: _buildPasswordSuffixIcon(),
+                      onSaved: (value) => _password = value,
+                      onChanged: (value) {
+                        setState(() {
+                          _password = value;
+                        });
+                      },
+                      obscureText: _isPasswordVisible,
+                    ),
+                    if(_checkpassword == null)
+                    _buildPasswordTextField(
+                      initialValue: _cpassword,
+                      label: 'Confirm Password',
+                      suffixIcon: _buildCPasswordSuffixIcon(),
+                      onSaved: (value) => _cpassword = value,
+                      onChanged: (value) {
+                        setState(() {
+                          _cpassword = value;
+                        });
+                      },
+                      obscureText: _isCPasswordVisible,
+                    ),
+
+                    Row(
                       children: [
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: TextFormField(
-                              initialValue:
-                                  profileCubit.profileModel.data?.mobile,
-                              decoration: InputDecoration(
-                                labelText: 'Mobile',
-                                labelStyle: TextStyle(
-                                  fontWeight:
-                                      FontWeight.bold, // Makes the label bold
-                                ),
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 12),
-                                suffixIcon: mobileverified &&
-                                        _mobile ==
-                                            profileCubit
-                                                .profileModel.data?.mobile
-                                    ? Icon(Icons.verified, color: Colors.green)
-                                    : Icon(Icons.cancel, color: Colors.red),
-                              ),
-                              onSaved: (value) => _mobile = value,
-                              onChanged: (value) {
-                                _mobile = value;
-                                if (_mobile !=
-                                    profileCubit.profileModel.data?.mobile) {
-                                  mobileverified = false;
-                                }
-                                if (value.length == 10 && !isOTPSent) {
-                                  sendOTP(
-                                      value); // Call sendOTP when mobile number is valid
-                                }
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                AuthCubits.get(context).signOut();
+                                CacheHelper.removeData(key: 'token');
+                                CacheHelper.removeData(key: 'image');
+                                CacheHelper.removeData(key: 'name');
+                                CacheHelper.removeData(key: 'email');
+                                CacheHelper.removeData(key: 'state');
+                                CacheHelper.removeData(key: 'district' );
+                                CacheHelper.removeData(key: 'subDistrict');
+                                CacheHelper.removeData(key: 'village');
+                                CacheHelper.removeData(key: 'pincode');
+                               Get.offAll(()=>OTPScreen());
                               },
-                              validator: (value) => value?.isEmpty ?? true
-                                  ? 'Please enter your Mobile'
-                                  : null,
+                              child:
+                              Text("Logout", style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2.0),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(width: 2),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_mobile != null && _mobile!.length == 10) {
-                              _showOTPDialog();
-                              sendOTP(_mobile!);
-                            } else {
-                              showCustomSnackbar('Error',
-                                  'Please enter a valid mobile number.',
-                                  isError: true);
-                            }
-                          },
-                          child: Text(
-                            'OTP',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3.0),
+                        SizedBox(width: ScreenUtil().setWidth(2)),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 0),
+                            child: ElevatedButton(
+                              onPressed: _saveProfile,
+                              child:
+                              Text("Next", style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2.0),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(8)),
-                  CustomDropdown(
-                    hint: "Select State",
-                    items: locationCubits.stateNames,
-                    value: selectedState,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedState = value;
-                        selectedDistrict = null;
-                        filteredSubDistricts = [];
-                      });
-                      loadDistricts();
-                    },
-                    label: "State",
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(16)),
-                  CustomDropdown(
-                    hint: "Select District",
-                    items: districts.map((d) => d.district).toList(),
-                    value: selectedDistrict,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDistrict = value;
-                        selectedSubDistrict = null;
-                        filteredSubDistricts = districts
-                            .firstWhere(
-                                (district) => district.district == value)
-                            .subDistricts;
-                      });
-                    },
-                    label: "District",
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(16)),
-                  CustomDropdown(
-                    hint: "Select Sub-District",
-                    items:
-                        filteredSubDistricts.map((s) => s.subDistrict).toList(),
-                    value: selectedSubDistrict,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedSubDistrict = value;
-                        filteredVillages = filteredSubDistricts
-                            .firstWhere((s) => s.subDistrict == value)
-                            .villages;
-                      });
-                    },
-                    label: "Sub-District",
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(16)),
-                  CustomDropdown(
-                    hint: "Select Village",
-                    items: filteredVillages.isNotEmpty
-                        ? filteredVillages
-                        : ['No villages'],
-                    value: selectedVillage ?? 'No village selected',
-                    onChanged: (value) {
-                      setState(() {
-                        selectedVillage = value;
-                      });
-                    },
-                    label: "Village",
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(12)),
-                  _buildTextField(
-                    initialValue: _pincode,
-                    label: 'Pincode',
-                    onSaved: (value) => _pincode = value,
-                      onChanged:(value) {
-                        setState(() {
-                          _pincode = value;
-                        });
-                      },
-                  ),
-                if(_checkpassword == null)
-                  _buildPasswordTextField(
-                    initialValue: _password,
-                    label: 'Password',
-                    suffixIcon: _buildPasswordSuffixIcon(),
-                    onSaved: (value) => _password = value,
-                    onChanged: (value) {
-                      setState(() {
-                        _password = value;
-                      });
-                    },
-                    obscureText: _isPasswordVisible,
-                  ),
-                  if(_checkpassword == null)
-                  _buildPasswordTextField(
-                    initialValue: _cpassword,
-                    label: 'Confirm Password',
-                    suffixIcon: _buildCPasswordSuffixIcon(),
-                    onSaved: (value) => _cpassword = value,
-                    onChanged: (value) {
-                      setState(() {
-                        _cpassword = value;
-                      });
-                    },
-                    obscureText: _isCPasswordVisible,
-                  ),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              AuthCubits.get(context).signOut();
-                              CacheHelper.removeData(key: 'token');
-                              CacheHelper.removeData(key: 'image');
-                              CacheHelper.removeData(key: 'name');
-                              CacheHelper.removeData(key: 'email');
-                              CacheHelper.removeData(key: 'state');
-                              CacheHelper.removeData(key: 'district' );
-                              CacheHelper.removeData(key: 'subDistrict');
-                              CacheHelper.removeData(key: 'village');
-                              CacheHelper.removeData(key: 'pincode');
-                             Get.offAll(()=>OTPScreen());
-                            },
-                            child:
-                            Text("Logout", style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: ScreenUtil().setWidth(2)),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 0),
-                          child: ElevatedButton(
-                            onPressed: _saveProfile,
-                            child:
-                            Text("Next", style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                ],
+                  ],
+                ),
               ),
             ),
+              if (_isLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(child: LoadingIndicator(size: 100)),
+                  ),
+                ),
+            ],
           ),
         );
       },

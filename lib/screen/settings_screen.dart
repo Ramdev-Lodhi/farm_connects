@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/profileScreen/profile_screen.dart';
+import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
+import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -177,6 +179,9 @@ class SettingsScreen extends StatelessWidget {
                                   color: textColor),
                             ),
                             ListTile(
+                              onTap: (){
+                                cubit.changeNavIndex(1);
+                              },
                               leading: Icon(FontAwesomeIcons.tractor,
                                   size: 20.0, color: textColor),
                               title: Text("NEW TRACTOR",
@@ -185,6 +190,9 @@ class SettingsScreen extends StatelessWidget {
                                   color: textColor),
                             ),
                             ListTile(
+                              onTap: (){
+                                cubit.changeNavIndex(2);
+                              },
                               leading: Icon(Icons.agriculture_outlined,
                                   color: textColor),
                               title: Text("BUY USED TRACTOR",
@@ -193,6 +201,9 @@ class SettingsScreen extends StatelessWidget {
                                   color: textColor),
                             ),
                             ListTile(
+                              onTap: (){
+                                Get.to(() => SellScreen());
+                              },
                               leading: Icon(Icons.sell, color: textColor),
                               title: Text("SELL USED TRACTOR",
                                   style: TextStyle(color: textColor)),
@@ -208,6 +219,9 @@ class SettingsScreen extends StatelessWidget {
                                   color: textColor),
                             ),
                             ListTile(
+                              onTap: (){
+                                Get.to(() => RentFormScreen());
+                              },
                               leading: Icon(FontAwesomeIcons.retweet,
                                   size: 20.0, color: textColor),
                               title: Text("RENT TRACTOR / EQUIPMENT'S",

@@ -75,7 +75,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                 indicatorPadding: EdgeInsets.zero,
                 labelPadding: EdgeInsets.symmetric(horizontal: 16),
                 tabs: const [
-                  Tab(text: 'Overview'),
+                  Tab(text: 'New Tractors'),
                   Tab(text: 'Used Tractors'),
                   Tab(text: 'Implements'),
                   Tab(text: 'About Tractors'),

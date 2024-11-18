@@ -1,22 +1,19 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../config/network/local/cache_helper.dart';
-import '../../constants/palette.dart'; // Ensure you have the palette constants
-import '../../constants/styles/colors.dart';
+import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/location_cubit/location_cubits.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../cubits/rent_cubit/rent_cubit.dart';
 import '../../cubits/rent_cubit/rent_states.dart';
-import '../../models/home_data_model.dart';
 import '../../widgets/customDropdown.dart';
 import '../../widgets/loadingIndicator.dart';
 import '../../widgets/snackbar_helper.dart';
-import '../sellScreen/sell_imageUpload.dart'; // If applicable
+import '../sellScreen/sell_imageUpload.dart';
 
 class RentFormScreen extends StatefulWidget {
   @override
@@ -54,7 +51,7 @@ class _RentFormScreenState extends State<RentFormScreen>
     'Month',
     'Years',
     'Bigha',
-    'Acre'
+    'Acre',
     'km'
   ];
 
@@ -184,9 +181,8 @@ class _RentFormScreenState extends State<RentFormScreen>
               children: [
                 // Top TabBar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical:20),
+                  padding: const EdgeInsets.only(top: 40),
                   child: Container(
-
                     color: Palette.tabbarColor,
                     child: TabBar(
                       controller: _tabController,

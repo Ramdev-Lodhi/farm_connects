@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 
+import '../screen/rentScreen/rent_form_screen.dart';
 import '../screen/sellScreen/sell_Screen.dart';
 import '../widgets/sell_rent_dialog.dart';
 
@@ -93,6 +94,7 @@ class _AppBarLayoutState extends State<AppBarLayout> {
                           Get.to(() => SellScreen());
                         },
                         onRent: () {
+                          Get.to(() => RentFormScreen());
                         },
                         isDark: widget.isDark,
                       );

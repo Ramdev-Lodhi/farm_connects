@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:farm_connects/layout/home_layout.dart';
 import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
-import 'package:farm_connects/screen/BuyScreen/new_tractors_screen.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:farm_connects/screen/sellScreen/used_tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +17,6 @@ import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../models/rent_model.dart';
-import '../widgets/loadingIndicator.dart';
 import '../widgets/loadingPlaceholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
 import 'BuyScreen/tractors_by_brand_screen.dart';
@@ -100,7 +97,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             gridTractorsBuilder(widget.homeDataModel, context),
             _viewAllButton(context,
                 label: "View All Tractors",
-                onTap: () => Get.to(() => HomeLayout())),
+                onTap: (){
+                  cubit.changeNavIndex(1);
+                },
+                // onTap: () => Get.to(() => HomeLayout())
+            ),
+
             _sectionHeader(context, 'Tractor By Brand'),
             _tractorTypeTabBar(context),
             SizedBox(
@@ -115,8 +117,22 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             ),
             _sectionHeader(context, 'Used Tractor'),
             gridsellTractorsBuilder(selltractors, context),
+            _viewAllButton(context,
+              label: "View All Used Tractors",
+              onTap: (){
+                cubit.changeNavIndex(2);
+              },
+              // onTap: () => Get.to(() => HomeLayout())
+            ),
             _sectionHeader(context, 'Custom Hiring Service'),
             _customHiringService(Rentcubit.rentDataModel, context),
+            _viewAllButton(context,
+              label: "View All Rent Services",
+              onTap: (){
+                cubit.changeNavIndex(3);
+              },
+              // onTap: () => Get.to(() => HomeLayout())
+            ),
           ],
         ),
       ),
