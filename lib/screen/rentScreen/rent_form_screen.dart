@@ -196,7 +196,6 @@ class _RentFormScreenState extends State<RentFormScreen>
                     ),
                   ),
                 ),
-                // TabBarView for the content
                 Expanded(
                   child: Stack(
                     children: [

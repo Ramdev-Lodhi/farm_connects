@@ -1,10 +1,8 @@
 import 'package:farm_connects/models/rent_model.dart';
-import 'package:farm_connects/models/sell_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../constants/palette.dart';
-import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 
 class RentDetialsScreen extends StatefulWidget {
@@ -225,9 +223,9 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   height: 10,
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                  margin: EdgeInsets.only(bottom: 0),
                   child: SizedBox(
-                    width: 150, // Set the desired width here
+                    width: 150,
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
