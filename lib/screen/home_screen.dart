@@ -137,7 +137,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             // onTap: () => Get.to(() => HomeLayout())
           ),
           _sectionHeader(context, 'Explore Farm Connects'),
-          gridExploreBuilder(context),
+          Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
           SizedBox(height: 10.h),
           _sectionHeader(context, 'Custom Hiring Service'),
           _customHiringService(Rentcubit.rentDataModel, context),

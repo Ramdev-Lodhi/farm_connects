@@ -74,11 +74,13 @@ class _AccountScreenState extends State<AccountScreen>
                     SizedBox(height: 10.0),
                     _AccountTypeTabBar(textColor),
                     SizedBox(
-                      height: 350.h,
+                      height: 365.h,
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          _buildMyLeads(isDark),
+                          Transform.translate(
+                              offset: Offset(0, -20),
+                              child: _buildMyLeads(isDark)),
                           _buildPersonalInfoSection(textColor,iconColor, profileCubit),
                         ],
                       ),

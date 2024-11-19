@@ -42,64 +42,70 @@ class RentScreen extends StatelessWidget {
     final RentData = rentDataModel?.data.rentData ?? [];
     final brands = cubits.homeDataModel?.data.brands ?? [];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: RentData.length < 3 ? RentData.length : 3,
-              itemBuilder: (context, index) =>
-                  ItemBuilder(RentData[index], context),
-            ),
-            if (brands.isNotEmpty) ...[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.branding_watermark_outlined,
-                      color: Colors.red,
-                      size: 24.0.sp,
-                    ),
-                    SizedBox(width: 10.0.w),
-                    Text(
-                      "Select Hiring Service",
-                      style: TextStyle(
-                        fontSize: 20.0.sp,
-                        fontWeight: FontWeight.bold,
-                        color: cubits.isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+    return Transform.translate(
+      offset: Offset(0, -20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: RentData.length < 3 ? RentData.length : 3,
+                itemBuilder: (context, index) =>
+                    ItemBuilder(RentData[index], context),
               ),
-              gridServiceBuilder(cubits.homeDataModel, context),
-              TextButton(
-                onPressed: () {
-                },
-                child: Text(
-                  "View All Services   ➞",
-                  style: TextStyle(
-                    fontSize: 18.0.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blue,
+              if (brands.isNotEmpty) ...[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.branding_watermark_outlined,
+                        color: Colors.red,
+                        size: 24.0.sp,
+                      ),
+                      SizedBox(width: 10.0.w),
+                      Text(
+                        "Select Hiring Service",
+                        style: TextStyle(
+                          fontSize: 20.0.sp,
+                          fontWeight: FontWeight.bold,
+                          color: cubits.isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                gridServiceBuilder(cubits.homeDataModel, context),
+                TextButton(
+                  onPressed: () {
+                  },
+                  child: Text(
+                    "View All Services   ➞",
+                    style: TextStyle(
+                      fontSize: 18.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
+              Transform.translate(
+                offset: Offset(0, -25),
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: RentData.length - 3,
+                  itemBuilder: (context, index) =>
+                      ItemBuilder(RentData[index + 3], context),
                 ),
               ),
             ],
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: RentData.length - 3,
-              itemBuilder: (context, index) =>
-                  ItemBuilder(RentData[index + 3], context),
-            ),
-          ],
+          ),
         ),
       ),
     );
