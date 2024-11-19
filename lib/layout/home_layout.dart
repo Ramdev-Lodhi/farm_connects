@@ -70,7 +70,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                     Flexible(
                       child: Image.asset(
                         'assets/images/logo/FarmConnects_logo.png',
-                        height: 100,
+                        height: 110,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -107,7 +107,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                         );
                       },
                       child: Container(
-                        // width: 55.w,
+                        width: 80.w,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black87, width: 2),
                           borderRadius: BorderRadius.circular(5.0),
