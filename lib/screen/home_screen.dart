@@ -86,61 +86,70 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         SellCubit.get(context).sellAllTractorData?.data.SellTractor ?? [];
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCarousel(widget.homeDataModel, screenHeight),
-            _sectionHeader(context, 'New Tractor'),
-            gridTractorsBuilder(widget.homeDataModel, context),
-            _viewAllButton(
-              context,
-              label: "View All Tractors",
-              onTap: () {
-                cubit.changeNavIndex(1);
-              },
-              // onTap: () => Get.to(() => HomeLayout())
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildCarousel(widget.homeDataModel, screenHeight),
+          ),
+          _sectionHeader(context, 'New Tractor'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: gridTractorsBuilder(widget.homeDataModel, context),
+          ),
+          _viewAllButton(
+            context,
+            label: "View All Tractors",
+            onTap: () {
+              cubit.changeNavIndex(1);
+            },
+            // onTap: () => Get.to(() => HomeLayout())
+          ),
+          _sectionHeader(context, 'Tractor By Brand'),
+          _tractorTypeTabBar(context),
+          SizedBox(
+            height: 350.h,
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _newTractorsViewBrands(widget.homeDataModel, context),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _usedTractorsBrands(widget.homeDataModel, context),
+                ),
+              ],
             ),
-            _sectionHeader(context, 'Tractor By Brand'),
-            _tractorTypeTabBar(context),
-            SizedBox(
-              height: 350.h,
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _newTractorsViewBrands(widget.homeDataModel, context),
-                  _usedTractorsBrands(widget.homeDataModel, context),
-                ],
-              ),
-            ),
-            _sectionHeader(context, 'Used Tractor'),
-            gridsellTractorsBuilder(selltractors, context),
-            _viewAllButton(
-              context,
-              label: "View All Used Tractors",
-              onTap: () {
-                cubit.changeNavIndex(2);
-              },
-              // onTap: () => Get.to(() => HomeLayout())
-            ),
-            _sectionHeader(context, 'Explore Farm Connects'),
-            gridExploreBuilder(context),
-            SizedBox(height: 10.h),
-            _sectionHeader(context, 'Custom Hiring Service'),
-            _customHiringService(Rentcubit.rentDataModel, context),
-            _viewAllButton(
-              context,
-              label: "View All Rent Services",
-              onTap: () {
-                cubit.changeNavIndex(3);
-              },
-              // onTap: () => Get.to(() => HomeLayout())
-            ),
-          ],
-        ),
+          ),
+          _sectionHeader(context, 'Used Tractor'),
+          gridsellTractorsBuilder(selltractors, context),
+          _viewAllButton(
+            context,
+            label: "View All Used Tractors",
+            onTap: () {
+              cubit.changeNavIndex(2);
+            },
+            // onTap: () => Get.to(() => HomeLayout())
+          ),
+          _sectionHeader(context, 'Explore Farm Connects'),
+          gridExploreBuilder(context),
+          SizedBox(height: 10.h),
+          _sectionHeader(context, 'Custom Hiring Service'),
+          _customHiringService(Rentcubit.rentDataModel, context),
+          _viewAllButton(
+            context,
+            label: "View All Rent Services",
+            onTap: () {
+              cubit.changeNavIndex(3);
+            },
+            // onTap: () => Get.to(() => HomeLayout())
+          ),
+        ],
       ),
     );
   }
