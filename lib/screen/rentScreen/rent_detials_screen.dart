@@ -278,8 +278,8 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
           child: Table(
             border: TableBorder.all(color: Colors.grey, width: 1),
             columnWidths: {
-              0: FlexColumnWidth(1.5), // Flex for the first column
-              1: FlexColumnWidth(2), // Flex for the second column
+              0: FlexColumnWidth(1.5),
+              1: FlexColumnWidth(2),
             },
             children: [
               _buildTableRow(

@@ -3,7 +3,6 @@ import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/Provider/OTPProvider.dart';
-import 'package:farm_connects/screen/authScreen/otpScreen/VerificationSuccessScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,10 +12,8 @@ import 'package:provider/provider.dart';
 import '../config/network/remote/dio.dart';
 import '../config/network/local/cache_helper.dart';
 import '../layout/home_layout.dart';
-import '../screen/authScreen/login_signup.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/home_cubit/home_states.dart';
-
 import '../cubits/auth_cubit/auth_cubit.dart';
 import 'constants/styles/styles.dart';
 import 'cubits/location_cubit/location_cubits.dart';

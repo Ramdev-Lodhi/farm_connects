@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
 import '../../widgets/loadingPlaceholder.dart';
-import '../BuyScreen/brand_screen.dart';
 
 class RentScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -50,16 +49,12 @@ class RentScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: RentData.length < 3 ? RentData.length : 3,
-                  itemBuilder: (context, index) =>
-                      ItemBuilder(RentData[index], context),
-                ),
-              ],
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: RentData.length < 3 ? RentData.length : 3,
+              itemBuilder: (context, index) =>
+                  ItemBuilder(RentData[index], context),
             ),
             if (brands.isNotEmpty) ...[
               Padding(
@@ -86,7 +81,6 @@ class RentScreen extends StatelessWidget {
               gridServiceBuilder(cubits.homeDataModel, context),
               TextButton(
                 onPressed: () {
-
                 },
                 child: Text(
                   "View All Services   ➞",
@@ -98,16 +92,12 @@ class RentScreen extends StatelessWidget {
                 ),
               ),
             ],
-            Column(
-              children: [
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: RentData.length - 3,
-                  itemBuilder: (context, index) =>
-                      ItemBuilder(RentData[index + 3], context),
-                ),
-              ],
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: RentData.length - 3,
+              itemBuilder: (context, index) =>
+                  ItemBuilder(RentData[index + 3], context),
             ),
           ],
         ),
@@ -160,7 +150,6 @@ class RentScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Title (Service type or name)
                           Text(
                             '${product?.servicetype}'.trim(),
                             maxLines: 1,

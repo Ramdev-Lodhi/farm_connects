@@ -24,8 +24,8 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         var profileCubit = ProfileCubits.get(context);
-        Color cardColor = cubit.isDark ? Colors.white12 : Colors.white;
         Color textColor = cubit.isDark ? Colors.white : Colors.black;
+        Color cardColor = cubit.isDark ? Colors.white12 : Colors.white;
         Color profileCardColor = cubit.isDark ? Colors.white12 : Colors.white;
 
         return Scaffold(

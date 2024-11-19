@@ -11,7 +11,7 @@ import '../../constants/styles/colors.dart';
 import '../../models/login_model.dart';
 import '../../models/profile_model.dart';
 import '../../screen/BuyScreen/new_tractors_screen.dart';
-import '../../screen/settings_screen.dart';
+import '../../screen/account_screen.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../config/network/end_points.dart';
 import '../../config/network/local/cache_helper.dart';
@@ -25,31 +25,39 @@ class HomeCubit extends Cubit<HomeStates> {
 
   List<BottomNavigationBarItem> navItems = [
     BottomNavigationBarItem(
-      icon: Icon(Icons.home_outlined),
+      icon: Icon(
+        FontAwesomeIcons.home,
+        size: 20.0,
+      ),
       label: 'Home',
       activeIcon: Icon(
-        Icons.home,
-        color: orange, // Change active icon color
+        FontAwesomeIcons.home,
+        size: 20.0,
+        color: orange,
       ),
     ),
     BottomNavigationBarItem(
       icon: Icon(
         FontAwesomeIcons.tractor,
-        size: 20.0, // Set icon size for New Tractor
+        size: 20.0,
       ),
       label: 'New Tractor',
       activeIcon: Icon(
         FontAwesomeIcons.tractor,
         size: 20.0,
-        color: orange, // Change active icon color
+        color: orange,
       ),
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.agriculture_outlined),
+      icon: Icon(
+        Icons.agriculture_outlined,
+        size: 20.0,
+      ),
       label: 'Used Tractor',
       activeIcon: Icon(
-        Icons.agriculture,
-        color: orange, // Change active icon color
+        Icons.agriculture_outlined,
+        size: 20.0,
+        color: orange,
       ),
     ),
     BottomNavigationBarItem(
@@ -65,11 +73,15 @@ class HomeCubit extends Cubit<HomeStates> {
       ),
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.settings_outlined),
-      label: 'Settings',
+      icon: Icon(
+        FontAwesomeIcons.sliders,
+        size: 20.0,
+      ),
+      label: 'Account',
       activeIcon: Icon(
-        Icons.settings,
-        color: orange, // Change active icon color
+        FontAwesomeIcons.sliders,
+        size: 20.0,
+        color: orange,
       ),
     ),
   ];
@@ -80,7 +92,7 @@ class HomeCubit extends Cubit<HomeStates> {
     NewTractorScreen(),
     UsedTractorScreen(),
     RentScreen(),
-    SettingsScreen(),
+    AccountScreen(),
   ];
 
   int currentIndex = 0;

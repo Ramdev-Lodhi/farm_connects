@@ -60,7 +60,7 @@ class _AppBarLayoutState extends State<AppBarLayout> {
         shadowColor: Colors.black.withOpacity(0.2),
         child: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: widget.isDark ? Colors.black : Colors.white,
+          // backgroundColor: widget.isDark ? Colors.black : Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

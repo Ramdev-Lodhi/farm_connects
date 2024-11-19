@@ -106,7 +106,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             _sectionHeader(context, 'Tractor By Brand'),
             _tractorTypeTabBar(context),
             SizedBox(
-              height: 320.h,
+              height: 350.h,
               child: TabBarView(
                 controller: _tabController,
                 children: [

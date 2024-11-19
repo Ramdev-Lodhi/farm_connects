@@ -35,13 +35,13 @@ ThemeData darkTheme = ThemeData(
     ),
     iconTheme: IconThemeData(color: Colors.white),
     systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: asmar,
+      statusBarColor: asmarFate7,
       statusBarIconBrightness: Brightness.light,
     ),
-    color: asmar,
+    color: asmarFate7,
     elevation: 0.0,
   ),
-  scaffoldBackgroundColor: asmar,
+  scaffoldBackgroundColor: asmarFate7,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: asmarFate7,
     selectedLabelStyle: TextStyle(

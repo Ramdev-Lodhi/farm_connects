@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:farm_connects/cubits/profile_cubit/profile_states.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
@@ -54,7 +53,7 @@ class _ImageDialogState extends State<ImageDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _isLoading
-                    ? Center(child: LoadingIndicator(size: 100)) // Show loading indicator
+                    ? Center(child: LoadingIndicator(size: 100))
                     : ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: _selectedImage != null
@@ -64,9 +63,9 @@ class _ImageDialogState extends State<ImageDialog> {
                     width: 200,
                     fit: BoxFit.cover,
                   )
-                      : Image.network(
-                    CacheHelper.getData(key: 'image') ??
-                        'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg',
+                      : Image.network(widget.profileCubit.profileModel.data?.image
+                     ?? CacheHelper.getData(key: 'image'),
+                        // 'https://res.cloudinary.com/farmconnects/image/upload/v1728409875/user_kzxegi.jpg',
                     height: 200,
                     width: 200,
                     fit: BoxFit.cover,
