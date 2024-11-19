@@ -276,8 +276,30 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_tabController!.index < _tabController!.length - 1) {
-                      _tabController?.animateTo(_tabController!.index + 1);
+                    if (_tabController!.index == 0) {
+                      if (_selectedbrand != null &&
+                          _selectedmodel != null &&
+                          _selectedyear != null) {
+                        if (_tabController!.index <
+                            _tabController!.length - 1) {
+                          _tabController?.animateTo(_tabController!.index + 1);
+                        }
+                      } else {
+                        showCustomSnackbar('Alert', 'Select All Fields ',
+                            isError: true);
+                      }
+                    } else if (_tabController!.index == 1) {
+                      if (_selectedengin != null &&
+                          _selectedtyre != null &&
+                          _selecteddriven != null) {
+                        if (_tabController!.index <
+                            _tabController!.length - 1) {
+                          _tabController?.animateTo(_tabController!.index + 1);
+                        }
+                      } else {
+                        showCustomSnackbar('Alert', 'Select All Fields ',
+                            isError: true);
+                      }
                     }
                   },
                   child: Text('Next', style: TextStyle(color: Colors.blue)),
