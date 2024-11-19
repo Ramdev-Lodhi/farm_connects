@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../config/location/location_permission.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
@@ -27,9 +27,12 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     super.initState();
-    ProfileCubits.get(context)..getProfileData();
-    RentCubit.get(context)..GetRentData();
-    SellCubit.get(context)..getSellData();
+    ProfileCubits.get(context)
+      ..getProfileData();
+    RentCubit.get(context)
+      ..GetRentData();
+    SellCubit.get(context)
+      ..getSellData();
     _startButtonTextChange();
   }
 
@@ -52,33 +55,27 @@ class _HomeLayoutState extends State<HomeLayout> {
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        LocationHelper.fetchLocationDetails();
         var cubit = HomeCubit.get(context);
         return Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 40.0,
-                floating: true,
-                pinned: true,
-                // backgroundColor: Colors.white,
-                elevation: 5,
-                shadowColor: Colors.black.withOpacity(0.5),
-                // flexibleSpace: FlexibleSpaceBar(
-                title: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(40.0),
+            child: Material(
+              elevation: 5,
+              shadowColor: Colors.black.withOpacity(0.2),
+              child: AppBar(
+                // backgroundColor: Colors.transparent,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Image.asset(
                         'assets/images/logo/FarmConnects_logo.png',
-                        height: 110,
+                        height: 100,
                         fit: BoxFit.contain,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
                 actions: [
                   IconButton(
                     onPressed: () {
@@ -86,12 +83,12 @@ class _HomeLayoutState extends State<HomeLayout> {
                     },
                     icon: Icon(
                       CupertinoIcons.search,
-                      size: 20.0,
+                      size: 24.0,
                       color: cubit.isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 5),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
@@ -110,7 +107,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                         );
                       },
                       child: Container(
-                        width: 70.sp,
+                        // width: 55.w,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black87, width: 2),
                           borderRadius: BorderRadius.circular(5.0),
@@ -119,6 +116,8 @@ class _HomeLayoutState extends State<HomeLayout> {
                           _isSell
                               ? 'assets/images/rent_sell/sell.png'
                               : 'assets/images/rent_sell/rent.png',
+                          // width: 52.w,
+                          // height: 50.h,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -126,34 +125,35 @@ class _HomeLayoutState extends State<HomeLayout> {
                   )
                 ],
               ),
-              SliverFillRemaining(
-                child: CustomRefreshIndicator(
-                  onRefresh: () async {
-                    if (cubit.currentIndex == 0 || cubit.currentIndex == 1) {
-                      await cubit
-                        ..getHomeData();
-                    } else if (cubit.currentIndex == 2) {
-                      await SellCubit.get(context)
-                        ..getSellData();
-                    } else if (cubit.currentIndex == 3) {
-                      await RentCubit.get(context)
-                        ..GetRentData();
-                    } else {
-                      await ProfileCubits.get(context)
-                        ..getProfileData();
-                    }
-                  },
-                  child: Container(
-                    color: cubit.isDark ? Colors.black : Colors.white,
-                    child: cubit.screens[cubit.currentIndex],
-                  ),
-                ),
-              ),
-            ],
+            ),
+          ),
+          body: CustomRefreshIndicator(
+            onRefresh: () async {
+              if(cubit.currentIndex == 0 || cubit.currentIndex == 1){
+                await cubit
+                  ..getHomeData();
+
+              } else if(cubit.currentIndex == 2){
+                await SellCubit.get(context)
+                  ..getSellData();
+              }else if(cubit.currentIndex == 3){
+                await RentCubit.get(context)
+                  ..GetRentData();
+              }else{
+                await ProfileCubits.get(context)
+                  ..getProfileData();
+              }
+            },
+            child: Container(
+              color: cubit.isDark ? Colors.black : Colors.white,
+              // Background color based on theme
+              child: cubit.screens[cubit.currentIndex],
+            ),
           ),
           bottomNavigationBar: Material(
             elevation: 50,
             color: cubit.isDark ? Colors.black : Colors.white,
+            // Bottom nav bar color
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(10.0),
@@ -170,7 +170,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   currentIndex: cubit.currentIndex,
                   items: cubit.navItems,
                   unselectedItemColor:
-                      cubit.isDark ? Colors.white70 : Colors.black,
+                  cubit.isDark ? Colors.white70 : Colors.black,
                   selectedItemColor: cubit.isDark ? Colors.white : Colors.black,
                   type: BottomNavigationBarType.fixed,
                   iconSize: MediaQuery.of(context).size.height / 30.0,
