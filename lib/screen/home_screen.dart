@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
+import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:farm_connects/screen/sellScreen/used_tractor_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,14 +96,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             _buildCarousel(widget.homeDataModel, screenHeight),
             _sectionHeader(context, 'New Tractor'),
             gridTractorsBuilder(widget.homeDataModel, context),
-            _viewAllButton(context,
-                label: "View All Tractors",
-                onTap: (){
-                  cubit.changeNavIndex(1);
-                },
-                // onTap: () => Get.to(() => HomeLayout())
+            _viewAllButton(
+              context,
+              label: "View All Tractors",
+              onTap: () {
+                cubit.changeNavIndex(1);
+              },
+              // onTap: () => Get.to(() => HomeLayout())
             ),
-
             _sectionHeader(context, 'Tractor By Brand'),
             _tractorTypeTabBar(context),
             SizedBox(
@@ -117,18 +118,22 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             ),
             _sectionHeader(context, 'Used Tractor'),
             gridsellTractorsBuilder(selltractors, context),
-            _viewAllButton(context,
+            _viewAllButton(
+              context,
               label: "View All Used Tractors",
-              onTap: (){
+              onTap: () {
                 cubit.changeNavIndex(2);
               },
               // onTap: () => Get.to(() => HomeLayout())
             ),
+            _sectionHeader(context, 'Explore FarmConnects'),
+            gridExploreBuilder(context),
             _sectionHeader(context, 'Custom Hiring Service'),
             _customHiringService(Rentcubit.rentDataModel, context),
-            _viewAllButton(context,
+            _viewAllButton(
+              context,
               label: "View All Rent Services",
-              onTap: (){
+              onTap: () {
                 cubit.changeNavIndex(3);
               },
               // onTap: () => Get.to(() => HomeLayout())
@@ -724,7 +729,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         borderRadius: BorderRadius.circular(8.0),
       ),
       insetPadding: EdgeInsets.all(10.0),
-
       child: SingleChildScrollView(
         child: Container(
           height: 400.0,
@@ -742,7 +746,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -758,7 +763,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -775,7 +781,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -789,7 +796,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Budget',
                       prefixIcon: Icon(Icons.currency_rupee),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -804,7 +812,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     height: 10,
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(
@@ -833,6 +842,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
       ),
     );
   }
+
   Widget rentContactDialog(rent, BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -856,8 +866,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -867,12 +877,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue: '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                    initialValue:
+                        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -882,12 +894,15 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue: ProfileCubits.get(context).profileModel.data?.mobile ?? "",
+                    initialValue:
+                        ProfileCubits.get(context).profileModel.data?.mobile ??
+                            "",
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -901,7 +916,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       labelText: 'Budget',
                       prefixIcon: Icon(Icons.currency_rupee),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -916,7 +932,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     height: 10,
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(
@@ -925,7 +942,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                             Get.to(() => RentDetialsScreen(rentdata: rent));
                           }
                         },
-                        child: Text("Contact Owner", style: TextStyle(color: Colors.white)),
+                        child: Text("Contact Owner",
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
                           shape: RoundedRectangleBorder(
@@ -941,6 +959,91 @@ class _ProductsBuilderState extends State<ProductsBuilder>
           ),
         ),
       ),
+    );
+  }
+
+  Widget gridExploreBuilder(BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+
+    List<Map<String, String>> categories = [
+      {'name': 'New Tractor', 'icon': 'assets/images/newTractor.png'},
+      {'name': 'Rent Services', 'icon': 'assets/images/rent.png'},
+      {'name': 'Used Tractor', 'icon': 'assets/images/oldTractor.png'},
+      {'name': 'My Lead', 'icon': 'assets/images/mylead.png'},
+      {'name': 'Compare', 'icon': 'assets/images/compare.png'},
+      {'name': 'Sell Tractor', 'icon': 'assets/images/sell.png'},
+    ];
+
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 10.0.w,
+        mainAxisSpacing: 10.0.h,
+        childAspectRatio: 1,
+      ),
+      itemCount: categories.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final category = categories[index];
+        return GestureDetector(
+          onTap: () async {
+            // print(category['name']);
+            if (category['name'] == 'New Tractor') {
+              cubit.changeNavIndex(1);
+            } else if (category['name'] == 'Rent Services') {
+              cubit.changeNavIndex(3);
+            } else if (category['name'] == 'Used Tractor') {
+              cubit.changeNavIndex(2);
+            }else if (category['name'] == 'My Lead') {
+              cubit.changeNavIndex(4);
+            }else if (category['name'] == 'Compare') {
+              // cubit.changeNavIndex(2);
+            }else if (category['name'] == 'Sell Tractor') {
+              Get.to(()=> SellScreen());
+            }
+          },
+          child: Material(
+            elevation: 3.0,
+            borderRadius: BorderRadius.circular(5.0),
+            color: cubit.isDark ? Colors.grey[800] : Colors.white,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Icon for each category
+                  SizedBox(
+                    height: 40.h,
+                    child: Image.asset(
+                      category['icon'] ?? '', // Ensure you have the icon path
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Center(
+                      child: Text(
+                        category['name'] ?? '',
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          fontWeight: FontWeight.w600,
+                          color: cubit.isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
