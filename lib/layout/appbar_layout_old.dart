@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 
-import '../constants/styles/colors.dart';
-import '../cubits/home_cubit/home_cubit.dart';
 import '../screen/rentScreen/rent_form_screen.dart';
 import '../screen/sellScreen/sell_Screen.dart';
 import '../widgets/sell_rent_dialog.dart';
@@ -55,57 +53,37 @@ class _AppBarLayoutState extends State<AppBarLayout> {
 
   @override
   Widget build(BuildContext context) {
-    var cubit = HomeCubit.get(context);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
+    return PreferredSize(
+      preferredSize: Size.fromHeight(40.0),
+      child: Material(
+        elevation: 5,
+        shadowColor: Colors.black.withOpacity(0.2),
+        child: AppBar(
           automaticallyImplyLeading: false,
-          expandedHeight: 40.0,
-          floating: true,
-          pinned: true,
-          // backgroundColor: Colors.white,
-          elevation: 0,
-          // shadowColor: Colors.black.withOpacity(0.5),
-          // flexibleSpace: FlexibleSpaceBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: cubit.isDark ? asmarFate7 : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: asmarFate7.withOpacity(0.2),
-                  offset: Offset(0, 2),
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset(
+          // backgroundColor: widget.isDark ? Colors.black : Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Image.asset(
                   'assets/images/logo/FarmConnects_logo.png',
-                  height: 110,
+                  height: 100,
                   fit: BoxFit.contain,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-
           actions: [
             IconButton(
-              onPressed: () {
-                // Handle search action
-              },
+              onPressed: widget.onSearchPressed,
               icon: Icon(
                 CupertinoIcons.search,
-                size: 20.0,
-                color: cubit.isDark ? Colors.white : Colors.black,
+                size: 24.0,
+                color: widget.isDark ? Colors.white : Colors.black,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
                   showDialog(
@@ -118,13 +96,13 @@ class _AppBarLayoutState extends State<AppBarLayout> {
                         onRent: () {
                           Get.to(() => RentFormScreen());
                         },
-                        isDark: false,
+                        isDark: widget.isDark,
                       );
                     },
                   );
                 },
                 child: Container(
-                  width: 70.sp,
+                  width: 55.w,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black87, width: 2),
                     borderRadius: BorderRadius.circular(5.0),
@@ -140,7 +118,7 @@ class _AppBarLayoutState extends State<AppBarLayout> {
             )
           ],
         ),
-      ],
+      ),
     );
   }
 }

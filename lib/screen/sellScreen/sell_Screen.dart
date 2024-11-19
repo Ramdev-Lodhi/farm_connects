@@ -1,3 +1,4 @@
+import 'package:farm_connects/layout/appbar_layout.dart';
 import 'package:farm_connects/screen/sellScreen/multi_step_sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,10 +24,9 @@ class _SellScreenState extends State<SellScreen> {
   @override
   void initState() {
     super.initState();
-    // Set the initial value for the location controller from the cache or any other source
     locationController.text =
     '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
-    nameController.text = CacheHelper.getData(key: 'name')?? "";
+    nameController.text = CacheHelper.getData(key: 'name') ?? "";
     var profileCubit = ProfileCubits.get(context);
     mobileController.text = profileCubit.profileModel.data?.mobile ?? "";
   }
@@ -41,17 +41,13 @@ class _SellScreenState extends State<SellScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeCubit = HomeCubit.get(context);
+    final homeCubit = context.watch<HomeCubit>();
+
     return BlocProvider(
       create: (context) => SellCubit(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Sell Tractor',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          backgroundColor: homeCubit.isDark ? Colors.black : Colors.white,
-        ),
+        appBar:AppBarLayout(isDark: homeCubit.isDark),
+
         body: BlocConsumer<SellCubit, SellFormState>(
           listener: (context, state) {
             if (state is SellFormState && state.showSnackbar != null) {
@@ -59,7 +55,8 @@ class _SellScreenState extends State<SellScreen> {
             }
           },
           builder: (context, state) {
-            final cubit = SellCubit.get(context);
+            final cubit = context.read<SellCubit>();
+
             return SingleChildScrollView(
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Padding(
@@ -92,9 +89,14 @@ class _SellScreenState extends State<SellScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const Text(
+                              'Sell Your Used Tractor',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 20),
                             CustomTextField(
                               controller: locationController,
-                              hintText: 'location',
+                              hintText: 'Location',
                               icon: Icons.location_on,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -125,7 +127,7 @@ class _SellScreenState extends State<SellScreen> {
                                 if (value == null || value.isEmpty) {
                                   return 'Mobile number is required';
                                 }
-                                if (value.length != 10) {
+                                if (value.length != 13) {
                                   return 'Mobile number must be 10 digits';
                                 }
                                 return null;
@@ -134,38 +136,35 @@ class _SellScreenState extends State<SellScreen> {
                             const SizedBox(height: 20),
                             if (state is SellFormSubmitting)
                               const Center(child: CircularProgressIndicator()),
-                            if (state is! SellFormSubmitting)
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      // Navigate to the MultiStepSellScreen and pass the data
-                                      Get.to(
-                                        MultiStepSellScreen(
-                                          location: locationController.text,
-                                          name: nameController.text,
-                                          mobile: mobileController.text,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    padding: const EdgeInsets.symmetric(vertical: 15),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(35.0),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'Sell Now',
-                                    style: TextStyle(fontSize: 18, color: Colors.white),
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ),
+                      if (state is! SellFormSubmitting)
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              Get.to(
+                                MultiStepSellScreen(
+                                  location: locationController.text,
+                                  name: nameController.text,
+                                  mobile: mobileController.text,
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text(
+                            'Next',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2.0),
+                              side: BorderSide(color: Colors.blue, width: 1),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
