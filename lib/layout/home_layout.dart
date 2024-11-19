@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../config/location/location_permission.dart';
+import '../constants/styles/colors.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
@@ -62,9 +63,21 @@ class _HomeLayoutState extends State<HomeLayout> {
                 floating: true,
                 pinned: true,
                 // backgroundColor: Colors.white,
-                elevation: 5,
-                shadowColor: Colors.black.withOpacity(0.5),
+                elevation: 0,
+                // shadowColor: Colors.black.withOpacity(0.5),
                 // flexibleSpace: FlexibleSpaceBar(
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                    color: cubit.isDark ? asmarFate7 : Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: asmarFate7.withOpacity(0.2),
+                        offset: Offset(0, 2),
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                ),
                 title: Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Row(

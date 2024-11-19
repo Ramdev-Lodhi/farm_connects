@@ -61,134 +61,75 @@ class _AccountScreenState extends State<AccountScreen>
           },
           child: Scaffold(
             backgroundColor: cubit.isDark ? Colors.black : Colors.white,
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildProfileCard(
-                          context, profileCubit, profileCardColor, textColor),
-                      SizedBox(height: 10.0),
-                      _AccountTypeTabBar(textColor),
-                      SizedBox(
-                        height: 350.h,
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            _buildMyLeads(isDark),
-                            _buildPersonalInfoSection(textColor,iconColor, profileCubit),
-                          ],
-                        ),
+            body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildProfileCard(
+                        context, profileCubit, profileCardColor, textColor),
+                    SizedBox(height: 10.0),
+                    _AccountTypeTabBar(textColor),
+                    SizedBox(
+                      height: 350.h,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildMyLeads(isDark),
+                          _buildPersonalInfoSection(textColor,iconColor, profileCubit),
+                        ],
                       ),
-                      Container(
-                        color: logoutColor,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                            left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
-                        child: Text(
-                          'Setting'.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0.sp),
-                        ),
+                    ),
+                    Container(
+                      color: logoutColor,
+                      width: double.infinity,
+                      padding: EdgeInsets.only(
+                          left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
+                      child: Text(
+                        'Setting'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0.sp),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.dark_mode, color: isDark ? skin : Colors.black45 ),
-                        title: Text("Dark Mode",
-                            style: TextStyle(color: textColor)),
-                        trailing: CupertinoSwitch(
-                          value: isDark,
-                          onChanged: (state) {
-                            cubit.changeThemeMode(state);
-                          },
-                          activeColor: Colors.white24,
-                          thumbColor:
-                          isDark ? Colors.white12 : Colors.white,
-                        ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.dark_mode, color: isDark ? skin : Colors.black45 ),
+                      title: Text("Dark Mode",
+                          style: TextStyle(color: textColor)),
+                      trailing: CupertinoSwitch(
+                        value: isDark,
+                        onChanged: (state) {
+                          cubit.changeThemeMode(state);
+                        },
+                        activeColor: Colors.white24,
+                        thumbColor:
+                        isDark ? Colors.white12 : Colors.white,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0.h, horizontal: 20.0.w),
-                        child: GestureDetector(
-                          onTap: ()=>{
-                            Get.to(ChangePasswordScreen())
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit,
-                                size: 25.sp,
-                                color: isDark ? skin : Colors.black45,
-                              ),
-                              SizedBox(width: 10.0.w),
-                              Text(
-                                'Change Password',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w100,
-                                  fontSize: 15.0.sp,
-                                  color: isDark ? Colors.white : Colors.black,
-                                ),
-                              ),
-                              Spacer(),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(10.0.sp),
-                                highlightColor: isDark ? asmarFate7 : offWhite,
-                                onTap: () {
-                                  Get.to(() => ChangePasswordScreen());
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0.sp),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 18.0.sp,
-                                        color: isDark ? Colors.white38 : Colors.black45 ,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: logoutColor,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                            left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
-                        child: Text(
-                          'Logout'.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0.sp),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0.h, horizontal: 20.0.w),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0.h, horizontal: 20.0.w),
+                      child: GestureDetector(
+                        onTap: ()=>{
+                          Get.to(ChangePasswordScreen())
+                        },
                         child: Row(
                           children: [
                             Icon(
-                              Icons.logout,
-                              size: 28.sp,
-                              color: isDark ? skin : Colors.black54,
+                              Icons.edit,
+                              size: 25.sp,
+                              color: isDark ? skin : Colors.black45,
                             ),
                             SizedBox(width: 10.0.w),
                             Text(
-                              'Logout',
+                              'Change Password',
                               style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 17.0.sp,
+                                fontWeight: FontWeight.w100,
+                                fontSize: 15.0.sp,
                                 color: isDark ? Colors.white : Colors.black,
                               ),
                             ),
@@ -197,34 +138,16 @@ class _AccountScreenState extends State<AccountScreen>
                               borderRadius: BorderRadius.circular(10.0.sp),
                               highlightColor: isDark ? asmarFate7 : offWhite,
                               onTap: () {
-                                AuthCubits.get(context).signOut();
-                                CacheHelper.removeData(key: 'token');
-                                CacheHelper.removeData(key: 'image');
-                                CacheHelper.removeData(key: 'name');
-                                CacheHelper.removeData(key: 'email');
-                                CacheHelper.removeData(key: 'state');
-                                CacheHelper.removeData(key: 'district');
-                                CacheHelper.removeData(key: 'subDistrict');
-                                CacheHelper.removeData(key: 'village');
-                                CacheHelper.removeData(key: 'pincode');
-                                HomeCubit.get(context).resetToHome();
-                                Get.offAll(() => OTPScreen());
+                                Get.to(() => ChangePasswordScreen());
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10.0.sp),
                                 child: Row(
                                   children: [
-                                    Text(
-                                      'Logout',
-                                      style: TextStyle(
-                                        color: orange,
-                                        fontSize: 14.0.sp,
-                                      ),
-                                    ),
                                     Icon(
                                       Icons.arrow_forward_ios,
                                       size: 18.0.sp,
-                                      color: orange,
+                                      color: isDark ? Colors.white38 : Colors.black45 ,
                                     ),
                                   ],
                                 ),
@@ -233,8 +156,82 @@ class _AccountScreenState extends State<AccountScreen>
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      color: logoutColor,
+                      width: double.infinity,
+                      padding: EdgeInsets.only(
+                          left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
+                      child: Text(
+                        'Logout'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0.sp),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0.h, horizontal: 20.0.w),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            size: 28.sp,
+                            color: isDark ? skin : Colors.black54,
+                          ),
+                          SizedBox(width: 10.0.w),
+                          Text(
+                            'Logout',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17.0.sp,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          Spacer(),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            highlightColor: isDark ? asmarFate7 : offWhite,
+                            onTap: () {
+                              AuthCubits.get(context).signOut();
+                              CacheHelper.removeData(key: 'token');
+                              CacheHelper.removeData(key: 'image');
+                              CacheHelper.removeData(key: 'name');
+                              CacheHelper.removeData(key: 'email');
+                              CacheHelper.removeData(key: 'state');
+                              CacheHelper.removeData(key: 'district');
+                              CacheHelper.removeData(key: 'subDistrict');
+                              CacheHelper.removeData(key: 'village');
+                              CacheHelper.removeData(key: 'pincode');
+                              HomeCubit.get(context).resetToHome();
+                              Get.offAll(() => OTPScreen());
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10.0.sp),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Logout',
+                                    style: TextStyle(
+                                      color: orange,
+                                      fontSize: 14.0.sp,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 18.0.sp,
+                                    color: orange,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

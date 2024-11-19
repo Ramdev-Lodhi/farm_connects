@@ -184,7 +184,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         child: Text(
           '$title'.toUpperCase(),
           style: TextStyle(
-              color: Colors.black,
+              color: cubit.isDark ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
               fontSize: 18.0.sp),
         ),
@@ -218,11 +218,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   Widget _tractorTypeTabBar(BuildContext context) {
+    final cubit = HomeCubit.get(context);
     return TabBar(
       controller: _tabController,
-      labelColor: Colors.black,
-      unselectedLabelColor: Colors.black,
-      indicatorColor: Colors.black,
+      labelColor: cubit.isDark ? offWhite : asmarFate7,
+      unselectedLabelColor: cubit.isDark ? offWhite : asmarFate7,
+      indicatorColor: cubit.isDark ? offWhite : asmarFate7,
       tabs: [
         Tab(text: 'New Tractors'),
         Tab(text: 'Used Tractors'),
