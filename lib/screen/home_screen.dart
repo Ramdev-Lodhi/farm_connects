@@ -126,8 +126,9 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               },
               // onTap: () => Get.to(() => HomeLayout())
             ),
-            _sectionHeader(context, 'Explore FarmConnects'),
+            _sectionHeader(context, 'Explore Farm Connects'),
             gridExploreBuilder(context),
+            SizedBox(height: 10.h),
             _sectionHeader(context, 'Custom Hiring Service'),
             _customHiringService(Rentcubit.rentDataModel, context),
             _viewAllButton(
@@ -165,13 +166,18 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   Widget _sectionHeader(BuildContext context, String title) {
     final cubit = HomeCubit.get(context);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 24.0.sp,
-          color: cubit.isDark ? Colors.white : Colors.black,
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        color: cubit.isDark ? asmarFate7 : offWhite,
+        width: double.infinity,
+        padding: EdgeInsets.only(
+            left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
+        child: Text(
+          '$title'.toUpperCase(),
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 18.0.sp),
         ),
       ),
     );
@@ -964,7 +970,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
 
   Widget gridExploreBuilder(BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
-
     List<Map<String, String>> categories = [
       {'name': 'New Tractor', 'icon': 'assets/images/newTractor.png'},
       {'name': 'Rent Services', 'icon': 'assets/images/rent.png'},
