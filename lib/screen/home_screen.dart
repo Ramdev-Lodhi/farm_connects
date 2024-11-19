@@ -967,11 +967,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
 
     List<Map<String, String>> categories = [
       {'name': 'New Tractor', 'icon': 'assets/images/newTractor.png'},
-      {'name': 'Rent Services', 'icon': 'assets/images/rent2.jpeg'},
+      {'name': 'Rent Services', 'icon': 'assets/images/rent.png'},
       {'name': 'Used Tractor', 'icon': 'assets/images/oldTractor.png'},
-      {'name': 'My Lead', 'icon': 'assets/images/mylead.webp'},
-      {'name': 'Compare', 'icon': 'assets/images/compare.jpeg'},
-      {'name': 'Sell Tractor', 'icon': 'assets/images/sell.jpeg'},
+      {'name': 'My Lead', 'icon': 'assets/images/mylead.png'},
+      {'name': 'Compare', 'icon': 'assets/images/compare.png'},
+      {'name': 'Sell Tractor', 'icon': 'assets/images/sell.png'},
     ];
 
     return GridView.builder(
@@ -996,7 +996,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             } else if (category['name'] == 'Used Tractor') {
               cubit.changeNavIndex(2);
             }else if (category['name'] == 'My Lead') {
-              // cubit.changeNavIndex(2);
+              cubit.changeNavIndex(4);
             }else if (category['name'] == 'Compare') {
               // cubit.changeNavIndex(2);
             }else if (category['name'] == 'Sell Tractor') {
