@@ -95,7 +95,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             padding: const EdgeInsets.all(8.0),
             child: _buildCarousel(widget.homeDataModel, screenHeight),
           ),
-          _sectionHeader(context, 'New Tractor'),
+          _sectionHeader(context, 'Popular Tractors'),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: gridTractorsBuilder(widget.homeDataModel, context),
@@ -108,24 +108,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             },
             // onTap: () => Get.to(() => HomeLayout())
           ),
-          _sectionHeader(context, 'Tractor By Brand'),
-          _tractorTypeTabBar(context),
-          SizedBox(
-            height: 350.h,
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _newTractorsViewBrands(widget.homeDataModel, context),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _usedTractorsBrands(widget.homeDataModel, context),
-                ),
-              ],
-            ),
-          ),
+          _sectionHeader(context, 'Explore Farm Connects'),
+          Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
           _sectionHeader(context, 'Used Tractor'),
           gridsellTractorsBuilder(selltractors, context),
           _viewAllButton(
@@ -136,9 +120,37 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             },
             // onTap: () => Get.to(() => HomeLayout())
           ),
-          _sectionHeader(context, 'Explore Farm Connects'),
-          Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
-          SizedBox(height: 10.h),
+
+          _sectionHeader(context, 'Tractor By Brand'),
+          _tractorTypeTabBar(context),
+          SizedBox(
+            height: 345.h,
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Transform.translate(offset:Offset(0, -20),child: _newTractorsViewBrands(widget.homeDataModel, context)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Transform.translate(offset:Offset(0, -20),child: _usedTractorsBrands(widget.homeDataModel, context)),
+                ),
+              ],
+            ),
+          ),
+          // _sectionHeader(context, 'Used Tractor'),
+          // gridsellTractorsBuilder(selltractors, context),
+          // _viewAllButton(
+          //   context,
+          //   label: "View All Used Tractors",
+          //   onTap: () {
+          //     cubit.changeNavIndex(2);
+          //   },
+          //   // onTap: () => Get.to(() => HomeLayout())
+          // ),
+          // _sectionHeader(context, 'Explore Farm Connects'),
+          // Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
           _sectionHeader(context, 'Custom Hiring Service'),
           _customHiringService(Rentcubit.rentDataModel, context),
           _viewAllButton(
