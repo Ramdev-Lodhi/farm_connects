@@ -1,4 +1,3 @@
-
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
@@ -24,9 +23,10 @@ void main() async {
 
   DioHelper.init();
   await CacheHelper.init();
-
   String token = CacheHelper.getData(key: 'token') ?? '';
-  runApp(MyApp(token != '' ? HomeLayout() : OTPScreen()));
+  bool isValidToken = await AuthCubits().validateToken(token);
+  runApp(MyApp(isValidToken ? HomeLayout() : OTPScreen()));
+  // runApp(MyApp(token != '' ? HomeLayout() : OTPScreen()));
 }
 
 class MyApp extends StatefulWidget {

@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/screen/BuyScreen/tractor_details_screen.dart';
 import 'package:farm_connects/screen/BuyScreen/tractors_by_brand_screen.dart';
+import 'package:farm_connects/widgets/placeholder/newscreen_placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../widgets/loadingIndicator.dart';
-import '../../widgets/loadingPlaceholder.dart';
 import 'brand_screen.dart';
 
 class NewTractorScreen extends StatelessWidget {
@@ -24,11 +24,11 @@ class NewTractorScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: HomeCubit.get(context).homeDataModel != null,
+          condition: HomeCubit.get(context).homeDataModel == null,
           builder: (context) => productsBuilder(
               HomeCubit.get(context).homeDataModel,
               context),
-          fallback: (context) => Center(child: LoadingPlaceholder()),
+          fallback: (context) => Center(child: NewScreenPlaceholder()),
         );
       },
     );

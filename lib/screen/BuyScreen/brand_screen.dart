@@ -9,7 +9,8 @@ import '../../layout/appbar_layout.dart';
 import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/home_cubit/home_states.dart';
-import '../../widgets/loadingPlaceholder.dart';
+import '../../widgets/placeholder/brandscreen_placeholder.dart';
+
 
 
 class AllBrandScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class AllBrandScreen extends StatelessWidget {
           condition: HomeCubit.get(context).homeDataModel != null,
           builder: (context) =>
               productsBuilder(HomeCubit.get(context).homeDataModel, context),
-          fallback: (context) => Center(child: LoadingPlaceholder()),
+          fallback: (context) => Center(child: BrandscreenPlaceholder()),
         );
       },
     );

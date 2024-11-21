@@ -5,6 +5,7 @@ import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
+import '../../widgets/placeholder/usedscreen_placeholder.dart';
 import '../../widgets/snackbar_helper.dart';
 import '../BuyScreen/tractors_by_brand_screen.dart';
 import '../sellScreen/used_tractor_details_screen.dart';
@@ -17,7 +18,6 @@ import '../../cubits/sell_cubit/sell_cubit.dart';
 import '../../models/home_data_model.dart';
 import '../../models/sell_model.dart';
 import '../../widgets/loadingIndicator.dart';
-import '../../widgets/loadingPlaceholder.dart';
 import '../BuyScreen/brand_screen.dart';
 
 class UsedTractorScreen extends StatefulWidget {
@@ -39,10 +39,10 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: SellCubit.get(context).sellAllTractorData != null,
+          condition: SellCubit.get(context).sellAllTractorData == null,
           builder: (context) => productsBuilder(
               SellCubit.get(context).sellAllTractorData, context),
-          fallback: (context) => Center(child: LoadingPlaceholder()),
+          fallback: (context) => Center(child: UsedScreenPlaceholder()),
         );
       },
     );
@@ -111,7 +111,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               ),
             ],
 
-// Display remaining tractors
+
             Column(
               children: List.generate(
                 tractors.length > 6

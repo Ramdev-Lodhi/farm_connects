@@ -18,7 +18,7 @@ import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../models/rent_model.dart';
-import '../widgets/loadingPlaceholder.dart';
+import '../widgets/placeholder/homescreen_placeholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
 import 'BuyScreen/tractors_by_brand_screen.dart';
 
@@ -30,12 +30,14 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         final cubit = HomeCubit.get(context);
         final sellcubit = SellCubit.get(context);
+        final rentcubit = RentCubit.get(context);
         return ConditionalBuilder(
           condition: cubit.homeDataModel != null &&
-              sellcubit.sellAllTractorData != null,
+              sellcubit.sellAllTractorData != null &&
+              rentcubit.rentDataModel != null,
           builder: (context) =>
               ProductsBuilder(homeDataModel: cubit.homeDataModel),
-          fallback: (context) => Center(child: LoadingPlaceholder()),
+          fallback: (context) => Center(child: HomescreenPlaceholder()),
         );
       },
     );
@@ -85,7 +87,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     final selltractors =
         SellCubit.get(context).sellAllTractorData?.data.SellTractor ?? [];
     double screenHeight = MediaQuery.of(context).size.height;
-
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -106,10 +107,10 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             onTap: () {
               cubit.changeNavIndex(1);
             },
-            // onTap: () => Get.to(() => HomeLayout())
           ),
           _sectionHeader(context, 'Explore Farm Connects'),
-          Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
+          Transform.translate(
+              offset: Offset(0, -20), child: gridExploreBuilder(context)),
           _sectionHeader(context, 'Used Tractor'),
           gridsellTractorsBuilder(selltractors, context),
           _viewAllButton(
@@ -118,9 +119,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             onTap: () {
               cubit.changeNavIndex(2);
             },
-            // onTap: () => Get.to(() => HomeLayout())
           ),
-
           _sectionHeader(context, 'Tractor By Brand'),
           _tractorTypeTabBar(context),
           SizedBox(
@@ -130,27 +129,21 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Transform.translate(offset:Offset(0, -20),child: _newTractorsViewBrands(widget.homeDataModel, context)),
+                  child: Transform.translate(
+                      offset: Offset(0, -20),
+                      child: _newTractorsViewBrands(
+                          widget.homeDataModel, context)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Transform.translate(offset:Offset(0, -20),child: _usedTractorsBrands(widget.homeDataModel, context)),
+                  child: Transform.translate(
+                      offset: Offset(0, -20),
+                      child:
+                          _usedTractorsBrands(widget.homeDataModel, context)),
                 ),
               ],
             ),
           ),
-          // _sectionHeader(context, 'Used Tractor'),
-          // gridsellTractorsBuilder(selltractors, context),
-          // _viewAllButton(
-          //   context,
-          //   label: "View All Used Tractors",
-          //   onTap: () {
-          //     cubit.changeNavIndex(2);
-          //   },
-          //   // onTap: () => Get.to(() => HomeLayout())
-          // ),
-          // _sectionHeader(context, 'Explore Farm Connects'),
-          // Transform.translate(offset:Offset(0, -20),child: gridExploreBuilder(context)),
           _sectionHeader(context, 'Custom Hiring Service'),
           _customHiringService(Rentcubit.rentDataModel, context),
           _viewAllButton(
@@ -159,7 +152,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             onTap: () {
               cubit.changeNavIndex(3);
             },
-            // onTap: () => Get.to(() => HomeLayout())
           ),
         ],
       ),
@@ -191,8 +183,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
       child: Container(
         color: cubit.isDark ? asmarFate7 : offWhite,
         width: double.infinity,
-        padding: EdgeInsets.only(
-            left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
+        padding: EdgeInsets.only(left: 20.0.w, top: 7.5.h, bottom: 7.5.h),
         child: Text(
           '$title'.toUpperCase(),
           style: TextStyle(
@@ -276,7 +267,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         mainAxisSpacing: 10.0.h,
         childAspectRatio: 1, // Adjust ratio based on content
       ),
-      // itemCount: homeDataModel?.data.brands.length ?? 0,
       itemCount: 12,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -1022,12 +1012,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               cubit.changeNavIndex(3);
             } else if (category['name'] == 'Used Tractor') {
               cubit.changeNavIndex(2);
-            }else if (category['name'] == 'My Lead') {
+            } else if (category['name'] == 'My Lead') {
               cubit.changeNavIndex(4);
-            }else if (category['name'] == 'Compare') {
+            } else if (category['name'] == 'Compare') {
               // cubit.changeNavIndex(2);
-            }else if (category['name'] == 'Sell Tractor') {
-              Get.to(()=> SellScreen());
+            } else if (category['name'] == 'Sell Tractor') {
+              Get.to(() => SellScreen());
             }
           },
           child: Material(

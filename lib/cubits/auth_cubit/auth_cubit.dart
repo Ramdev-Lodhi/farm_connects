@@ -25,6 +25,42 @@ class AuthCubits extends Cubit<Authstates> {
         "475762921924-607vhtcp8u4hl3ime3r8mebeb6ehtsbq.apps.googleusercontent.com",
   );
 
+  Future<bool> validateToken(String token) async {
+    if (token.isEmpty) {
+      _clearCachedData();
+      return false;
+    }
+
+    try {
+      final response = await DioHelper.getData(
+        method: 'token_check',
+        token: token,
+      );
+      print(response.data);
+      if (response.data['status'] == true) {
+        return true;
+      }
+    } catch (error) {
+      print("Error validating token: $error");
+    }
+
+     _clearCachedData();
+    await _googleSignIn.signOut();
+    return false;
+  }
+
+  void _clearCachedData() {
+    CacheHelper.removeData(key: 'token');
+    CacheHelper.removeData(key: 'image');
+    CacheHelper.removeData(key: 'name');
+    CacheHelper.removeData(key: 'email');
+    CacheHelper.removeData(key: 'state');
+    CacheHelper.removeData(key: 'district');
+    CacheHelper.removeData(key: 'subDistrict');
+    CacheHelper.removeData(key: 'village');
+    CacheHelper.removeData(key: 'pincode');
+  }
+
   Future<void> Signup(String name, int phone, String address, int pincode,
       String password, String email) async {
     emit(SignupLoadingState());

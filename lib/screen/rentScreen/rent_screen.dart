@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
-import '../../widgets/loadingPlaceholder.dart';
+import '../../widgets/placeholder/rentscreen_placeholder.dart';
 
 class RentScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -27,10 +27,10 @@ class RentScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: RentCubit.get(context).rentDataModel != null,
+          condition: RentCubit.get(context).rentDataModel == null,
           builder: (context) =>
               productsBuilder(RentCubit.get(context).rentDataModel, context),
-          fallback: (context) => Center(child: LoadingPlaceholder()),
+          fallback: (context) => Center(child: RentscreenPlaceholder()),
         );
       },
     );

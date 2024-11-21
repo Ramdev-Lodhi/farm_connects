@@ -1,3 +1,4 @@
+import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,9 +70,11 @@ class _OTPScreenState extends State<OTPScreen> {
             }
             if (state is LoginSuccessState) {
               await LocationHelper.fetchLocationDetails();
+
               CacheHelper.getData(key: 'token');
               HomeCubit.get(context).getHomeData();
               SellCubit.get(context).getSellData();
+              RentCubit.get(context).GetRentData();
               await ProfileCubits.get(context).getProfileData();
               var profileData = ProfileCubits.get(context).profileModel.data;
               if (profileData != null) {
