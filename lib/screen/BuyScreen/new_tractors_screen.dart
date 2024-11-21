@@ -24,7 +24,7 @@ class NewTractorScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: HomeCubit.get(context).homeDataModel == null,
+          condition: HomeCubit.get(context).homeDataModel != null,
           builder: (context) => productsBuilder(
               HomeCubit.get(context).homeDataModel,
               context),

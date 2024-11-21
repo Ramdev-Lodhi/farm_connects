@@ -27,7 +27,7 @@ class RentScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: RentCubit.get(context).rentDataModel == null,
+          condition: RentCubit.get(context).rentDataModel != null,
           builder: (context) =>
               productsBuilder(RentCubit.get(context).rentDataModel, context),
           fallback: (context) => Center(child: RentscreenPlaceholder()),

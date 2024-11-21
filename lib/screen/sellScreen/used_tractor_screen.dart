@@ -39,7 +39,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: SellCubit.get(context).sellAllTractorData == null,
+          condition: SellCubit.get(context).sellAllTractorData != null,
           builder: (context) => productsBuilder(
               SellCubit.get(context).sellAllTractorData, context),
           fallback: (context) => Center(child: UsedScreenPlaceholder()),
