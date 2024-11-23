@@ -36,7 +36,6 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   Widget startWidget;
-
   MyApp(this.startWidget);
 
   @override

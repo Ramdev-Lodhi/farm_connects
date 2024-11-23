@@ -93,6 +93,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         sellcontactdata.modelname,
         sellcontactdata.brand,
         sellcontactdata.sellerId,
+        sellcontactdata.name,
         name!,
         mobile!,
         location!,

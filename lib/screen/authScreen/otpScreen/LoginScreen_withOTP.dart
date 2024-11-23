@@ -48,6 +48,7 @@ class _OTPScreenState extends State<OTPScreen> with WidgetsBindingObserver{
     super.initState();
     NotificationService.initialize();
     _firebaseMessaging.requestPermission();
+
     WidgetsBinding.instance.addObserver(this);
     checkAndroidVersionAndPermission();
     _firebaseMessaging.getToken().then((token) {
@@ -56,9 +57,12 @@ class _OTPScreenState extends State<OTPScreen> with WidgetsBindingObserver{
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Message received: ${message.notification?.title}");
+      String? imageUrl = message.notification?.android?.imageUrl;
+      print("Message Image: ${message.notification?.android?.imageUrl}");
       NotificationService.showNotification(
         title: message.notification?.title ?? 'No Title',
         body: message.notification?.body ?? 'No Body',
+        imageUrl: imageUrl,
       );
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
