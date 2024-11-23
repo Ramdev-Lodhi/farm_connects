@@ -47,7 +47,7 @@ class MyleadCubits extends Cubit<MyleadState> {
         if (response.statusCode == 200) {
           emit(MyleadSuccess('Data Added Successfully'));
           // sellDataModel = SellDataModel.fromJson(response.data);
-          Get.offAll(()=>HomeLayout());
+          // Get.offAll(()=>HomeLayout());
         } else {
           emit(MyleadError('Failed to insert data, please try again.'));
         }

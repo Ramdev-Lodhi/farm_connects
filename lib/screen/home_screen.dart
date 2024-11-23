@@ -879,9 +879,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertselldata(selltractors);
-
-                            //   Get.to(() =>
-                            //       UsedTractorDetails(selltractor: selltractors));
+                              Get.to(() =>
+                                  UsedTractorDetails(selltractor: selltractors));
                           }
                         },
                         child: Text("Contact Seller",
@@ -922,7 +921,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                 children: [
                   Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
-                    initialValue: CacheHelper.getData(key: 'name') ?? "",
+                    initialValue: name,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
@@ -930,6 +929,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Name';
@@ -939,14 +944,19 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue:
-                        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                     location,
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
+                    ),onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Location';
@@ -956,8 +966,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue:
-                        ProfileCubits.get(context).profileModel.data?.mobile ??
-                            "",
+                        mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
@@ -965,9 +974,17 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
+                      }else if (value.length != 13) {
+                        return 'please enter 10 digit number';
                       }
                       return null;
                     },
@@ -980,6 +997,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Budget';
@@ -1000,6 +1023,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKeyrent.currentState!.validate()) {
+                            insertselldata();
                             Get.to(() => RentDetialsScreen(rentdata: rent));
                           }
                         },
