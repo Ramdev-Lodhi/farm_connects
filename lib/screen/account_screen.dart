@@ -14,6 +14,7 @@ import '../cubits/auth_cubit/auth_cubit.dart';
 import '../cubits/profile_cubit/profile_cubits.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
+import 'myleadScreen/listed_item_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   @override
@@ -401,8 +402,9 @@ class _AccountScreenState extends State<AccountScreen>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
         onTap: () {
-          // Handle tap event for each item
-          print('$title tapped');
+          if(title == 'Listed Item'){
+            Get.to(()=> ListedItemScreen());
+          }
         },
         borderRadius: BorderRadius.circular(12.0),
         child: Column(

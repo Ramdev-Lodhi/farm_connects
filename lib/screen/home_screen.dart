@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../config/network/local/cache_helper.dart';
 import '../constants/styles/colors.dart';
+import '../cubits/mylead_cubit/mylead_cubits.dart';
 import '../cubits/profile_cubit/profile_cubits.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
 import '../cubits/sell_cubit/sell_cubit.dart';
@@ -58,26 +59,44 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
+  String? name;
+  String? mobile;
+  String? location;
   final _formKeyrent = GlobalKey<FormState>();
-  final TextEditingController rentlocationController = TextEditingController();
-  final TextEditingController rentnameController = TextEditingController();
-  final TextEditingController rentmobileController = TextEditingController();
-  final TextEditingController rentpriceController = TextEditingController();
+
+  // String? rentname;
+  // String? rentmobile;
+  // String? rentLocation;
+  String? price;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    name = CacheHelper.getData(key: 'name') ?? "";
+    location =
+        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+    mobile = ProfileCubits.get(context).profileModel.data?.mobile ?? "";
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void insertselldata(sellcontactdata) {
+    print(price);
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertContactData(
+        sellcontactdata.image,
+        sellcontactdata.modelname,
+        sellcontactdata.brand,
+        sellcontactdata.sellerId,
+        name!,
+        mobile!,
+        location!,
+        price!);
   }
 
   @override
@@ -759,7 +778,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                 children: [
                   Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
-                    initialValue: CacheHelper.getData(key: 'name') ?? "",
+                    initialValue: name,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
@@ -767,6 +786,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Name';
@@ -775,8 +800,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                    initialValue: location,
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
@@ -784,6 +808,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Location';
@@ -792,9 +822,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                        ProfileCubits.get(context).profileModel.data?.mobile ??
-                            "",
+                    initialValue: mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
@@ -802,9 +830,17 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
+                      } else if (value.length != 13) {
+                        return 'please enter 10 digit number';
                       }
                       return null;
                     },
@@ -816,7 +852,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
+                    ),onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Budget';
@@ -837,8 +878,10 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            Get.to(() =>
-                                UsedTractorDetails(selltractor: selltractors));
+                            insertselldata(selltractors);
+
+                            //   Get.to(() =>
+                            //       UsedTractorDetails(selltractor: selltractors));
                           }
                         },
                         child: Text("Contact Seller",
