@@ -196,21 +196,12 @@ class _AccountScreenState extends State<AccountScreen>
                           InkWell(
                             borderRadius: BorderRadius.circular(10.0.sp),
                             highlightColor: isDark ? asmarFate7 : offWhite,
-                            onTap: () {
-                              // AuthCubits.get(context).signOut();
-                              // CacheHelper.removeData(key: 'token');
-                              // CacheHelper.removeData(key: 'image');
-                              // CacheHelper.removeData(key: 'name');
-                              // CacheHelper.removeData(key: 'email');
-                              // CacheHelper.removeData(key: 'state');
-                              // CacheHelper.removeData(key: 'district');
-                              // CacheHelper.removeData(key: 'subDistrict');
-                              // CacheHelper.removeData(key: 'village');
-                              // CacheHelper.removeData(key: 'pincode');
-                              HomeCubit.get(context).resetToHome();
-                              AuthCubits.get(context).Logout();
-                              // Get.offAll(() => OTPScreen());
-                            },
+                              onTap: () async {
+                                bool status = await AuthCubits.get(context).Logout();
+                                if (status) {
+                                  HomeCubit.get(context).resetToHome();
+                                }
+                              },
                             child: Container(
                               padding: EdgeInsets.all(10.0.sp),
                               child: Row(

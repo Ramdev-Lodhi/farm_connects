@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,12 +13,14 @@ import '../../screen/authScreen/login_signup.dart';
 import '../../screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import '../../widgets/snackbar_helper.dart';
 import '../auth_cubit/auth_states.dart';
+import '../home_cubit/home_cubit.dart';
 import '../profile_cubit/profile_cubits.dart';
 
 class AuthCubits extends Cubit<Authstates> {
   AuthCubits() : super(LoginInitialState());
 
   static AuthCubits get(context) => BlocProvider.of(context);
+
 
   late LoginModel loginModel;
   bool isLoading = false;
@@ -307,40 +310,49 @@ class AuthCubits extends Cubit<Authstates> {
     }
   }
 
-  Future<void> Logout() async {
+  Future<bool> Logout() async {
     emit(LogoutLoadingState());
     String token = CacheHelper.getData(key: 'token') ?? '';
-    String? Firebase_Token = await FirebaseMessaging.instance.getToken();
-    DioHelper.postData(
-      method: 'logout',
-      data: {
-        "deviceToken":Firebase_Token
-      },
-      token: token,
-      lang: 'en',
-    ).then((value) async {
-      if (value.data['status']) {
+    String? firebaseToken = await FirebaseMessaging.instance.getToken();
+    try {
+      final response = await DioHelper.postData(
+        method: 'logout',
+        data: {
+          "deviceToken": firebaseToken,
+        },
+        token: token,
+        lang: 'en',
+      );
+
+      if (response.data['status'] == true) {
         await _googleSignIn.signOut();
-        CacheHelper.removeData(key: 'token');
-        CacheHelper.removeData(key: 'image');
-        CacheHelper.removeData(key: 'name');
-        CacheHelper.removeData(key: 'email');
-        CacheHelper.removeData(key: 'state');
-        CacheHelper.removeData(key: 'district');
-        CacheHelper.removeData(key: 'subDistrict');
-        CacheHelper.removeData(key: 'village');
-        CacheHelper.removeData(key: 'pincode');
-        Get.offAll(() => OTPScreen());
+        // Remove all cached user data
+        final keysToRemove = [
+          'token',
+          'image',
+          'name',
+          'email',
+          'state',
+          'district',
+          'subDistrict',
+          'village',
+          'pincode',
+        ];
+        for (var key in keysToRemove) {
+          CacheHelper.removeData(key: key);
+        }
         emit(LogoutSuccessState("User logout successful."));
+        Get.offAll(() => OTPScreen());
+        return true;
       } else {
-        emit(LogoutErrorState('Logout Failed Please try again.'));
+        emit(LogoutErrorState('Logout Failed. Please try again.'));
+        return false;
       }
-    }).catchError((error) {
+    } catch (error) {
       emit(LogoutErrorState(error.toString()));
-      showCustomSnackbar(
-          'Logout Failed', 'Please try again.',
-          isError: true);
-    });
+      showCustomSnackbar('Logout Failed', 'Please try again.', isError: true);
+      return false;
+    }
   }
 }
 

@@ -51,11 +51,11 @@ class _OTPScreenState extends State<OTPScreen> with WidgetsBindingObserver{
     checkAndroidVersionAndPermission();
     _firebaseMessaging.getToken().then((token) {
 
-      print("Firebase Token: $token");
+      // print("Firebase Token: $token");
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Message received: ${message.notification?.title}");
-      NotificationService.showNotification( // Call the service to show notification
+      NotificationService.showNotification(
         title: message.notification?.title ?? 'No Title',
         body: message.notification?.body ?? 'No Body',
       );
