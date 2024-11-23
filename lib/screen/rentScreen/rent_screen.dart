@@ -41,7 +41,7 @@ class RentScreen extends StatelessWidget {
     RentCubit Rentcubit = RentCubit.get(context);
     HomeCubit cubits = HomeCubit.get(context);
     final RentData = rentDataModel?.data.rentData ?? [];
-    final brands = cubits.homeDataModel?.data.brands ?? [];
+    final services = cubits.homeDataModel?.data.services ?? [];
 
     return Transform.translate(
       offset: Offset(0, -20),
@@ -59,7 +59,7 @@ class RentScreen extends StatelessWidget {
                 itemBuilder: (context, index) =>
                     ItemBuilder(RentData[index], context),
               ),
-              if (brands.isNotEmpty) ...[
+              if (services.isNotEmpty) ...[
 
                 _sectionHeader(context, 'Select Hiring Service'),
                 gridServiceBuilder(cubits.homeDataModel, context),
@@ -259,7 +259,7 @@ class RentScreen extends StatelessWidget {
                             height: 50.h,
                             width: 60.w,
                             child: CachedNetworkImage(
-                              imageUrl:  '',
+                              imageUrl:  service.image ?? '',
                               fit: BoxFit.contain,
                               errorWidget: (context, url, error) =>
                                   Icon(Icons.error_outline),

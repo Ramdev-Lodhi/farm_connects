@@ -52,11 +52,13 @@ class ServicesType
 {
   late String id;
   late String service;
+  late String image;
 
   ServicesType.fromJson(Map<String, dynamic> json)
   {
     id = json['_id'];
     service = json['service'];
+    image = json['image'];
   }
 }
 class Brand

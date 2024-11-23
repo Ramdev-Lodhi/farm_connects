@@ -1,19 +1,26 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
 import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../config/location/location_permission.dart';
 import '../constants/styles/colors.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
 import '../cubits/sell_cubit/sell_cubit.dart';
+import '../service/notification_service.dart';
 import '../widgets/loadingIndicator.dart';
+import '../widgets/permission/notificationPermissionDialog.dart';
 import '../widgets/sell_rent_dialog.dart';
 
 class HomeLayout extends StatefulWidget {
@@ -22,12 +29,38 @@ class HomeLayout extends StatefulWidget {
 }
 
 class _HomeLayoutState extends State<HomeLayout> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+
+  bool isDialogVisible = false;
   late Timer _timer;
   bool _isSell = true;
 
   @override
   void initState() {
     super.initState();
+    NotificationService.initialize();
+    _firebaseMessaging.requestPermission();
+    // checkAndroidVersionAndPermission();
+    _firebaseMessaging.getToken().then((token) {
+
+      // print("Firebase Token: $token");
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Message received: ${message.notification?.title}");
+      String? imageUrl = message.notification?.android?.imageUrl;
+      print("Message Image: ${message.notification?.android?.imageUrl}");
+      NotificationService.showNotification(
+        title: message.notification?.title ?? 'No Title',
+        body: message.notification?.body ?? 'No Body',
+        imageUrl: imageUrl,
+      );
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("Message clicked: ${message.notification?.title}");
+
+    });
     ProfileCubits.get(context)..getProfileData();
     RentCubit.get(context)..GetRentData();
     SellCubit.get(context)..getSellData();
