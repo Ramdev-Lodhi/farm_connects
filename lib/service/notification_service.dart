@@ -1,9 +1,7 @@
 import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -17,19 +15,61 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNotification(
-      {required String title, required String body}) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-        'channel_id',
-        'channel_name',
-        importance: Importance.max,
-        priority: Priority.high
-    );
-    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+  static Future<void> showNotification({
+    required String title,
+    required String body,
+    String? imageUrl,
+  }) async {
+    String? localImagePath;
 
+    // Download image using Dio if URL is provided
+    if (imageUrl != null) {
+      try {
+        final Dio dio = Dio();
+        final Directory tempDir = await getTemporaryDirectory();
+        final String filePath = '${tempDir.path}/notification_image.jpg';
+
+        // Download and save the image
+        await dio.download(imageUrl, filePath);
+        localImagePath = filePath;
+      } catch (e) {
+        print('Error downloading image with Dio: $e');
+      }
+    }
+
+    // Configure BigPictureStyleInformation for expanded view
+    final BigPictureStyleInformation? bigPictureStyleInformation =
+    localImagePath != null
+        ? BigPictureStyleInformation(
+      FilePathAndroidBitmap(localImagePath),
+      contentTitle: title,
+      htmlFormatContentTitle: true,
+      summaryText: body,
+      htmlFormatSummaryText: true,
+    )
+        : null;
+
+    // Configure collapsed view with a small right-side image (using largeIcon)
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      largeIcon: localImagePath != null
+          ? FilePathAndroidBitmap(localImagePath) // Small image for collapsed view
+          : null,
+      styleInformation: bigPictureStyleInformation, // Full image in expanded view
+    );
+
+    final NotificationDetails platformDetails =
+    NotificationDetails(android: androidDetails);
+
+    // Show notification
     await flutterLocalNotificationsPlugin.show(
-        0, title, body, platformDetails
+      0,
+      title,
+      body,
+      platformDetails,
     );
   }
-
 }

@@ -93,6 +93,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         sellcontactdata.modelname,
         sellcontactdata.brand,
         sellcontactdata.sellerId,
+        sellcontactdata.name,
         name!,
         mobile!,
         location!,
@@ -879,9 +880,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertselldata(selltractors);
-
-                            //   Get.to(() =>
-                            //       UsedTractorDetails(selltractor: selltractors));
+                              Get.to(() =>
+                                  UsedTractorDetails(selltractor: selltractors));
                           }
                         },
                         child: Text("Contact Seller",

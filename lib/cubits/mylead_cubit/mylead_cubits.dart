@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:farm_connects/cubits/mylead_cubit/mylead_state.dart';
@@ -21,6 +20,7 @@ class MyleadCubits extends Cubit<MyleadState> {
       String modelname,
       String brand,
       String sellerId,
+      String sellerName,
       String name,
       String mobile,
       String location ,
@@ -44,10 +44,20 @@ class MyleadCubits extends Cubit<MyleadState> {
             }
           });
 
+      await DioHelper.postData(
+          method: 'notification/send-contact-notification',
+          token: token,
+          data: {
+            "id":sellerId,
+            "title": "New Contact Request for You, ${sellerName}",
+            "message": "User ${name} has sent a message: \"I'm interested in buy a ${brand} ${modelname}. Please get in touch!\"",
+            "image":image,
+          });
+
         if (response.statusCode == 200) {
           emit(MyleadSuccess('Data Added Successfully'));
           // sellDataModel = SellDataModel.fromJson(response.data);
-          Get.offAll(()=>HomeLayout());
+          // Get.offAll(()=>HomeLayout());
         } else {
           emit(MyleadError('Failed to insert data, please try again.'));
         }
