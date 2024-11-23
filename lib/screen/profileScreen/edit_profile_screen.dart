@@ -38,8 +38,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     loadDistricts();
-
-    // fetchPincode();
     BlocProvider.of<LocationCubits>(context).loadStates();
     var profileData = ProfileCubits.get(context).profileModel.data;
     if (profileData != null) {
@@ -58,6 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _pincode =profileData.pincode != null ?profileData.pincode :  CacheHelper.getData(key: 'pincode');
       loadDistricts();
     } else {
+      print('nullllllllllllllllllll');
     }
   }
 

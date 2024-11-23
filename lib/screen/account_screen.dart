@@ -27,6 +27,7 @@ class _AccountScreenState extends State<AccountScreen>
   @override
   void initState() {
     super.initState();
+    ProfileCubits.get(context)..getProfileData();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -46,7 +47,6 @@ class _AccountScreenState extends State<AccountScreen>
         HomeCubit cubit = HomeCubit.get(context);
         bool isDark = cubit.isDark;
         var profileCubit = ProfileCubits.get(context);
-
         Color cardColor = isDark ? Colors.white12 : Colors.white;
         Color textColor = isDark ? Colors.white : Colors.black;
         Color iconColor = isDark ? skin : Colors.black45;
@@ -197,18 +197,19 @@ class _AccountScreenState extends State<AccountScreen>
                             borderRadius: BorderRadius.circular(10.0.sp),
                             highlightColor: isDark ? asmarFate7 : offWhite,
                             onTap: () {
-                              AuthCubits.get(context).signOut();
-                              CacheHelper.removeData(key: 'token');
-                              CacheHelper.removeData(key: 'image');
-                              CacheHelper.removeData(key: 'name');
-                              CacheHelper.removeData(key: 'email');
-                              CacheHelper.removeData(key: 'state');
-                              CacheHelper.removeData(key: 'district');
-                              CacheHelper.removeData(key: 'subDistrict');
-                              CacheHelper.removeData(key: 'village');
-                              CacheHelper.removeData(key: 'pincode');
+                              // AuthCubits.get(context).signOut();
+                              // CacheHelper.removeData(key: 'token');
+                              // CacheHelper.removeData(key: 'image');
+                              // CacheHelper.removeData(key: 'name');
+                              // CacheHelper.removeData(key: 'email');
+                              // CacheHelper.removeData(key: 'state');
+                              // CacheHelper.removeData(key: 'district');
+                              // CacheHelper.removeData(key: 'subDistrict');
+                              // CacheHelper.removeData(key: 'village');
+                              // CacheHelper.removeData(key: 'pincode');
                               HomeCubit.get(context).resetToHome();
-                              Get.offAll(() => OTPScreen());
+                              AuthCubits.get(context).Logout();
+                              // Get.offAll(() => OTPScreen());
                             },
                             child: Container(
                               padding: EdgeInsets.all(10.0.sp),

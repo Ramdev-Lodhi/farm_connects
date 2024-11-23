@@ -308,7 +308,7 @@ class AuthCubits extends Cubit<Authstates> {
   }
 
   Future<void> Logout() async {
-    emit(LoginLoadingState());
+    emit(LogoutLoadingState());
     String token = CacheHelper.getData(key: 'token') ?? '';
     String? Firebase_Token = await FirebaseMessaging.instance.getToken();
     DioHelper.postData(
@@ -319,8 +319,7 @@ class AuthCubits extends Cubit<Authstates> {
       token: token,
       lang: 'en',
     ).then((value) async {
-      loginModel = LoginModel.fromJson(value.data);
-      if (loginModel.status) {
+      if (value.data['status']) {
         await _googleSignIn.signOut();
         CacheHelper.removeData(key: 'token');
         CacheHelper.removeData(key: 'image');
@@ -332,12 +331,12 @@ class AuthCubits extends Cubit<Authstates> {
         CacheHelper.removeData(key: 'village');
         CacheHelper.removeData(key: 'pincode');
         Get.offAll(() => OTPScreen());
-        emit(LoginSuccessState("User logout successful."));
+        emit(LogoutSuccessState("User logout successful."));
       } else {
-        emit(LoginErrorState('Logout Failed Please try again.'));
+        emit(LogoutErrorState('Logout Failed Please try again.'));
       }
     }).catchError((error) {
-      emit(LoginErrorState(error.toString()));
+      emit(LogoutErrorState(error.toString()));
       showCustomSnackbar(
           'Logout Failed', 'Please try again.',
           isError: true);

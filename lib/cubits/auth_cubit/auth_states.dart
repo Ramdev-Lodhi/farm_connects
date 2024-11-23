@@ -35,7 +35,31 @@ class LoginErrorState extends Authstates {
     showCustomSnackbar('Login Failed', message, isError: true);
   }
 }
+class LogoutLoadingState extends Authstates {
 
+}
+
+class LogoutSuccessState extends Authstates {
+  final String message;
+
+  LogoutSuccessState(this.message);
+
+  @override
+  void showSnackbar(BuildContext context) {
+    showCustomSnackbar('Login Successful', message, isError: false);
+  }
+}
+
+class LogoutErrorState extends Authstates {
+  final String message;
+
+  LogoutErrorState(this.message);
+
+  @override
+  void showSnackbar(BuildContext context) {
+    showCustomSnackbar('Login Failed', message, isError: true);
+  }
+}
 class SignupLoadingState extends Authstates {}
 
 class SignupSuccessState extends Authstates {
