@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,6 +9,7 @@ import '../../config/network/remote/dio.dart';
 import '../../layout/home_layout.dart';
 import '../../models/login_model.dart';
 import '../../screen/authScreen/login_signup.dart';
+import '../../screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import '../../widgets/snackbar_helper.dart';
 import '../auth_cubit/auth_states.dart';
 import '../profile_cubit/profile_cubits.dart';
@@ -136,11 +138,13 @@ class AuthCubits extends Cubit<Authstates> {
   Future<void> SigninWithPassword(String phoneOrEmail , String password) async {
     emit(LoginLoadingState());
     isLoading = true;
+    String? Firebase_Token = await FirebaseMessaging.instance.getToken();
     DioHelper.postData(
       method: 'loginpassword',
       data: {
         "phone_or_email": phoneOrEmail,
         "password": password,
+        "deviceToken":Firebase_Token
       },
       lang: 'en',
     ).then((value) {
@@ -199,10 +203,12 @@ class AuthCubits extends Cubit<Authstates> {
 
   Future<void> _loginWithGoogleToken(String token) async {
     try {
+      String? Firebase_Token = await FirebaseMessaging.instance.getToken();
       final response = await DioHelper.postData(
         method: "google",
         data: {
           "token": token,
+          "deviceToken":Firebase_Token
         },
       );
 
@@ -238,12 +244,23 @@ class AuthCubits extends Cubit<Authstates> {
 
   Future<void> sendOTP(String phoneNumber) async {
     emit(SendOtpLoadingState());
+    String? Firebase_Token = await FirebaseMessaging.instance.getToken();
     try {
       final response = await DioHelper.postData(
         method: "send-otp",
         data: {'phone': phoneNumber},
       );
+      print(response.data);
+
       if (response.data['status']) {
+        await DioHelper.postData(
+          method: NOTIFICATION,
+          data: {
+            'token': Firebase_Token,
+            'title':"OTP",
+            'body':"${response.data['data']['otp']} is your OTP for Farm Connects. Please do not share it with anyone."
+          },
+        );
         emit(SendOtpSuccessState(response.data['message']));
       } else {
         emit(SendOtpErrorState(response.data['message']));
@@ -254,17 +271,17 @@ class AuthCubits extends Cubit<Authstates> {
     }
   }
 
-
-
   Future<void> verifyOTP(
       String phoneNumber, String otpCode) async {
     emit(VerifyOtpLoadingState());
     try {
+      String? Firebase_Token = await FirebaseMessaging.instance.getToken();
       final response = await DioHelper.postData(
         method: "verify-otp",
         data: {
           'phone': phoneNumber,
           'otp': otpCode,
+          "deviceToken":Firebase_Token
         },
       );
       loginModel = LoginModel.fromJson(response.data);
@@ -288,6 +305,43 @@ class AuthCubits extends Cubit<Authstates> {
       emit(VerifyOtpErrorState(error.toString()));
 
     }
+  }
+
+  Future<void> Logout() async {
+    emit(LoginLoadingState());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String? Firebase_Token = await FirebaseMessaging.instance.getToken();
+    DioHelper.postData(
+      method: 'logout',
+      data: {
+        "deviceToken":Firebase_Token
+      },
+      token: token,
+      lang: 'en',
+    ).then((value) async {
+      loginModel = LoginModel.fromJson(value.data);
+      if (loginModel.status) {
+        await _googleSignIn.signOut();
+        CacheHelper.removeData(key: 'token');
+        CacheHelper.removeData(key: 'image');
+        CacheHelper.removeData(key: 'name');
+        CacheHelper.removeData(key: 'email');
+        CacheHelper.removeData(key: 'state');
+        CacheHelper.removeData(key: 'district');
+        CacheHelper.removeData(key: 'subDistrict');
+        CacheHelper.removeData(key: 'village');
+        CacheHelper.removeData(key: 'pincode');
+        Get.offAll(() => OTPScreen());
+        emit(LoginSuccessState("User logout successful."));
+      } else {
+        emit(LoginErrorState('Logout Failed Please try again.'));
+      }
+    }).catchError((error) {
+      emit(LoginErrorState(error.toString()));
+      showCustomSnackbar(
+          'Logout Failed', 'Please try again.',
+          isError: true);
+    });
   }
 }
 

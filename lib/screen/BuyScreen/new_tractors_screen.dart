@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../constants/styles/colors.dart';
 import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/home_cubit/home_states.dart';
@@ -55,27 +56,11 @@ class NewTractorScreen extends StatelessWidget {
             ),
             // Display brands list
             if (brands.isNotEmpty) ...[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child:
-                Row(
-                  children: [
-                    Icon(
-                      Icons.branding_watermark_outlined,
-                      color: Colors.red,
-                      size: 24.0.sp,
-                    ),
-                    SizedBox(width: 10.0.w),
-                    Text(
-                      "Select your favorite brands",
-                      style: TextStyle(
-                        fontSize: 20.0.sp,
-                        fontWeight: FontWeight.bold,
-                        color: cubit.isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+              _sectionHeader(
+                context,
+                'Select your favorite brands',
+                Icon(Icons.branding_watermark_outlined),
+                Colors.red,
               ),
               gridBrandsBuilder(homeDataModel, context),
               TextButton(
@@ -106,25 +91,12 @@ class NewTractorScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.flash_on,
-                        color: Colors.orange,
-                        size: 24.0.sp,
-                      ),
-                      SizedBox(width: 10.0.w),
-                      Text(
-                        " Select tractor by HP",
-                        style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: cubit.isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ],
+                  _sectionHeader(
+                    context,
+                    'Select tractor by HP',
+                    Icon(Icons.flash_on),
+                    orange,
                   ),
-                  SizedBox(height: 8.0),
 
                   GridView.count(
 
@@ -157,25 +129,12 @@ class NewTractorScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.payments,
-                        color: Colors.green,
-                        size: 24.0.sp,
-                      ),
-                      SizedBox(width: 10.0.w),
-                      Text(
-                        "Select your budget",
-                        style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: cubit.isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ],
+                  _sectionHeader(
+                    context,
+                    'Select your budget',
+                    Icon(Icons.payments),
+                    Colors.green,
                   ),
-                  SizedBox(height: 8.0),
 
                   GridView.count(
                     shrinkWrap: true,
@@ -197,6 +156,36 @@ class NewTractorScreen extends StatelessWidget {
               children: List.generate(
                 tractors.length > 12 ? tractors.length - 12 : 0,
                     (index) => tractorItemBuilder(tractors[index + 12], context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _sectionHeader(
+      BuildContext context, String title, Icon icon, Color color) {
+    final cubit = HomeCubit.get(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        color: cubit.isDark ? asmarFate7 : offWhite,
+        width: double.infinity,
+        padding: EdgeInsets.only(left: 5.0.w, top: 7.5.h, bottom: 7.5.h),
+        child: Row(
+          children: [
+            Icon(
+              icon.icon,
+              color: color,
+              size: 24.0.sp,
+            ),
+            SizedBox(width: 15.0.w),
+            Text(
+              '$title'.toUpperCase(),
+              style: TextStyle(
+                color: cubit.isDark ? Colors.white : Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 18.0.sp,
               ),
             ),
           ],

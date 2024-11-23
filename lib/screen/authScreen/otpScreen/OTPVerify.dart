@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:farm_connects/layout/home_layout.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,40 @@ class _OTPVerifyState extends State<OTPVerify> {
 
   bool _isLoading = false;
   bool isVerified = true;
+  int remainingTime = 60; // 1-minute countdown
+  late Timer timer;
+  bool isResendEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    startResendTimer();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+  void startResendTimer() {
+    setState(() {
+      remainingTime = 60;
+      isResendEnabled = false;
+    });
+
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (remainingTime > 0) {
+        setState(() {
+          remainingTime--;
+        });
+      } else {
+        setState(() {
+          isResendEnabled = true;
+        });
+        timer.cancel();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,21 +203,24 @@ class _OTPVerifyState extends State<OTPVerify> {
                                 'Didn`t you receive any code ?',
                                 style: TextStyle(
                                   fontSize: ScreenUtil().setSp(12),
-                                  // fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextButton(
-                                onPressed: () {
-                                  BlocProvider.of<AuthCubits>(context)
-                                      .sendOTP(phonenumber);
-                                  // otpProvider.sendOTP();
-                                },
+                                onPressed: isResendEnabled
+                                    ? () {
+                                  BlocProvider.of<AuthCubits>(context).sendOTP(phonenumber);
+                                  startResendTimer();
+                                }
+                                    : null,
                                 child: Text(
-                                  'Resend OTP',
+                                  isResendEnabled
+                                      ? 'Resend OTP'
+                                      : 'Resend OTP in $remainingTime s',
                                   style: TextStyle(
-                                    color:
-                                        const Color.fromRGBO(143, 130, 244, 1),
-                                    fontSize: ScreenUtil().setSp(20),
+                                    color: isResendEnabled
+                                        ? const Color.fromRGBO(143, 130, 244, 1)
+                                        : Colors.grey,
+                                    fontSize: isResendEnabled ? ScreenUtil().setSp(20) : ScreenUtil().setSp(12) ,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

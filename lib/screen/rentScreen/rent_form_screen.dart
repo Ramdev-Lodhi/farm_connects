@@ -46,13 +46,13 @@ class _RentFormScreenState extends State<RentFormScreen>
   String? pincode;
   List<String> serviceList = [];
   List<String> priceTypeList = [
-    'Hours',
-    'Day',
-    'Month',
-    'Years',
-    'Bigha',
-    'Acre',
-    'km'
+    'Per Hours',
+    'Per Day',
+    'Per Month',
+    'Per Years',
+    'Per Bigha',
+    'Per Acre',
+    'Per km'
   ];
 
   @override

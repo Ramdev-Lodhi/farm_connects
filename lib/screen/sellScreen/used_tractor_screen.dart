@@ -4,6 +4,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
+import '../../constants/styles/colors.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../widgets/placeholder/usedscreen_placeholder.dart';
 import '../../widgets/snackbar_helper.dart';
@@ -74,27 +75,13 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
 
 // Display brands list
             if (brands.isNotEmpty) ...[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.branding_watermark_outlined,
-                      color: Colors.red,
-                      size: 24.0.sp,
-                    ),
-                    SizedBox(width: 10.0.w),
-                    Text(
-                      "Select your favorite brands",
-                      style: TextStyle(
-                        fontSize: 20.0.sp,
-                        fontWeight: FontWeight.bold,
-                        color: cubits.isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+              _sectionHeader(
+                context,
+                'Select your favorite brands',
+                Icon(Icons.branding_watermark_outlined),
+                Colors.red,
               ),
+
               gridBrandsBuilder(HomeCubit.get(context).homeDataModel, context),
               TextButton(
                 onPressed: () {
@@ -111,14 +98,10 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               ),
             ],
 
-
             Column(
               children: List.generate(
-                tractors.length > 6
-                    ? 4
-                    : (tractors.length - 2).clamp(0, 4),
-                (index) =>
-                    tractorItemBuilder(tractors[index + 2], context),
+                tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
+                (index) => tractorItemBuilder(tractors[index + 2], context),
               ),
             ),
 
@@ -127,25 +110,12 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.flash_on,
-                        color: Colors.orange,
-                        size: 24.0.sp,
-                      ),
-                      SizedBox(width: 10.0.w),
-                      Text(
-                        " Select tractor by HP",
-                        style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: cubits.isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ],
+                  _sectionHeader(
+                    context,
+                    'Select tractor by HP',
+                    Icon(Icons.flash_on),
+                    orange,
                   ),
-                  SizedBox(height: 8.0),
                   GridView.count(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -176,25 +146,13 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.payments,
-                        color: Colors.green,
-                        size: 24.0.sp,
-                      ),
-                      SizedBox(width: 10.0.w),
-                      Text(
-                        "Select your budget",
-                        style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: cubits.isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ],
+                  _sectionHeader(
+                    context,
+                    'Select your budget',
+                    Icon(Icons.payments),
+                    Colors.green,
                   ),
-                  SizedBox(height: 8.0),
+
                   GridView.count(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -215,6 +173,37 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               children: List.generate(
                 tractors.length > 12 ? tractors.length - 12 : 0,
                 (index) => tractorItemBuilder(tractors[index + 12], context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionHeader(
+      BuildContext context, String title, Icon icon, Color color) {
+    final cubit = HomeCubit.get(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        color: cubit.isDark ? asmarFate7 : offWhite,
+        width: double.infinity,
+        padding: EdgeInsets.only(left: 5.0.w, top: 7.5.h, bottom: 7.5.h),
+        child: Row(
+          children: [
+            Icon(
+              icon.icon,
+              color: color,
+              size: 24.0.sp,
+            ),
+            SizedBox(width: 15.0.w),
+            Text(
+              '$title'.toUpperCase(),
+              style: TextStyle(
+                color: cubit.isDark ? Colors.white : Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 18.0.sp,
               ),
             ),
           ],
@@ -400,7 +389,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
             child: GestureDetector(
               onTap: () {
                 selectedBrand = product.name;
-                  Get.to(() => TractorsByBrandScreen(brandName: product.name, brandId: product.id));
+                Get.to(() => TractorsByBrandScreen(
+                    brandName: product.name, brandId: product.id));
 
                 setState(() {});
               },
@@ -579,7 +569,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -595,7 +586,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -612,7 +604,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -626,7 +619,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       labelText: 'Budget',
                       prefixIcon: Icon(Icons.currency_rupee),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -641,7 +635,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                     height: 10,
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(

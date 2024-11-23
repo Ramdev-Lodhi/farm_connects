@@ -2,6 +2,7 @@ import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/Provider/OTPProvider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,10 +18,13 @@ import '../cubits/auth_cubit/auth_cubit.dart';
 import 'constants/styles/styles.dart';
 import 'cubits/location_cubit/location_cubits.dart';
 import 'cubits/sell_cubit/sell_cubit.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
+  // await FirebaseMessaging.instance.requestPermission();
+  // String? token1 = await FirebaseMessaging.instance.getToken();
+  // print("FCM Token: $token1");
   DioHelper.init();
   await CacheHelper.init();
   String token = CacheHelper.getData(key: 'token') ?? '';

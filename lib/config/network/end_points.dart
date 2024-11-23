@@ -9,3 +9,4 @@ const String CHANGE_FAV = 'favorites';
 const String GET_PROFILE = 'profile';
 const String UPDATE_PROFILE = 'update-profile';
 const String SEARCH = 'products/search';
+const String NOTIFICATION = 'notification/send-notification';

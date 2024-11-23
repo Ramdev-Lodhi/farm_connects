@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +19,16 @@ import '../../../cubits/auth_cubit/auth_cubit.dart';
 import '../../../cubits/home_cubit/home_cubit.dart';
 import '../../../cubits/sell_cubit/sell_cubit.dart';
 import '../../../layout/home_layout.dart';
+import '../../../service/notification_service.dart';
 import '../../../widgets/loadingIndicator.dart';
+import '../../../widgets/permission/notificationPermissionDialog.dart';
 import '../../../widgets/snackbar_helper.dart';
 import '../../profileScreen/edit_profile_screen.dart';
 import '../../profileScreen/update_profile_screen.dart';
 import './Provider/OTPProvider.dart';
 import 'OTPVerify.dart';
 import 'country_code_picker.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 class OTPScreen extends StatefulWidget {
@@ -29,12 +36,96 @@ class OTPScreen extends StatefulWidget {
   _OTPScreenState createState() => _OTPScreenState();
 }
 
-class _OTPScreenState extends State<OTPScreen> {
+class _OTPScreenState extends State<OTPScreen> with WidgetsBindingObserver{
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final TextEditingController _phoneNumberController = TextEditingController();
   bool _isLoading = false;
+  bool isDialogVisible = false;
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.initialize();
+    _firebaseMessaging.requestPermission();
+    WidgetsBinding.instance.addObserver(this);
+    checkAndroidVersionAndPermission();
+    _firebaseMessaging.getToken().then((token) {
+
+      print("Firebase Token: $token");
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Message received: ${message.notification?.title}");
+      NotificationService.showNotification( // Call the service to show notification
+        title: message.notification?.title ?? 'No Title',
+        body: message.notification?.body ?? 'No Body',
+      );
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("Message clicked: ${message.notification?.title}");
+
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      checkNotificationPermission();
+    }
+  }
+
+  Future<void> checkAndroidVersionAndPermission() async {
+    if (Platform.isAndroid) {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      int androidVersion = int.parse(androidInfo.version.sdkInt.toString());
+      if (androidVersion < 33) {
+        checkNotificationPermission();
+      } else {
+        await FirebaseMessaging.instance.requestPermission();
+        print("No permission check needed for Android 13+");
+      }
+    }
+  }
+  void checkNotificationPermission() async {
+    NotificationSettings settings = await _firebaseMessaging.getNotificationSettings();
+    PermissionStatus status = await Permission.notification.status;
+    if (status.isDenied && !isDialogVisible) {
+      _showPermissionDialog();
+    } else if (status.isGranted && isDialogVisible) {
+      Navigator.of(context, rootNavigator: true).pop();
+      setState(() {
+        isDialogVisible = false;
+      });
+    }
+  }
+
+  void _showPermissionDialog() {
+    final Brightness brightness = MediaQuery.of(context).platformBrightness;
+    final bool isDarkMode = brightness == Brightness.dark;
+    setState(() {
+      isDialogVisible = true;
+    });
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => NotificationPermissionDialog(
+        isDarkMode: isDarkMode,
+        onEnable: () {
+          openAppSettings();
+        },
+        onDeny: () {
+          Navigator.of(context).pop();
+          setState(() {
+            isDialogVisible = false;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _phoneNumberController.dispose();
     super.dispose();
   }
@@ -70,7 +161,6 @@ class _OTPScreenState extends State<OTPScreen> {
             }
             if (state is LoginSuccessState) {
               await LocationHelper.fetchLocationDetails();
-
               CacheHelper.getData(key: 'token');
               HomeCubit.get(context).getHomeData();
               SellCubit.get(context).getSellData();

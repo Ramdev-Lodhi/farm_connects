@@ -1,6 +1,5 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-
 import '../network/local/cache_helper.dart';
 
 class LocationHelper {

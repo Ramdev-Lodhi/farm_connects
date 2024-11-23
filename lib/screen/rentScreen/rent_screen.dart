@@ -6,6 +6,7 @@ import 'package:farm_connects/cubits/rent_cubit/rent_states.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
+import '../../constants/styles/colors.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/rent_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,27 +60,8 @@ class RentScreen extends StatelessWidget {
                     ItemBuilder(RentData[index], context),
               ),
               if (brands.isNotEmpty) ...[
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.branding_watermark_outlined,
-                        color: Colors.red,
-                        size: 24.0.sp,
-                      ),
-                      SizedBox(width: 10.0.w),
-                      Text(
-                        "Select Hiring Service",
-                        style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: cubits.isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+                _sectionHeader(context, 'Select Hiring Service'),
                 gridServiceBuilder(cubits.homeDataModel, context),
                 TextButton(
                   onPressed: () {
@@ -110,7 +92,34 @@ class RentScreen extends StatelessWidget {
       ),
     );
   }
-
+  Widget _sectionHeader(BuildContext context, String title) {
+    final cubit = HomeCubit.get(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        color: cubit.isDark ? asmarFate7 : offWhite,
+        width: double.infinity,
+        padding: EdgeInsets.only(left: 5.0.w, top: 7.5.h, bottom: 7.5.h),
+        child: Row(
+          children: [
+            Icon(
+              Icons.branding_watermark_outlined,
+              color: Colors.red,
+              size: 24.0.sp,
+            ),
+            SizedBox(width: 15.0.w),
+            Text(
+              '$title'.toUpperCase(),
+              style: TextStyle(
+                  color: cubit.isDark ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0.sp),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   Widget ItemBuilder(RentData? product, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
