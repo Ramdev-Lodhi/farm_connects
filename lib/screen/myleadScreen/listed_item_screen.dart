@@ -21,8 +21,6 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   @override
   Widget build(BuildContext context) {
     final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
-    final sellEnquiryData = dataSellEnquiry?.data.Sellenquiry ?? [];
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -48,7 +46,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
           children: [
             Container(),
             _buildVerticalScrollableContent(
-                _buildSellEnquiry(sellEnquiryData)),
+                _buildSellEnquiry(dataSellEnquiry!)),
             Container(),
           ],
         ),
@@ -62,15 +60,15 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
     );
   }
 
-  Widget _buildSellEnquiry(List<SellEnquirydata> sellEnquiryData) {
+  Widget _buildSellEnquiry(sellEnquiryData dataSellEnquiry) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: sellEnquiryData.length,
+        itemCount: dataSellEnquiry.data.Sellenquiry.length,
         itemBuilder: (context, index) {
-          return ItemBuilder(sellEnquiryData[index], context);
+          return ItemBuilder(dataSellEnquiry.data.Sellenquiry[index], context);
         },
       ),
     );
