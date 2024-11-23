@@ -3,7 +3,7 @@ class sellEnquiryData {
   late SellEnquiry data;
   sellEnquiryData.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    // print(status);
+    print(status);
     data = SellEnquiry.fromJson(json['data']);
   }
 }
@@ -30,7 +30,6 @@ class SellEnquirydata {
     farmerlocation = json['location'] ?? '';
     budget = json['budget'] ?? '';
     sellerInfo = json['sellerInfo'] != null ? SellerInfo.fromJson(json['sellerInfo']) : null;
-
   }
 }
 class SellerInfo {

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:farm_connects/cubits/mylead_cubit/mylead_cubits.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
@@ -12,12 +11,18 @@ class ListedItemScreen extends StatefulWidget {
   State<ListedItemScreen> createState() => _ListedItemScreenState();
 }
 
-
 class _ListedItemScreenState extends State<ListedItemScreen> {
   @override
+  void initState() {
+    super.initState();
+    MyleadCubits.get(context)..getSellenquiry();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final sellenquiry = MyleadCubits.get(context).sellEnquirydata;
-    print(sellenquiry?.data.Sellenquiry);
+    final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
+    final sellEnquiryData = dataSellEnquiry?.data.Sellenquiry ?? [];
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -27,7 +32,6 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
             child: Container(
               color: Palette.tabbarColor,
               child: TabBar(
-                // isScrollable: true,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
                 indicatorColor: Colors.black,
@@ -42,12 +46,10 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
         ),
         body: TabBarView(
           children: [
+            Container(),
             _buildVerticalScrollableContent(
-                _buildsellenquiry(sellenquiry)),
-            _buildVerticalScrollableContent(
-                _buildsellenquiry(sellenquiry)),
-            _buildVerticalScrollableContent(
-                _buildsellenquiry(sellenquiry)),
+                _buildSellEnquiry(sellEnquiryData)),
+            Container(),
           ],
         ),
       ),
@@ -60,32 +62,26 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
     );
   }
 
-  Widget _buildsellenquiry(sellEnquiryData? sellenquiry) {
-    HomeCubit cubits = HomeCubit.get(context);
-    return Transform.translate(
-      offset: Offset(0, -20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: sellenquiry?.data.Sellenquiry.length,
-            itemBuilder: (context, index) =>
-                ItemBuilder(sellenquiry?.data.Sellenquiry, context),
-          ),
-        ),
+  Widget _buildSellEnquiry(List<SellEnquirydata> sellEnquiryData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: sellEnquiryData.length,
+        itemBuilder: (context, index) {
+          return ItemBuilder(sellEnquiryData[index], context);
+        },
       ),
     );
   }
 
-  Widget ItemBuilder(sellEnquiry, BuildContext context) {
+  Widget ItemBuilder(SellEnquirydata sellEnquiry, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
-// print(sellEnquiry.);
+
     return GestureDetector(
-      onTap: (){
-        // Get.to(() => RentDetialsScreen(rentdata: product));
+      onTap: () {
+        // Implement navigation to details screen if needed
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 4.0.h),
@@ -110,68 +106,62 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                         child: SizedBox(
                           height: 120.w,
                           width: 120.w,
-                          // child: CachedNetworkImage(
-                          //   imageUrl: product?.image ?? '',
-                          //   fit: BoxFit.cover,
-                          //   errorWidget: (context, url, error) =>
-                          //       Icon(Icons.error_outline),
-                          // ),
+                          child: CachedNetworkImage(
+                            imageUrl: sellEnquiry.sellerInfo?.image ?? '',
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        // children: [
-                        //   Text(
-                        //     '${product?.servicetype}'.trim(),
-                        //     maxLines: 1,
-                        //     textAlign: TextAlign.start,
-                        //     overflow: TextOverflow.ellipsis,
-                        //     style: TextStyle(
-                        //       fontSize: 16.0.sp,
-                        //       fontWeight: FontWeight.bold,
-                        //       color: cubit.isDark ? Colors.white : Colors.black,
-                        //     ),
-                        //   ),
-                        //
-                        //   SizedBox(height: 8.0),
-                        //   Text("₹ ${product?.price}",
-                        //       style: TextStyle(
-                        //           fontSize: 15, fontWeight: FontWeight.bold)),
-                        //   SizedBox(height: 8.0),
-                        //   Text(
-                        //     'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
-                        //     maxLines: 2,
-                        //     overflow: TextOverflow.ellipsis,
-                        //     style: TextStyle(
-                        //       fontSize: 14.0.sp,
-                        //       color:
-                        //       cubit.isDark ? Colors.white70 : Colors.black54,
-                        //     ),
-                        //   ),
-                        //   ElevatedButton(
-                        //     onPressed: () {
-                        //       showDialog(
-                        //         context: context,
-                        //         builder: (context) {
-                        //           return rentContactDialog(
-                        //               product, context);
-                        //         },
-                        //       );
-                        //     },
-                        //     child: Text("Contact Owner",
-                        //         style: TextStyle(color: Colors.white)),
-                        //     style: ElevatedButton.styleFrom(
-                        //       backgroundColor: Color(0xFF009688),
-                        //       shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(2.0),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ],
+                        children: [
+                          Text(
+                            sellEnquiry.farmername ?? 'Unknown Farmer',
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: cubit.isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Budget: ₹ ${sellEnquiry.budget}',
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Mobile: ${sellEnquiry.farmermobile}',
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Location: ${sellEnquiry.farmerlocation}',
+                            style: TextStyle(
+                                fontSize: 8.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+
+                        ],
                       ),
                     ),
                   ],

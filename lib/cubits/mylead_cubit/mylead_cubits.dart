@@ -69,7 +69,7 @@ class MyleadCubits extends Cubit<MyleadState> {
     ).then((response) {
       print('sellenquerydata : ${response.data}');
       sellEnquirydata = sellEnquiryData.fromJson(response.data);
-      // print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry}');
+      print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
 
       emit(MyleadSuccess("Data Getted Successfully"));
     }).catchError((error) {
