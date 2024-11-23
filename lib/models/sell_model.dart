@@ -48,6 +48,7 @@ class ModelName {
 }
 
 class SellData {
+  late String sellerId;
   late String name;
   late String mobile;
   late String location;
@@ -64,6 +65,7 @@ class SellData {
   late String image;
 
   SellData.fromJson(Map<String, dynamic> json) {
+    sellerId = json['sellerId'] ?? '';
     name = json['name'] ?? '';
     mobile = json['mobile'] ?? '';
     location = json['location'] ?? '';

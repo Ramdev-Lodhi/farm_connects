@@ -17,6 +17,7 @@ import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import 'constants/styles/styles.dart';
 import 'cubits/location_cubit/location_cubits.dart';
+import 'cubits/mylead_cubit/mylead_cubits.dart';
 import 'cubits/sell_cubit/sell_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 void main() async {
@@ -76,6 +77,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => RentCubit()..GetRentData(),
+        ),
+        BlocProvider(
+          create: (context) => MyleadCubits()..getSellenquiry(),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeStates>(

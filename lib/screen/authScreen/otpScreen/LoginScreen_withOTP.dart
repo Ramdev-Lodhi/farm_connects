@@ -17,6 +17,7 @@ import '../../../config/network/local/cache_helper.dart';
 import '../../../constants/palette.dart';
 import '../../../cubits/auth_cubit/auth_cubit.dart';
 import '../../../cubits/home_cubit/home_cubit.dart';
+import '../../../cubits/mylead_cubit/mylead_cubits.dart';
 import '../../../cubits/sell_cubit/sell_cubit.dart';
 import '../../../layout/home_layout.dart';
 import '../../../service/notification_service.dart';
@@ -165,6 +166,7 @@ class _OTPScreenState extends State<OTPScreen> with WidgetsBindingObserver{
               HomeCubit.get(context).getHomeData();
               SellCubit.get(context).getSellData();
               RentCubit.get(context).GetRentData();
+              MyleadCubits.get(context).getSellenquiry();
               await ProfileCubits.get(context).getProfileData();
               var profileData = ProfileCubits.get(context).profileModel.data;
               if (profileData != null) {
