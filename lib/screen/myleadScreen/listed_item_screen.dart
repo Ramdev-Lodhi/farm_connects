@@ -15,7 +15,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   @override
   void initState() {
     super.initState();
-    MyleadCubits.get(context)..getSellenquiry();
+     MyleadCubits.get(context)..getSellenquiry();
   }
 
   @override

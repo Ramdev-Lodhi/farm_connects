@@ -15,7 +15,7 @@ class MyleadCubits extends Cubit<MyleadState> {
   MyleadCubits() : super(MyleadInitial());
 
   static MyleadCubits get(context) => BlocProvider.of(context);
-  sellEnquiryData? sellEnquirydata = null;
+  sellEnquiryData? sellEnquirydata;
   Future<void> InsertContactData(
       String image,
       String modelname,
@@ -78,9 +78,9 @@ class MyleadCubits extends Cubit<MyleadState> {
       token: token,
       lang: lang,
     ).then((response) {
-      print('sellenquerydata : ${response.data}');
+      // print('sellenquerydata : ${response.data}');
       sellEnquirydata = sellEnquiryData.fromJson(response.data);
-      print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
+      // print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
 
       emit(MyleadSuccess("Data Getted Successfully"));
     }).catchError((error) {

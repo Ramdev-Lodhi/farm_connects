@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import '../config/network/local/cache_helper.dart';
 import '../constants/styles/colors.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
+import '../cubits/mylead_cubit/mylead_cubits.dart';
 import '../cubits/profile_cubit/profile_cubits.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
@@ -29,6 +30,7 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     ProfileCubits.get(context)..getProfileData();
+    MyleadCubits.get(context)..getSellenquiry();
     _tabController = TabController(length: 2, vsync: this);
   }
 
