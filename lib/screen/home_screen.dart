@@ -99,6 +99,19 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         location!,
         price!);
   }
+  void insertrentdata(rentcontactdata) {
+
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertrentContactData(
+        rentcontactdata.image,
+        rentcontactdata.servicetype,
+        rentcontactdata.userId,
+        rentcontactdata.userInfo.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -904,7 +917,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     );
   }
 
-  Widget rentContactDialog(rent, BuildContext context) {
+  Widget rentContactDialog(rentdata, BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -1024,8 +1037,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKeyrent.currentState!.validate()) {
-                            insertselldata();
-                            Get.to(() => RentDetialsScreen(rentdata: rent));
+                            insertrentdata(rentdata);
+                            Get.to(() => RentDetialsScreen(rentdata: rentdata));
                           }
                         },
                         child: Text("Contact Owner",
