@@ -6,6 +6,7 @@ import 'package:farm_connects/layout/home_layout.dart';
 import 'package:farm_connects/screen/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import '../../config/network/end_points.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
 import '../../models/myleads_model.dart';
@@ -46,7 +47,7 @@ class MyleadCubits extends Cubit<MyleadState> {
           });
 
       await DioHelper.postData(
-          method: 'notification/send-contact-notification',
+          method: CONTACT_NOTIFICATION,
           token: token,
           data: {
             "id":sellerId,

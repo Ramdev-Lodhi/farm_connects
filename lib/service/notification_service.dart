@@ -56,9 +56,9 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.high,
       largeIcon: localImagePath != null
-          ? FilePathAndroidBitmap(localImagePath) // Small image for collapsed view
+          ? FilePathAndroidBitmap(localImagePath)
           : null,
-      styleInformation: bigPictureStyleInformation, // Full image in expanded view
+      styleInformation: bigPictureStyleInformation,
     );
 
     final NotificationDetails platformDetails =
