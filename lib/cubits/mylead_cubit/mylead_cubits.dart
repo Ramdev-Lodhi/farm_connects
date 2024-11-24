@@ -17,6 +17,7 @@ class MyleadCubits extends Cubit<MyleadState> {
   static MyleadCubits get(context) => BlocProvider.of(context);
   sellEnquiryData? sellEnquirydata = null;
   RentEnquiryData? rentEnquiryData = null;
+  BuyEnquiryData? buyEnquiryData= null;
   Future<void> InsertContactData(
       String image,
       String modelname,
@@ -157,4 +158,69 @@ class MyleadCubits extends Cubit<MyleadState> {
     });
   }
 
+  Future<void> InsertbuyContactData(
+      String image,
+      String brand,
+      String modelname,
+      String name,
+      String mobile,
+      String location ,
+      String budget) async {
+    emit(MyleadLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    try {
+      final response = await DioHelper.postData(
+          method: 'contact/buyContact',
+          token: token,
+          data: {
+            "name" : name,
+            "mobile": mobile,
+            "location":location,
+            "budget":budget,
+            "dealerInfo":{
+              "image": image,
+              "modelName": modelname,
+              "Brand": brand,
+            }
+          });
+
+      // await DioHelper.postData(
+      //     method: 'notification/send-contact-notification',
+      //     token: token,
+      //     data: {
+      //       "id":userId,
+      //       "title": "New Contact Request for You, ${rentername}",
+      //       "message": "User ${name} has sent a message: \"I'm interested in buy a  ${servicetype}. Please get in touch!\"",
+      //       "image":image,
+      //     });
+
+      if (response.statusCode == 200) {
+        emit(MyleadSuccess('Data Added Successfully'));
+        // sellDataModel = SellDataModel.fromJson(response.data);
+        // Get.offAll(()=>HomeLayout());
+      } else {
+        emit(MyleadError('Failed to insert data, please try again.'));
+      }
+
+    } catch (error) {
+      emit(MyleadError(error.toString()));
+    }
+  }
+
+  void getBuyenquiry() {
+    emit(MyleadLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+    DioHelper.getData(
+      method: 'contact/getbuyContact',
+      token: token,
+      lang: lang,
+    ).then((response) {
+      buyEnquiryData = BuyEnquiryData.fromJson(response.data);
+
+      emit(MyleadSuccess("Data Getted Successfully"));
+    }).catchError((error) {
+      emit(MyleadError(error));
+    });
+  }
 }

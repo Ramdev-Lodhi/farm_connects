@@ -112,6 +112,20 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         price!);
   }
 
+  void insertbuydata(buycontactdata) {
+
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertbuyContactData(
+        buycontactdata.image,
+        buycontactdata.brand,
+        // buycontactdata.userId,
+        buycontactdata.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = HomeCubit.get(context);
@@ -457,7 +471,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                     width: double.infinity,
                                     margin: EdgeInsets.only(bottom: 0),
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return newTractorContactDialog(product, context);
+                                          },
+                                        );
+                                      },
                                       child: Text("Check Tractor Price",
                                           style:
                                               TextStyle(color: Colors.white)),
@@ -773,6 +794,148 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     );
   }
 
+  Widget newTractorContactDialog(newtractors, BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      insetPadding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 400.0,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: location,
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Location';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: mobile,
+                    decoration: InputDecoration(
+                      labelText: 'Mobile',
+                      prefixIcon: Icon(Icons.phone),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Mobile';
+                      } else if (value.length != 13) {
+                        return 'please enter 10 digit number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Budget',
+                      prefixIcon: Icon(Icons.currency_rupee),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Budget';
+                      }
+                      return null;
+                    },
+                  ),
+                  Divider(
+                    thickness: 1.5,
+                    color: Colors.black12,
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
+                    child: SizedBox(
+                      width: 150, // Set the desired width here
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            insertbuydata(newtractors);
+                            Get.to(() => TractorsDetails(tractor: newtractors));
+                          }
+                        },
+                        child: Text("Contact Seller",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF009688),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  
   Widget sellerContactDialog(selltractors, BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
