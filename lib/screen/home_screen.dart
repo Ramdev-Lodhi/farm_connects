@@ -86,7 +86,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   void insertselldata(sellcontactdata) {
-    print(price);
     var mylead = MyleadCubits.get(context);
     mylead.InsertContactData(
         sellcontactdata.image,
