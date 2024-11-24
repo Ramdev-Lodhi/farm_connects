@@ -457,7 +457,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Dealer Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -563,7 +563,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                             Get.back();
                           }
                         },
-                        child: Text("Contact Seller",
+                        child: Text("Contact Dealer",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),

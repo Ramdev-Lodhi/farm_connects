@@ -570,7 +570,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Dealer Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -676,7 +676,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                             Get.to(() => TractorsDetails(tractor: newtractors));
                           }
                         },
-                        child: Text("Contact Seller",
+                        child: Text("Contact Dealer",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),

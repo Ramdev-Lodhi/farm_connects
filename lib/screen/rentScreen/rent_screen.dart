@@ -44,7 +44,7 @@ class _RentScreenState extends State<RentScreen> {
         name!,
         mobile!,
         location!,
-        price!);
+        rentcontactdata.price);
   }
   @override
   void initState() {
@@ -411,27 +411,6 @@ class _RentScreenState extends State<RentScreen> {
                         return 'Please enter Mobile';
                       }else if (value.length != 13) {
                         return 'please enter 10 digit number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
-                    onSaved: (value) => price = value,
-                    onChanged: (value) {
-                      setState(() {
-                        price = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Budget';
                       }
                       return null;
                     },

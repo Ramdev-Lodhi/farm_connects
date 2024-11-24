@@ -109,7 +109,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         name!,
         mobile!,
         location!,
-        price!);
+        rentcontactdata.price);
   }
 
   void insertbuydata(buycontactdata) {
@@ -810,7 +810,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Dealer Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -916,7 +916,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                             Get.to(() => TractorsDetails(tractor: newtractors));
                           }
                         },
-                        child: Text("Contact Seller",
+                        child: Text("Contact Dealer",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
@@ -1165,27 +1165,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       return null;
                     },
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
-                    onSaved: (value) => price = value,
-                    onChanged: (value) {
-                      setState(() {
-                        price = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Budget';
-                      }
-                      return null;
-                    },
-                  ),
+
                   Divider(
                     thickness: 1.5,
                     color: Colors.black12,

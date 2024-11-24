@@ -41,7 +41,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
         name!,
         mobile!,
         location!,
-        price!);
+        rentcontactdata.price!);
   }
 
   @override
@@ -110,24 +110,36 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             fit: BoxFit.cover,
           ),
           SizedBox(height: 10),
-          Text(
-            '${rentdata?.servicetype} ',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${rentdata?.servicetype} ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              rentdata.rentedStatus == false ?
+              Text(
+                   "Unavailable" ,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold ,color: Colors.red),
+              ):Text(
+                "Available" ,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,color: Colors.green),
+              ) ,
+            ],
           ),
           SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildIconWithText(
-                    Icons.location_on, 'Location', ' ${rentdata?.state}'),
-                _buildIconWithText(
-                    Icons.currency_rupee, 'Price', ' ${rentdata?.price}'),
-                _buildIconWithText(
-                    Icons.check_circle, 'Status', ' ${rentdata?.rentedStatus}'),
-              ],
-            ),
+          Table(
+            border: TableBorder.all(color: Colors.grey, width: 1),
+            columnWidths: {
+              0: FlexColumnWidth(1.5),
+              1: FlexColumnWidth(2),
+            },
+            children: [
+              _buildTableRow(
+                  Icons.currency_rupee, 'Price', '${rentdata?.price}'),
+              _buildTableRow(Icons.location_on, 'Location', '${rentdata?.state}'),
+
+            ],
           ),
           Center(
             child: Padding(
@@ -263,27 +275,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                       return null;
                     },
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
-                    onSaved: (value) => price = value,
-                    onChanged: (value) {
-                      setState(() {
-                        price = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Budget';
-                      }
-                      return null;
-                    },
-                  ),
+
                   Divider(
                     thickness: 1.5,
                     color: Colors.black12,
