@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../config/network/local/cache_helper.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
+import '../../cubits/mylead_cubit/mylead_cubits.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../cubits/sell_cubit/sell_cubit.dart';
 import '../../models/home_data_model.dart';
 import '../../models/sell_model.dart';
@@ -29,12 +32,53 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
   int _expandedIndex = -1;
   String? _selectedbrand;
   String? _selectedsellbrand;
+  final _formKey = GlobalKey<FormState>();
+  String? name;
+  String? mobile;
+  String? location;
+  String? price;
 
   @override
   void initState() {
     super.initState();
     _selectedbrand = widget.brandName;
     _selectedsellbrand = widget.brandName;
+    name = CacheHelper.getData(key: 'name') ?? "";
+    location =
+    '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(
+        key: 'subDistrict') ?? ''}';
+    mobile = ProfileCubits
+        .get(context)
+        .profileModel
+        .data
+        ?.mobile ?? "";
+  }
+
+  void insertselldata(sellcontactdata) {
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertContactData(
+        sellcontactdata.image,
+        sellcontactdata.modelname,
+        sellcontactdata.brand,
+        sellcontactdata.sellerId,
+        sellcontactdata.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
+  }
+
+  void insertbuydata(buycontactdata) {
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertbuyContactData(
+        buycontactdata.image,
+        buycontactdata.brand,
+        // buycontactdata.userId,
+        buycontactdata.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
   }
 
   @override
@@ -98,12 +142,13 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
 
   Widget _buildOverview(List<Tractors> filteredTractors, BuildContext context) {
     List<String> brandList = [];
-    brandList = HomeCubit.get(context)
-            .homeDataModel
-            ?.data
-            .brands
-            .map((brand) => brand.name)
-            .toList() ??
+    brandList = HomeCubit
+        .get(context)
+        .homeDataModel
+        ?.data
+        .brands
+        .map((brand) => brand.name)
+        .toList() ??
         [];
     return Column(
       children: [
@@ -128,8 +173,8 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
     );
   }
 
-  Widget _buildTractorsList(
-      List<Tractors> tractorsByBrand, BuildContext context) {
+  Widget _buildTractorsList(List<Tractors> tractorsByBrand,
+      BuildContext context) {
     return ListView.builder(
       itemCount: tractorsByBrand.length,
       itemBuilder: (context, index) {
@@ -178,7 +223,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                             fit: BoxFit.contain,
                             width: double.infinity,
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error_outline),
+                            const Icon(Icons.error_outline),
                           ),
                         ),
                       ),
@@ -233,7 +278,13 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // Navigate to check price screen
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return newTractorContactDialog(
+                                          product, context);
+                                    },
+                                  );
                                 },
                                 child: const Text("Check Tractor Price",
                                     style: TextStyle(color: Colors.white)),
@@ -285,9 +336,11 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
     );
   }
 
-  Widget _buildUsedTractorsSection(List<SellData> filteredSellTractors , BuildContext context) {
+  Widget _buildUsedTractorsSection(List<SellData> filteredSellTractors,
+      BuildContext context) {
     List<String> brandList = [];
-    brandList = HomeCubit.get(context)
+    brandList = HomeCubit
+        .get(context)
         .homeDataModel
         ?.data
         .brands
@@ -316,8 +369,9 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       ],
     );
   }
-  Widget _buildSellTractorsList(
-      List<SellData> selltractorsByBrand, BuildContext context) {
+
+  Widget _buildSellTractorsList(List<SellData> selltractorsByBrand,
+      BuildContext context) {
     return ListView.builder(
       itemCount: selltractorsByBrand.length,
       itemBuilder: (context, index) {
@@ -325,6 +379,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       },
     );
   }
+
   Widget selltractorItemBuilder(SellData? product, BuildContext context) {
     // SellCubit cubit = SellCubit.get(context);
     HomeCubit cubit = HomeCubit.get(context);
@@ -332,7 +387,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          Get.to(()=> UsedTractorDetails(selltractor: product));
+          Get.to(() => UsedTractorDetails(selltractor: product));
           // Get.to(() => BrandDetailScreen(
           //   brandName: product?.name ?? '',
           //   brandId: product?.id ?? '', // Assuming `id` exists in your model
@@ -376,7 +431,8 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${product?.brand ?? ''} ${product?.modelname ?? ''}'
+                            '${product?.brand ?? ''} ${product?.modelname ??
+                                ''}'
                                 .trim(),
                             maxLines: 1,
                             textAlign: TextAlign.center,
@@ -413,6 +469,16 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                               ),
                             ],
                           ),
+                          Text(
+                            'Price: ${product?.price ?? 'N/A'} ',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: cubit.isDark
+                                  ? Colors.grey[400]
+                                  : Colors.black,
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -420,18 +486,13 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (product?.mobile != null) {
-                                    // Copy the phone number to clipboard
-                                    Clipboard.setData(ClipboardData(text: product!.mobile))
-                                        .then((_) {
-                                      showCustomSnackbar(
-                                          'Alert', 'Phone number copied to clipboard!');
-                                    });
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Phone number is not available.')),
-                                    );
-                                  }
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return sellerContactDialog(
+                                          product, context);
+                                    },
+                                  );
                                 },
                                 child: Text("Contact Seller",
                                     style: TextStyle(color: Colors.white)),
@@ -449,6 +510,290 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget sellerContactDialog(selltractors, BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      insetPadding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 400.0,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: location,
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Location';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: mobile,
+                    decoration: InputDecoration(
+                      labelText: 'Mobile',
+                      prefixIcon: Icon(Icons.phone),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Mobile';
+                      } else if (value.length != 13) {
+                        return 'please enter 10 digit number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Budget',
+                      prefixIcon: Icon(Icons.currency_rupee),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Budget';
+                      }
+                      return null;
+                    },
+                  ),
+                  Divider(
+                    thickness: 1.5,
+                    color: Colors.black12,
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
+                    child: SizedBox(
+                      width: 150, // Set the desired width here
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            insertselldata(selltractors);
+                            Get.to(() =>
+                                UsedTractorDetails(selltractor: selltractors));
+                          }
+                        },
+                        child: Text("Contact Seller",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF009688),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget newTractorContactDialog(newtractors, BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      insetPadding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 400.0,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: location,
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Location';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: mobile,
+                    decoration: InputDecoration(
+                      labelText: 'Mobile',
+                      prefixIcon: Icon(Icons.phone),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Mobile';
+                      } else if (value.length != 13) {
+                        return 'please enter 10 digit number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Budget',
+                      prefixIcon: Icon(Icons.currency_rupee),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Budget';
+                      }
+                      return null;
+                    },
+                  ),
+                  Divider(
+                    thickness: 1.5,
+                    color: Colors.black12,
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
+                    child: SizedBox(
+                      width: 150, // Set the desired width here
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            insertbuydata(newtractors);
+                            Get.to(() => TractorsDetails(tractor: newtractors));
+                          }
+                        },
+                        child: Text("Contact Seller",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF009688),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
