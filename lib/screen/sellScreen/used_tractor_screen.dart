@@ -699,6 +699,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertselldata(selltractors);
+                            Navigator.pop(context);
                             Get.to(() =>
                                 UsedTractorDetails(selltractor: selltractors));
                           }

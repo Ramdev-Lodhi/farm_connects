@@ -810,7 +810,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -913,10 +913,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertbuydata(newtractors);
+                            Navigator.pop(context);
                             Get.to(() => TractorsDetails(tractor: newtractors));
                           }
                         },
-                        child: Text("Contact Seller",
+                        child: Text("Contact",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
@@ -935,7 +936,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
       ),
     );
   }
-  
+
   Widget sellerContactDialog(selltractors, BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -1055,6 +1056,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertselldata(selltractors);
+                            Navigator.pop(context);
+
                               Get.to(() =>
                                   UsedTractorDetails(selltractor: selltractors));
                           }
@@ -1200,6 +1203,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKeyrent.currentState!.validate()) {
                             insertrentdata(rentdata);
+                            Navigator.pop(context);
                             Get.to(() => RentDetialsScreen(rentdata: rentdata));
                           }
                         },

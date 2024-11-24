@@ -450,6 +450,7 @@ class _RentScreenState extends State<RentScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertrentdata(rentdata);
+                            Navigator.pop(context);
                             Get.to(() => RentDetialsScreen(rentdata: rentdata));
                           }
                         },

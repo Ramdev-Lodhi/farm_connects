@@ -30,7 +30,7 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     ProfileCubits.get(context)..getProfileData();
-    MyleadCubits.get(context)..getSellenquiry();
+    MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry();
     _tabController = TabController(length: 2, vsync: this);
   }
 
