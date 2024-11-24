@@ -23,10 +23,15 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   Widget build(BuildContext context) {
     final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
     final dataRentEnquiry = MyleadCubits.get(context).rentEnquiryData;
+    HomeCubit cubit = HomeCubit.get(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          title: Text("Enquiry List",style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white70 : Colors.black,
+          ),),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
@@ -152,9 +157,12 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            'Location: ${sellEnquiry.farmerlocation}',
+                            'Location: ${sellEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                            // softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 8.0.sp,
+                                fontSize: 12.0.sp,
                                 color: cubit.isDark
                                     ? Colors.white70
                                     : Colors.black54),
@@ -264,9 +272,12 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            'Location: ${rentEnquiry.farmerlocation}',
+                            'Location: ${rentEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                            // softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 8.0.sp,
+                                fontSize: 12.0.sp,
                                 color: cubit.isDark
                                     ? Colors.white70
                                     : Colors.black54),
