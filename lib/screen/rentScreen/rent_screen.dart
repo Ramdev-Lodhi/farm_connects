@@ -7,6 +7,7 @@ import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../constants/styles/colors.dart';
+import '../../cubits/mylead_cubit/mylead_cubits.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/rent_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,12 +17,43 @@ import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
 import '../../widgets/placeholder/rentscreen_placeholder.dart';
 
-class RentScreen extends StatelessWidget {
+class RentScreen extends StatefulWidget {
+  @override
+  State<RentScreen> createState() => _RentScreenState();
+}
+
+class _RentScreenState extends State<RentScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
+
+  String? name;
+
+  String? mobile;
+
+  String? location;
+
+  String? price;
+
+  void insertrentdata(rentcontactdata) {
+
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertrentContactData(
+        rentcontactdata.image,
+        rentcontactdata.servicetype,
+        rentcontactdata.userId,
+        rentcontactdata.userInfo.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
+  }
+  @override
+  void initState() {
+    super.initState();
+    name = CacheHelper.getData(key: 'name') ?? "";
+    location =
+    '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+    mobile = ProfileCubits.get(context).profileModel.data?.mobile ?? "";
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RentCubit, RentStates>(
@@ -92,6 +124,7 @@ class RentScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _sectionHeader(BuildContext context, String title) {
     final cubit = HomeCubit.get(context);
     return Padding(
@@ -120,6 +153,7 @@ class RentScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget ItemBuilder(RentData? product, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
@@ -294,7 +328,8 @@ class RentScreen extends StatelessWidget {
       ),
     );
   }
-  Widget rentContactDialog(rent, BuildContext context) {
+
+  Widget rentContactDialog(rentdata, BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -312,13 +347,20 @@ class RentScreen extends StatelessWidget {
                 children: [
                   Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
                   TextFormField(
-                    initialValue: CacheHelper.getData(key: 'name') ?? "",
+                    initialValue: name,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Name';
@@ -327,13 +369,20 @@ class RentScreen extends StatelessWidget {
                     },
                   ),
                   TextFormField(
-                    initialValue: '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                    initialValue:
+                    location,
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Location';
@@ -342,16 +391,26 @@ class RentScreen extends StatelessWidget {
                     },
                   ),
                   TextFormField(
-                    initialValue: ProfileCubits.get(context).profileModel.data?.mobile ?? "",
+                    initialValue:
+                    mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
+                      }else if (value.length != 13) {
+                        return 'please enter 10 digit number';
                       }
                       return null;
                     },
@@ -361,8 +420,15 @@ class RentScreen extends StatelessWidget {
                       labelText: 'Budget',
                       prefixIcon: Icon(Icons.currency_rupee),
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
+                    onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Budget';
@@ -376,16 +442,19 @@ class RentScreen extends StatelessWidget {
                     height: 10,
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            Get.to(() => RentDetialsScreen(rentdata: rent));
+                            insertrentdata(rentdata);
+                            Get.to(() => RentDetialsScreen(rentdata: rentdata));
                           }
                         },
-                        child: Text("Contact Owner", style: TextStyle(color: Colors.white)),
+                        child: Text("Contact Owner",
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
                           shape: RoundedRectangleBorder(
