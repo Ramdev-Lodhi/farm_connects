@@ -1,10 +1,12 @@
   import 'package:farm_connects/models/sell_model.dart';
   import 'package:flutter/material.dart';
   import 'package:flutter/services.dart';
+import 'package:get/get.dart';
   import '../../config/network/local/cache_helper.dart';
   import '../../constants/palette.dart';
   import '../../cubits/home_cubit/home_cubit.dart';
-  import '../../cubits/profile_cubit/profile_cubits.dart';
+  import '../../cubits/mylead_cubit/mylead_cubits.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
   import '../../models/home_data_model.dart';
   import '../../widgets/snackbar_helper.dart';
   import '../BuyScreen/customExpansionTile.dart';
@@ -17,10 +19,33 @@
   class _TractorsDetailsState extends State<UsedTractorDetails> {
     int _expandedIndex = -1;
     final _formKey = GlobalKey<FormState>();
-    final TextEditingController locationController = TextEditingController();
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController mobileController = TextEditingController();
-    final TextEditingController priceController = TextEditingController();
+    String? name;
+    String? mobile;
+    String? location;
+    String? price;
+
+    @override
+    void initState() {
+      super.initState();
+      name = CacheHelper.getData(key: 'name') ?? "";
+      location =
+      '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+      mobile = ProfileCubits.get(context).profileModel.data?.mobile ?? "";
+    }
+
+    void insertselldata(sellcontactdata) {
+      var mylead = MyleadCubits.get(context);
+      mylead.InsertContactData(
+          sellcontactdata.image,
+          sellcontactdata.modelname,
+          sellcontactdata.brand,
+          sellcontactdata.sellerId,
+          sellcontactdata.name,
+          name!,
+          mobile!,
+          location!,
+          price!);
+    }
     @override
     Widget build(BuildContext context) {
       // Get tractors list from HomeCubit
@@ -242,7 +267,7 @@
           child: Container(
             height: 400.0,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -250,13 +275,20 @@
                   children: [
                     Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
                     TextFormField(
-                      initialValue: CacheHelper.getData(key: 'name') ?? "",
+                      initialValue: name,
                       decoration: InputDecoration(
                         labelText: 'Name',
                         prefixIcon: Icon(Icons.person),
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                       ),
+                      onSaved: (value) => name = value,
+                      onChanged: (value) {
+                        setState(() {
+                          name = value;
+                        });
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter Name';
@@ -265,13 +297,20 @@
                       },
                     ),
                     TextFormField(
-                      initialValue: '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}',
+                      initialValue: location,
                       decoration: InputDecoration(
                         labelText: 'Location',
                         prefixIcon: Icon(Icons.location_on),
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                       ),
+                      onSaved: (value) => location = value,
+                      onChanged: (value) {
+                        setState(() {
+                          location = value;
+                        });
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter Location';
@@ -280,16 +319,25 @@
                       },
                     ),
                     TextFormField(
-                      initialValue: ProfileCubits.get(context).profileModel.data?.mobile ?? "",
+                      initialValue: mobile,
                       decoration: InputDecoration(
                         labelText: 'Mobile',
                         prefixIcon: Icon(Icons.phone),
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                       ),
+                      onSaved: (value) => mobile = value,
+                      onChanged: (value) {
+                        setState(() {
+                          mobile = value;
+                        });
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter Mobile';
+                        } else if (value.length != 13) {
+                          return 'please enter 10 digit number';
                         }
                         return null;
                       },
@@ -299,8 +347,14 @@
                         labelText: 'Budget',
                         prefixIcon: Icon(Icons.currency_rupee),
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                      ),
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      ),onSaved: (value) => price = value,
+                      onChanged: (value) {
+                        setState(() {
+                          price = value;
+                        });
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter Budget';
@@ -314,16 +368,19 @@
                       height: 10,
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 0), // Set bottom margin to 0
+                      margin: EdgeInsets.only(bottom: 0),
+                      // Set bottom margin to 0
                       child: SizedBox(
                         width: 150, // Set the desired width here
                         child: ElevatedButton(
                           onPressed: () {
-                if (_formKey.currentState!.validate()) {
-          // Get.to(()=> UsedTractorDetails(selltractor: selltractors));
-                }
+                            if (_formKey.currentState!.validate()) {
+                              insertselldata(selltractors);
+                              Get.back();
+                            }
                           },
-                          child: Text("Contact Seller", style: TextStyle(color: Colors.white)),
+                          child: Text("Contact Seller",
+                              style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF009688),
                             shape: RoundedRectangleBorder(

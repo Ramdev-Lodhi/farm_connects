@@ -15,16 +15,25 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   @override
   void initState() {
     super.initState();
-     MyleadCubits.get(context)..getSellenquiry();
+    MyleadCubits.get(context)..getSellenquiry();
+    MyleadCubits.get(context)..getRentenquiry();
+    MyleadCubits.get(context)..getBuyenquiry();
   }
 
   @override
   Widget build(BuildContext context) {
     final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
+    final dataRentEnquiry = MyleadCubits.get(context).rentEnquiryData;
+    final databuyEnquiry = MyleadCubits.get(context).buyEnquiryData;
+    HomeCubit cubit = HomeCubit.get(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          title: Text("Enquiry List",style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white70 : Colors.black,
+          ),),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
@@ -44,10 +53,12 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
         ),
         body: TabBarView(
           children: [
-            Container(),
+            _buildVerticalScrollableContent(
+                _buildBuyEnquiry(databuyEnquiry!)),
             _buildVerticalScrollableContent(
                 _buildSellEnquiry(dataSellEnquiry!)),
-            Container(),
+            _buildVerticalScrollableContent(
+                _buildrentEnquiry(dataRentEnquiry!)),
           ],
         ),
       ),
@@ -149,9 +160,243 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            'Location: ${sellEnquiry.farmerlocation}',
+                            'Location: ${sellEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                            // softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 8.0.sp,
+                                fontSize: 12.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildrentEnquiry(RentEnquiryData dataRentEnquiry) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: dataRentEnquiry.data.Rentenquiry.length,
+        itemBuilder: (context, index) {
+          return RentItemBuilder(dataRentEnquiry.data.Rentenquiry[index], context);
+        },
+      ),
+    );
+  }
+
+  Widget RentItemBuilder(rentEnquiry, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+
+    return GestureDetector(
+      onTap: () {
+        // Implement navigation to details screen if needed
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.0.h),
+        child: Card(
+          elevation: 1,
+          child: Material(
+            elevation: 3.0,
+            borderRadius: BorderRadius.circular(8.0),
+            color: cubit.isDark ? Colors.grey[800] : Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: SizedBox(
+                          height: 120.w,
+                          width: 120.w,
+                          child: CachedNetworkImage(
+                            imageUrl: rentEnquiry.renterInfo?.image ?? '',
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            rentEnquiry.farmername ?? 'Unknown Farmer',
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: cubit.isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Budget: ₹ ${rentEnquiry.budget}',
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Mobile: ${rentEnquiry.farmermobile}',
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Location: ${rentEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                            // softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildBuyEnquiry(BuyEnquiryData databuyEnquiry) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: databuyEnquiry.data.buyenquiry.length,
+        itemBuilder: (context, index) {
+          return BuyItemBuilder(databuyEnquiry.data.buyenquiry[index], context);
+        },
+      ),
+    );
+  }
+
+  Widget BuyItemBuilder(buyEnquiry, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+
+    return GestureDetector(
+      onTap: () {
+        // Implement navigation to details screen if needed
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.0.h),
+        child: Card(
+          elevation: 1,
+          child: Material(
+            elevation: 3.0,
+            borderRadius: BorderRadius.circular(8.0),
+            color: cubit.isDark ? Colors.grey[800] : Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: SizedBox(
+                          height: 120.w,
+                          width: 120.w,
+                          child: CachedNetworkImage(
+                            imageUrl: buyEnquiry.dealerInfo?.image ?? '',
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            buyEnquiry.farmername ?? 'Unknown Farmer',
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: cubit.isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Budget: ₹ ${buyEnquiry.budget}',
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Mobile: ${buyEnquiry.farmermobile}',
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: cubit.isDark
+                                    ? Colors.white70
+                                    : Colors.black54),
+
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Location: ${buyEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                            // softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
                                 color: cubit.isDark
                                     ? Colors.white70
                                     : Colors.black54),

@@ -8,14 +8,51 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../config/network/local/cache_helper.dart';
 import '../../constants/styles/colors.dart';
+import '../../cubits/mylead_cubit/mylead_cubits.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/home_data_model.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/home_cubit/home_states.dart';
 import '../../widgets/loadingIndicator.dart';
 import 'brand_screen.dart';
 
-class NewTractorScreen extends StatelessWidget {
+class NewTractorScreen extends StatefulWidget {
+  @override
+  State<NewTractorScreen> createState() => _NewTractorScreenState();
+}
+
+
+
+class _NewTractorScreenState extends State<NewTractorScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String? name;
+  String? mobile;
+  String? location;
+  String? price;
+
+  @override
+  void initState() {
+    super.initState();
+    name = CacheHelper.getData(key: 'name') ?? "";
+    location =
+    '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+    mobile = ProfileCubits.get(context).profileModel.data?.mobile ?? "";
+  }
+  void insertbuydata(buycontactdata) {
+
+    var mylead = MyleadCubits.get(context);
+    mylead.InsertbuyContactData(
+        buycontactdata.image,
+        buycontactdata.brand,
+        // buycontactdata.userId,
+        buycontactdata.name,
+        name!,
+        mobile!,
+        location!,
+        price!);
+  }
   @override
   Widget build(BuildContext context) {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -26,9 +63,8 @@ class NewTractorScreen extends StatelessWidget {
       builder: (context, state) {
         return ConditionalBuilder(
           condition: HomeCubit.get(context).homeDataModel != null,
-          builder: (context) => productsBuilder(
-              HomeCubit.get(context).homeDataModel,
-              context),
+          builder: (context) =>
+              productsBuilder(HomeCubit.get(context).homeDataModel, context),
           fallback: (context) => Center(child: NewScreenPlaceholder()),
         );
       },
@@ -51,7 +87,7 @@ class NewTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length < 2 ? tractors.length : 2,
-                    (index) => tractorItemBuilder(tractors[index], context),
+                (index) => tractorItemBuilder(tractors[index], context),
               ),
             ),
             // Display brands list
@@ -82,7 +118,7 @@ class NewTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
-                    (index) => tractorItemBuilder(tractors[index + 2], context),
+                (index) => tractorItemBuilder(tractors[index + 2], context),
               ),
             ),
 
@@ -97,9 +133,7 @@ class NewTractorScreen extends StatelessWidget {
                     Icon(Icons.flash_on),
                     orange,
                   ),
-
                   GridView.count(
-
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     crossAxisCount: 3,
@@ -121,7 +155,7 @@ class NewTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 (tractors.length - 6).clamp(0, 6),
-                    (index) => tractorItemBuilder(tractors[index + 6], context),
+                (index) => tractorItemBuilder(tractors[index + 6], context),
               ),
             ),
             Padding(
@@ -135,7 +169,6 @@ class NewTractorScreen extends StatelessWidget {
                     Icon(Icons.payments),
                     Colors.green,
                   ),
-
                   GridView.count(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -155,7 +188,7 @@ class NewTractorScreen extends StatelessWidget {
             Column(
               children: List.generate(
                 tractors.length > 12 ? tractors.length - 12 : 0,
-                    (index) => tractorItemBuilder(tractors[index + 12], context),
+                (index) => tractorItemBuilder(tractors[index + 12], context),
               ),
             ),
           ],
@@ -163,6 +196,7 @@ class NewTractorScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _sectionHeader(
       BuildContext context, String title, Icon icon, Color color) {
     final cubit = HomeCubit.get(context);
@@ -193,12 +227,11 @@ class NewTractorScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget budgetOption(String label, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       child: Container(
-
         margin: EdgeInsets.all(8.0),
         // padding: EdgeInsets.all(8.0),
         height: 20.0,
@@ -228,13 +261,14 @@ class NewTractorScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget tractorItemBuilder(Tractors? product, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return Padding(
-      padding: EdgeInsets.symmetric( vertical: 4.0.h),
+      padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: GestureDetector(
         onTap: () {
-          Get.to(()=> TractorsDetails(tractor: product!));
+          Get.to(() => TractorsDetails(tractor: product!));
         },
         child: Card(
           elevation: 1,
@@ -262,7 +296,8 @@ class NewTractorScreen extends StatelessWidget {
                             imageUrl: product?.image ?? '',
                             fit: BoxFit.contain,
                             width: double.infinity,
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
                           ),
                         ),
                       ),
@@ -273,7 +308,8 @@ class NewTractorScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${product?.brand ?? ''} ${product?.name ?? ''}'.trim(),
+                            '${product?.brand ?? ''} ${product?.name ?? ''}'
+                                .trim(),
                             maxLines: 1,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
@@ -306,12 +342,9 @@ class NewTractorScreen extends StatelessWidget {
                                       ? Colors.grey[400]
                                       : Colors.black,
                                 ),
-
                               ),
-
                             ],
                           ),
-
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -319,7 +352,12 @@ class NewTractorScreen extends StatelessWidget {
                               margin: EdgeInsets.only(bottom: 0),
                               child: ElevatedButton(
                                 onPressed: () {
-
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return newTractorContactDialog(product, context);
+                                    },
+                                  );
                                 },
                                 child: Text("Check Tractor Price",
                                     style: TextStyle(color: Colors.white)),
@@ -359,10 +397,11 @@ class NewTractorScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = brands[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
             child: GestureDetector(
-              onTap: (){
-                Get.to(() => TractorsByBrandScreen(brandName: product.name, brandId: product.id));
+              onTap: () {
+                Get.to(() => TractorsByBrandScreen(
+                    brandName: product.name, brandId: product.id));
               },
               child: Material(
                 elevation: 3.0,
@@ -398,7 +437,9 @@ class NewTractorScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                  color: cubit.isDark
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
                               ),
                             ),
@@ -460,14 +501,17 @@ class NewTractorScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '${product?.brand ?? ''} ${product?.name ?? ''}'.trim(),
+                                '${product?.brand ?? ''} ${product?.name ?? ''}'
+                                    .trim(),
                                 maxLines: 1,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: cubit.isDark ? Colors.white : Colors.black,
+                                  color: cubit.isDark
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
                               ),
                               Row(
@@ -508,7 +552,147 @@ class NewTractorScreen extends StatelessWidget {
           );
         },
       ),
-
+    );
+  }
+  Widget newTractorContactDialog(newtractors, BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      insetPadding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 400.0,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => name = value,
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: location,
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => location = value,
+                    onChanged: (value) {
+                      setState(() {
+                        location = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Location';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: mobile,
+                    decoration: InputDecoration(
+                      labelText: 'Mobile',
+                      prefixIcon: Icon(Icons.phone),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => mobile = value,
+                    onChanged: (value) {
+                      setState(() {
+                        mobile = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Mobile';
+                      } else if (value.length != 13) {
+                        return 'please enter 10 digit number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Budget',
+                      prefixIcon: Icon(Icons.currency_rupee),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => price = value,
+                    onChanged: (value) {
+                      setState(() {
+                        price = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Budget';
+                      }
+                      return null;
+                    },
+                  ),
+                  Divider(
+                    thickness: 1.5,
+                    color: Colors.black12,
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 0),
+                    // Set bottom margin to 0
+                    child: SizedBox(
+                      width: 150, // Set the desired width here
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            insertbuydata(newtractors);
+                            Get.to(() => TractorsDetails(tractor: newtractors));
+                          }
+                        },
+                        child: Text("Contact Seller",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF009688),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
