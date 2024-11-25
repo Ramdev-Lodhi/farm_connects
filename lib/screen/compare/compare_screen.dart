@@ -12,6 +12,7 @@ class CompareScreen extends StatefulWidget {
 
 class _CompareScreenState extends State<CompareScreen> {
   String? _firstselectedbrand;
+  String? _firstselectemodel;
   List<String> firstbrandList = [];
   String? _secondselectedbrand;
   List<String> secondbrandList = [];
@@ -21,49 +22,55 @@ class _CompareScreenState extends State<CompareScreen> {
   @override
   void initState() {
     super.initState();
+     // loadModel();
     // Populating the brand list
-    firstbrandList = HomeCubit
-        .get(context)
-        .homeDataModel
-        ?.data
-        .brands
-        .map((brand) => brand.name)
-        .toList() ?? [];
-    secondbrandList = HomeCubit
-        .get(context)
-        .homeDataModel
-        ?.data
-        .brands
-        .map((brand) => brand.name)
-        .toList() ?? [];
+    firstbrandList = HomeCubit.get(context)
+            .homeDataModel
+            ?.data
+            .brands
+            .map((brand) => brand.name)
+            .toList() ??
+        [];
+    secondbrandList = HomeCubit.get(context)
+            .homeDataModel
+            ?.data
+            .brands
+            .map((brand) => brand.name)
+            .toList() ??
+        [];
+
   }
 
   Future<void> loadModel() async {
     if (_firstselectedbrand != null) {
       await BlocProvider.of<SellCubit>(context).getModel(_firstselectedbrand!);
-      modelNameList = SellCubit
-          .get(context)
-          .sellDataModel
-          ?.data
-          .models
-          .map((model) => "${model.name} (${model.hpCategory})")
-          .toList() ?? [];
+      modelNameList = SellCubit.get(context)
+              .sellDataModel
+              ?.data
+              .models
+              .map((model) => "${model.name} (${model.hpCategory})")
+              .toList() ??
+          [];
       setState(() {});
     }
   }
 
-  void showmodelbottomsheet(){
-    CustomCardBottomSheet(hint: "select Brand",
-        items: modelNameList,
-        onChanged: (value) {
-          setState(() {
-            _secondselectedmodel = value;
-            print(_secondselectedmodel);
-            // loadModel();
-            // showmodelbottomsheet();// Call method to load models based on the selected brand
-          });
-        },  label: "model");
+  Future<void> showModelBottomSheet() {
+    print(modelNameList);
+    return showCustomCardBottomSheet(
+      context: context,
+      hint: "Select an Item",
+      label: "Item",
+      items: modelNameList,
+      selectedValue: _firstselectemodel,
+      onChanged: (value) {
+        setState(() {
+          _firstselectemodel = value;
+        });
+      },
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,38 +79,123 @@ class _CompareScreenState extends State<CompareScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
-            // First Card (Tractor 1)
-            CustomCardBottomSheet(hint: "select Brand",
-                items: firstbrandList,
-                onChanged: (value) {
-                  setState(() {
-                    _firstselectedbrand = value;
-                    loadModel();
-                    showmodelbottomsheet();// Call method to load models based on the selected brand
-                  });
-                },  label: "Brand"),
-            SizedBox(width: 10),
-            Text(
-              "Vs",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    showCustomCardBottomSheet(
+                      context: context,
+                      hint: "Select an Item",
+                      label: "Item",
+                      items: firstbrandList,
+                      selectedValue: _firstselectedbrand,
+                      onChanged: (value) {
+
+
+                        // Use a temporary synchronous update to store the selected value
+                        setState(() {
+                          _firstselectedbrand = value;
+                        });
+                        if (_firstselectedbrand != null) {
+                          loadModel().then((_) {
+                            setState(() {
+                              // Show the bottom sheet after async operation
+                              showModelBottomSheet();
+                            });
+                          });
+                        }
+                      },
+                    );
+                  },
+                  child: Card(
+                    elevation: 3,
+                    child: Container(
+                      width: 130,
+                      height: 220,
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Brand',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Vs",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    showCustomCardBottomSheet(
+                      context: context,
+                      hint: "Select an Item",
+                      label: "Item",
+                      items: firstbrandList,
+                      selectedValue: _firstselectedbrand,
+                      onChanged: (value) {
+                        setState(() {
+                          _firstselectedbrand = value;
+                        });
+                      },
+                    );
+                  },
+                  child: Card(
+                    elevation: 3,
+                    child: Container(
+                      width: 130,
+                      height: 220,
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Brand',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 10),
-            // Second Card (Tractor 2)
-            CustomCardBottomSheet(hint: "select Brand",
-                items: secondbrandList,
-                onChanged: (value) {
-                  setState(() {
-                    _secondselectedbrand = value;
-                    loadModel(); // Call method to load models based on the selected brand
-                  });
-                },  label: "Brand"),
+            // _firstselectedbrand != null ? showModelBottomSheet() : Container(),
           ],
         ),
       ),
