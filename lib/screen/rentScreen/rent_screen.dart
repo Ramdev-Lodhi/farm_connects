@@ -74,7 +74,7 @@ class _RentScreenState extends State<RentScreen> {
     HomeCubit cubits = HomeCubit.get(context);
     final RentData = rentDataModel?.data.rentData ?? [];
     final services = cubits.homeDataModel?.data.services ?? [];
-
+    if (RentData.isNotEmpty) {
     return Transform.translate(
       offset: Offset(0, -20),
       child: Padding(
@@ -87,12 +87,11 @@ class _RentScreenState extends State<RentScreen> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: RentData.length < 3 ? RentData.length : 3,
+                itemCount:  RentData.length < 3 ? RentData.length : 3,
                 itemBuilder: (context, index) =>
                     ItemBuilder(RentData[index], context),
               ),
               if (services.isNotEmpty) ...[
-
                 _sectionHeader(context, 'Select Hiring Service'),
                 gridServiceBuilder(cubits.homeDataModel, context),
                 TextButton(
@@ -113,7 +112,7 @@ class _RentScreenState extends State<RentScreen> {
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: RentData.length - 3,
+                  itemCount: RentData.length < 3 ? 0 :  RentData.length - 3,
                   itemBuilder: (context, index) =>
                       ItemBuilder(RentData[index + 3], context),
                 ),
@@ -123,6 +122,12 @@ class _RentScreenState extends State<RentScreen> {
         ),
       ),
     );
+    } else {
+      // When no rent data is available
+      return Center(
+        child: Text('No Rent Data Available'),
+      );
+    }
   }
 
   Widget _sectionHeader(BuildContext context, String title) {
@@ -217,7 +222,7 @@ class _RentScreenState extends State<RentScreen> {
                                   fontSize: 15, fontWeight: FontWeight.bold)),
                           SizedBox(height: 8.0),
                           Text(
-                            'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
+                            'Location: ${product?.address?.village == 'No villages' ? product?.address?.sub_district : product?.address?.village}  (${product?.address?.pincode}) ',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
