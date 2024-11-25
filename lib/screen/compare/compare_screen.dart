@@ -1,5 +1,4 @@
 import 'package:farm_connects/models/home_data_model.dart';
-import 'package:farm_connects/widgets/customDropdown.dart';
 import 'package:farm_connects/widgets/custom_card_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +15,7 @@ class _CompareScreenState extends State<CompareScreen> {
   List<String> firstbrandList = [];
   String? _secondselectedbrand;
   List<String> secondbrandList = [];
+  String? _secondselectedmodel;
   List<String> modelNameList = [];
 
   @override
@@ -37,20 +37,33 @@ class _CompareScreenState extends State<CompareScreen> {
         .map((brand) => brand.name)
         .toList() ?? [];
   }
+
   Future<void> loadModel() async {
     if (_firstselectedbrand != null) {
       await BlocProvider.of<SellCubit>(context).getModel(_firstselectedbrand!);
-      modelNameList = SellCubit.get(context)
+      modelNameList = SellCubit
+          .get(context)
           .sellDataModel
           ?.data
           .models
           .map((model) => "${model.name} (${model.hpCategory})")
-          .toList() ??
-          [];
+          .toList() ?? [];
       setState(() {});
     }
   }
 
+  void showmodelbottomsheet(){
+    CustomCardBottomSheet(hint: "select Brand",
+        items: modelNameList,
+        onChanged: (value) {
+          setState(() {
+            _secondselectedmodel = value;
+            print(_secondselectedmodel);
+            // loadModel();
+            // showmodelbottomsheet();// Call method to load models based on the selected brand
+          });
+        },  label: "model");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,18 +76,15 @@ class _CompareScreenState extends State<CompareScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // First Card (Tractor 1)
-            CustomCardBottomSheet(
-              hint:"Select Brand",
-              items: firstbrandList,
-              value: _firstselectedbrand,
-              onChanged: (value) {
-                setState(() {
-                  _firstselectedbrand = value;
-                  loadModel();
-                });
-              },
-              label: "Select Tractor",),
-            // "Vs" Text
+            CustomCardBottomSheet(hint: "select Brand",
+                items: firstbrandList,
+                onChanged: (value) {
+                  setState(() {
+                    _firstselectedbrand = value;
+                    loadModel();
+                    showmodelbottomsheet();// Call method to load models based on the selected brand
+                  });
+                },  label: "Brand"),
             SizedBox(width: 10),
             Text(
               "Vs",
@@ -84,23 +94,17 @@ class _CompareScreenState extends State<CompareScreen> {
                 color: Colors.black,
               ),
             ),
-            // "Vs" Text
             SizedBox(width: 10),
             // Second Card (Tractor 2)
-            CustomCardBottomSheet(
-                hint:"Select Brand",
-              items: secondbrandList,
-                value: _secondselectedbrand,
-              onChanged: (value) {
-                setState(() {
-                  _secondselectedbrand = value;
-                  print(_firstselectedbrand);
-            print(_secondselectedbrand);
-                });
-              },
-              label: "Select Tractor",),
+            CustomCardBottomSheet(hint: "select Brand",
+                items: secondbrandList,
+                onChanged: (value) {
+                  setState(() {
+                    _secondselectedbrand = value;
+                    loadModel(); // Call method to load models based on the selected brand
+                  });
+                },  label: "Brand"),
           ],
-
         ),
       ),
     );
