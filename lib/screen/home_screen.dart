@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
+import 'package:farm_connects/screen/compare/compare_screen.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:farm_connects/screen/sellScreen/used_tractor_details_screen.dart';
@@ -1242,7 +1243,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             } else if (category['name'] == 'My Lead') {
               cubit.changeNavIndex(4);
             } else if (category['name'] == 'Compare') {
-              // cubit.changeNavIndex(2);
+              Get.to(()=>CompareScreen());
             } else if (category['name'] == 'Sell Tractor') {
               Get.to(() => SellScreen());
             }
