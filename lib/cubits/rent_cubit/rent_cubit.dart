@@ -24,9 +24,12 @@ class RentCubit extends Cubit<RentStates> {
       method: 'rent/getrentItem',
       token: token,
       data: {
-        "pincode":pincode
+        'address':{
+          'pincode': pincode,
+        },
       },
     ).then((response) {
+      print(response);
       rentDataModel = RentDataModel.fromJson(response.data);
       emit(RentScreenSuccess());
     }).catchError((error) {
@@ -60,11 +63,13 @@ class RentCubit extends Cubit<RentStates> {
         dio.FormData formData = dio.FormData.fromMap({
           'image': await dio.MultipartFile.fromFile(_images.path,
               filename: fileName),
-          'state': state,
-          'district': district,
-          'sub_district': sub_district,
-          'village': village,
-          'pincode': pincode,
+          'address':{
+            'state': state,
+            'district': district,
+            'sub_district': sub_district,
+            'village': village,
+            'pincode': pincode,
+          },
           'serviceType': service,
           'price': price,
           'userInfo': {
@@ -90,6 +95,55 @@ class RentCubit extends Cubit<RentStates> {
           emit(RentFormError('Failed to insert data, please try again.'));
         }
       }
+    } catch (error) {
+      emit(RentFormError(error.toString()));
+    }
+  }
+
+
+  Future<void> InsertrentContactData(
+      String image,
+      String servicetype,
+      String userId,
+      String rentername,
+      String name,
+      String mobile,
+      String location ,
+      String budget) async {
+    emit(RentFormLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    try {
+      final response = await DioHelper.putData(
+          method: 'contact/rentContact',
+          token: token,
+          data: {
+            "name" : name,
+            "mobile": mobile,
+            "location":location,
+            "budget":budget,
+            "renterInfo":{
+              "renterID": userId,
+              "rent_image": image,
+              "rentserviceName": servicetype,
+            }
+          });
+
+      await DioHelper.postData(
+          method: 'notification/send-contact-notification',
+          token: token,
+          data: {
+            "id":userId,
+            "title": "New Contact Request for You, ${rentername}",
+            "message": "User ${name} has sent a message: \"I'm interested in buy a  ${servicetype}. Please get in touch!\"",
+            "image":image,
+          });
+
+      if (response.statusCode == 200) {
+        emit(RentFormSuccess('Data Added Successfully'));
+      } else {
+        emit(RentFormError('Failed to insert data, please try again.'));
+      }
+
     } catch (error) {
       emit(RentFormError(error.toString()));
     }

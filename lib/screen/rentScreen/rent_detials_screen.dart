@@ -137,7 +137,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             children: [
               _buildTableRow(
                   Icons.currency_rupee, 'Price', '${rentdata?.price}'),
-              _buildTableRow(Icons.location_on, 'Location', '${rentdata?.state}'),
+              _buildTableRow(Icons.location_on, 'Location', '${rentdata?.address?.state}'),
 
             ],
           ),
@@ -342,13 +342,13 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   Icons.phone, 'Mobile', '${rentdata?.userInfo?.mobile}'),
               _buildTableRow(
                   Icons.email, 'Email', '${rentdata?.userInfo?.email}'),
-              _buildTableRow(Icons.location_on, 'State', '${rentdata?.state}'),
+              _buildTableRow(Icons.location_on, 'State', '${rentdata?.address?.state}'),
               _buildTableRow(
-                  Icons.my_location, 'District', '${rentdata?.district}'),
+                  Icons.my_location, 'District', '${rentdata?.address?.district}'),
               _buildTableRow(Icons.location_city, 'SubDistrict',
-                  '${rentdata?.sub_district}'),
+                  '${rentdata?.address?.sub_district}'),
               _buildTableRow(
-                  Icons.maps_home_work, 'Pincode', '${rentdata?.pincode}'),
+                  Icons.maps_home_work, 'Pincode', '${rentdata?.address?.pincode}'),
             ],
           ),
         ),

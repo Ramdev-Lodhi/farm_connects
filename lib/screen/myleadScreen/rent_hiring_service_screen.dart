@@ -5,24 +5,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../models/myleads_model.dart';
+import '../../models/rent_model.dart';
 
-class ListedItemScreen extends StatefulWidget {
+class RentHiringServiceScreen extends StatefulWidget {
   @override
-  State<ListedItemScreen> createState() => _ListedItemScreenState();
+  State<RentHiringServiceScreen> createState() => _RentHiringServiceScreenState();
 }
 
-class _ListedItemScreenState extends State<ListedItemScreen> {
+class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
   @override
   void initState() {
     super.initState();
-    MyleadCubits.get(context)..getSellenquiry();
-    MyleadCubits.get(context)..getRentenquiry();
-    MyleadCubits.get(context)..getBuyenquiry();
+    MyleadCubits.get(context)..getSellenquiry()..getRentenquiry()..getBuyenquiry()..getrentItemByUserId();
   }
 
   @override
   Widget build(BuildContext context) {
-    final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
+    final rentserviceData = MyleadCubits.get(context).rentDataModel;
+    final dataRentRequestEnquiry = MyleadCubits.get(context).rentEnquiryData;
     final dataRentEnquiry = MyleadCubits.get(context).rentEnquiryData;
     final databuyEnquiry = MyleadCubits.get(context).buyEnquiryData;
     HomeCubit cubit = HomeCubit.get(context);
@@ -30,7 +30,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Enquiry List",style: TextStyle(
+          title: Text("Rent Hiring Service",style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white70 : Colors.black,
           ),),
@@ -43,9 +43,9 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                 unselectedLabelColor: Colors.white70,
                 indicatorColor: Colors.black,
                 tabs: [
-                  Tab(text: 'Buyer Request'),
-                  Tab(text: 'Sell Request'),
-                  Tab(text: 'Rent Request'),
+                  Tab(text: 'Your Service'),
+                  Tab(text: 'Service Rent Response'),
+                  Tab(text: 'Your Request'),
                 ],
               ),
             ),
@@ -54,11 +54,11 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
         body: TabBarView(
           children: [
             _buildVerticalScrollableContent(
-                _buildBuyEnquiry(databuyEnquiry!)),
-            _buildVerticalScrollableContent(
-                _buildSellEnquiry(dataSellEnquiry!)),
+                _buildRentService(rentserviceData!)),
             _buildVerticalScrollableContent(
                 _buildrentEnquiry(dataRentEnquiry!)),
+            _buildVerticalScrollableContent(
+                _buildRentRequestEnquiry(dataRentEnquiry)),
           ],
         ),
       ),
@@ -71,20 +71,21 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
     );
   }
 
-  Widget _buildSellEnquiry(sellEnquiryData dataSellEnquiry) {
+  Widget _buildRentRequestEnquiry(RentEnquiryData dataRentEnquiry) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: dataSellEnquiry.data.Sellenquiry.length,
+        itemCount: dataRentEnquiry.data.RentRequestenquiry.length,
         itemBuilder: (context, index) {
-          return ItemBuilder(dataSellEnquiry.data.Sellenquiry[index], context);
+          return ItemBuilder(dataRentEnquiry.data.RentRequestenquiry[index], context);
         },
       ),
     );
   }
-  Widget ItemBuilder(SellEnquirydata sellEnquiry, BuildContext context) {
+
+  Widget ItemBuilder(RentRequestEnquirydata rentRequestEnquiry, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
@@ -123,7 +124,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                         children: [
                           // Model Name
                           Text(
-                            sellEnquiry.farmername ?? 'Unknown',
+                            rentRequestEnquiry.renterInfo?.modelname ?? 'Unknown',
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.bold,
@@ -132,19 +133,19 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           // Status
-                          // Text(
-                          //   sellEnquiry.renterInfo?.requestStatus ?? 'Unknown',
-                          //   style: TextStyle(
-                          //     fontSize: 14.0.sp,
-                          //     fontWeight: FontWeight.w500,
-                          //     color: sellEnquiry.renterInfo?.requestStatus == 'Pending'
-                          //         ? Color(0xFFF57F17)
-                          //         : sellEnquiry.renterInfo?.requestStatus == 'Approved'
-                          //         ? Colors.green
-                          //         : Colors.red,
-                          //   ),
-                          //   overflow: TextOverflow.ellipsis,
-                          // ),
+                          Text(
+                            rentRequestEnquiry.renterInfo?.requestStatus ?? 'Unknown',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              color: rentRequestEnquiry.renterInfo?.requestStatus == 'Pending'
+                                  ? Color(0xFFF57F17)
+                                  : rentRequestEnquiry.renterInfo?.requestStatus == 'Approved'
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),
@@ -163,7 +164,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                               height: 120.w,
                               width: 120.w,
                               child: CachedNetworkImage(
-                                imageUrl: sellEnquiry.sellerInfo?.image ?? '',
+                                imageUrl: rentRequestEnquiry.renterInfo?.image ?? '',
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
@@ -179,7 +180,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                               children: [
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Price: ₹ ${sellEnquiry.budget}',
+                                  'Price: ₹ ${rentRequestEnquiry.budget}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
                                       color: cubit.isDark ? Colors.white70 : Colors.black54
@@ -195,7 +196,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Location: ${sellEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                                  'Location: ${rentRequestEnquiry.farmerlocation.replaceAll(",", "\n")}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -220,7 +221,6 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   }
 
 
-
   Widget _buildrentEnquiry(RentEnquiryData dataRentEnquiry) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -234,6 +234,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
       ),
     );
   }
+
   Widget RentItemBuilder(RentEnquirydata rentEnquiry, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
@@ -378,21 +379,22 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   }
 
 
-  Widget _buildBuyEnquiry(BuyEnquiryData databuyEnquiry) {
+
+  Widget _buildRentService(RentDataModel rentserviceData) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: databuyEnquiry.data.buyenquiry.length,
+        itemCount: rentserviceData.data.rentData.length,
         itemBuilder: (context, index) {
-          return BuyItemBuilder(databuyEnquiry.data.buyenquiry[index], context);
+          return RentServiceItemBuilder(rentserviceData.data.rentData[index], context);
         },
       ),
     );
   }
 
-  Widget BuyItemBuilder(buyEnquiry, BuildContext context) {
+  Widget RentServiceItemBuilder(RentData rentData, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
@@ -411,80 +413,108 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: SizedBox(
-                          height: 120.w,
-                          width: 120.w,
-                          child: CachedNetworkImage(
-                            imageUrl: buyEnquiry.dealerInfo?.image ?? '',
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+              child: Column(
+                children: [
+                  // Header Card for Service Type
+                  Card(
+                    margin: EdgeInsets.zero,
+                    elevation: 2.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    color: cubit.isDark ? Colors.grey[700] : Colors.grey[200],
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          // Service Type
                           Text(
-                            buyEnquiry.farmername ?? 'Unknown Farmer',
+                            rentData.servicetype ?? 'Unknown Service',
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.bold,
                               color: cubit.isDark ? Colors.white : Colors.black,
                             ),
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Budget: ₹ ${buyEnquiry.budget}',
-                            style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: cubit.isDark
-                                    ? Colors.white70
-                                    : Colors.black54),
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Mobile: ${buyEnquiry.farmermobile}',
-                            style: TextStyle(
-                                fontSize: 12.0.sp,
-                                color: cubit.isDark
-                                    ? Colors.white70
-                                    : Colors.black54),
-
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Location: ${buyEnquiry.farmerlocation.replaceAll(",", "\n")}',
-                            // softWrap: true,
-                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 12.0.sp,
-                                color: cubit.isDark
-                                    ? Colors.white70
-                                    : Colors.black54),
-
                           ),
-                          SizedBox(height: 8.0),
-
+                          Text(
+                            '${rentData.rentedStatus == false ? 'Unavailable': 'Available'} ',
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.bold,
+                              color: rentData.rentedStatus ? Colors.green : Colors.red,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // Main content of the card
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6.0),
+                            child: SizedBox(
+                              height: 120.w,
+                              width: 120.w,
+                              child: CachedNetworkImage(
+                                imageUrl: rentData.image ?? '',
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 8.0),
+                                Text(
+                                  'Name: ${rentData.userInfo?.name ?? 'Not Available'}',
+                                  style: TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: cubit.isDark ? Colors.white70 : Colors.black54
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Text(
+                                  'Price: ${rentData.price ?? 'Not Available'}',
+                                  style: TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: cubit.isDark ? Colors.white70 : Colors.black54
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Text(
+                                  'Location: ${rentData.address?.state}, ${rentData.address?.sub_district}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12.0.sp,
+                                      color: cubit.isDark ? Colors.white70 : Colors.black54
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -492,4 +522,5 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
       ),
     );
   }
+
 }

@@ -30,11 +30,12 @@ class RentData {
   late String servicetype;
   late String price;
   late bool rentedStatus;
-  String? pincode;
-  String? state;
-  String? district;
-  String? sub_district;
-  String? village;
+  // String? pincode;
+  // String? state;
+  // String? district;
+  // String? sub_district;
+  // String? village;
+  late Address? address;
   late UserInfo? userInfo; // Nullable to handle missing or null
   late ServiceRequests? serviceRequests; // Nullable to handle missing or null
 
@@ -45,13 +46,8 @@ class RentData {
     servicetype = json['serviceType'];
     rentedStatus = json['rentedStatus'];
     price = json['price'];
-    state = json['state'];
-    district = json['district'];
-    sub_district = json['sub_district'];
-    village = json['village'];
-    pincode = json['pincode'];
 
-    // Safely initialize nested objects
+    address = json['address'] != null ? Address.fromJson(json['address']) : null;
     userInfo = json['userInfo'] != null ? UserInfo.fromJson(json['userInfo']) : null;
     serviceRequests = json['transmission'] != null
         ? ServiceRequests.fromJson(json['transmission'])
@@ -67,6 +63,19 @@ class UserInfo {
     email = json['email'];
     mobile = json['mobile'];
 
+  }
+}class Address {
+  late String? pincode;
+  late String? state;
+  late String? district;
+  late String? sub_district;
+  late String? village;
+  Address.fromJson(Map<String, dynamic> json) {
+    state = json['state'];
+    district = json['district'];
+    sub_district = json['sub_district'];
+    village = json['village'];
+    pincode = json['pincode'];
   }
 }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
+import 'package:farm_connects/screen/myleadScreen/rent_hiring_service_screen.dart';
 import 'package:farm_connects/screen/profileScreen/edit_profile_screen.dart';
 import 'package:farm_connects/screen/profileScreen/imageUpload_screen.dart';
 import 'package:farm_connects/screen/profileScreen/password_change_screen.dart';
@@ -30,7 +31,7 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     ProfileCubits.get(context)..getProfileData();
-    MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry();
+    MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry()..getrentItemByUserId();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -406,6 +407,8 @@ class _AccountScreenState extends State<AccountScreen>
         onTap: () {
           if(title == 'Listed Item'){
             Get.to(()=> ListedItemScreen());
+          } else if(title == 'Rent Hiring Service'){
+            Get.to(()=> RentHiringServiceScreen());
           }
         },
         borderRadius: BorderRadius.circular(12.0),

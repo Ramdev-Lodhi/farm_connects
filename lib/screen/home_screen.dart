@@ -98,8 +98,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
         location!,
         price!);
   }
-  void insertrentdata(rentcontactdata) {
 
+  void insertrentdata(rentcontactdata) {
     var mylead = MyleadCubits.get(context);
     mylead.InsertrentContactData(
         rentcontactdata.image,
@@ -113,7 +113,6 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   void insertbuydata(buycontactdata) {
-
     var mylead = MyleadCubits.get(context);
     mylead.InsertbuyContactData(
         buycontactdata.image,
@@ -190,8 +189,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               ],
             ),
           ),
+
+          if(Rentcubit.rentDataModel!.data.rentData.length > 0) ...[
           _sectionHeader(context, 'Custom Hiring Service'),
           _customHiringService(Rentcubit.rentDataModel, context),
+
           _viewAllButton(
             context,
             label: "View All Rent Services",
@@ -199,6 +201,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               cubit.changeNavIndex(3);
             },
           ),
+          ],
         ],
       ),
     );
@@ -475,7 +478,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return newTractorContactDialog(product, context);
+                                            return newTractorContactDialog(
+                                                product, context);
                                           },
                                         );
                                       },
@@ -516,9 +520,9 @@ class _ProductsBuilderState extends State<ProductsBuilder>
       child: ListView.builder(
         scrollDirection: Axis.horizontal, // Horizontal scroll
         // itemCount: homeDataModel?.data.tractors.length ?? 0,
-        itemCount: 4,
+        itemCount: rentDataModel!.data.rentData.length > 4 ? 4 :rentDataModel.data.rentData.length,
         itemBuilder: (context, index) {
-          final product = rentDataModel?.data.rentData[index];
+          final product = rentDataModel.data.rentData[index];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.0.w),
             child: GestureDetector(
@@ -544,7 +548,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                           SizedBox(
                             height: 170.w,
                             child: CachedNetworkImage(
-                              imageUrl: product?.image ?? '',
+                              imageUrl: product.image ?? '',
                               fit: BoxFit.contain,
                               width: double.infinity,
                               errorWidget: (context, url, error) =>
@@ -561,7 +565,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      '${product?.servicetype ?? ''} '.trim(),
+                                      '${product.servicetype ?? ''} '.trim(),
                                       maxLines: 1,
                                       textAlign: TextAlign.center,
                                       overflow: TextOverflow.ellipsis,
@@ -577,7 +581,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                     ),
                                     SizedBox(width: 10.w),
                                     Text(
-                                      'Price: ${product?.price ?? 'N/A'}',
+                                      'Price: ${product.price ?? 'N/A'}',
                                       style: TextStyle(
                                         fontSize: 14.0.sp,
                                         fontWeight: FontWeight.bold,
@@ -589,7 +593,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                   ],
                                 ),
                                 Text(
-                                  'Location: ${product?.village == 'No villages' ? product?.sub_district : product?.village}  (${product?.pincode}) ',
+                                  'Location: ${product.address?.village == 'No villages' ? product.address?.sub_district : product.address?.village}  (${product.address?.pincode}) ',
                                   style: TextStyle(
                                     fontSize: 14.0.sp,
                                     // fontWeight: FontWeight.bold,
@@ -818,7 +822,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -840,7 +844,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => location = value,
                     onChanged: (value) {
@@ -862,7 +866,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -885,8 +889,9 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       prefixIcon: Icon(Icons.currency_rupee),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -1029,7 +1034,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -1058,8 +1064,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                             insertselldata(selltractors);
                             Navigator.pop(context);
 
-                              Get.to(() =>
-                                  UsedTractorDetails(selltractor: selltractors));
+                            Get.to(() =>
+                                UsedTractorDetails(selltractor: selltractors));
                           }
                         },
                         child: Text("Contact Seller",
@@ -1122,15 +1128,15 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                     location,
+                    initialValue: location,
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => location = value,
+                    ),
+                    onSaved: (value) => location = value,
                     onChanged: (value) {
                       setState(() {
                         location = value;
@@ -1144,8 +1150,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                        mobile,
+                    initialValue: mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
@@ -1162,13 +1167,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
-                      }else if (value.length != 13) {
+                      } else if (value.length != 13) {
                         return 'please enter 10 digit number';
                       }
                       return null;
                     },
                   ),
-
                   Divider(
                     thickness: 1.5,
                     color: Colors.black12,
@@ -1178,7 +1182,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     margin: EdgeInsets.only(bottom: 0),
                     // Set bottom margin to 0
                     child: SizedBox(
-                      width: 150, // Set the desired width here
+                      width: 150,
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKeyrent.currentState!.validate()) {

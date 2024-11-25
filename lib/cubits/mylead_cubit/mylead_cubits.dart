@@ -10,6 +10,7 @@ import '../../config/network/end_points.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../config/network/remote/dio.dart';
 import '../../models/myleads_model.dart';
+import '../../models/rent_model.dart';
 
 class MyleadCubits extends Cubit<MyleadState> {
   MyleadCubits() : super(MyleadInitial());
@@ -80,9 +81,9 @@ class MyleadCubits extends Cubit<MyleadState> {
       token: token,
       lang: lang,
     ).then((response) {
-      print('sellenquerydata : ${response.data}');
+      // print('sellenquerydata : ${response.data}');
       sellEnquirydata = sellEnquiryData.fromJson(response.data);
-      print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
+      // print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
 
       emit(MyleadSuccess("Data Getted Successfully"));
     }).catchError((error) {
@@ -150,8 +151,8 @@ class MyleadCubits extends Cubit<MyleadState> {
       token: token,
       lang: lang,
     ).then((response) {
+      print(response);
       rentEnquiryData = RentEnquiryData.fromJson(response.data);
-
       emit(MyleadSuccess("Data Getted Successfully"));
     }).catchError((error) {
       emit(MyleadError(error));
@@ -218,6 +219,24 @@ class MyleadCubits extends Cubit<MyleadState> {
     ).then((response) {
       buyEnquiryData = BuyEnquiryData.fromJson(response.data);
 
+      emit(MyleadSuccess("Data Getted Successfully"));
+    }).catchError((error) {
+      emit(MyleadError(error));
+    });
+  }
+  late RentDataModel? rentDataModel = null;
+  void getrentItemByUserId() {
+    emit(MyleadLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    print(token);
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+    DioHelper.getData(
+      method: 'rent/getrentItemByUserId',
+      token: token,
+      lang: lang,
+    ).then((response) {
+      // print(response);
+      rentDataModel = RentDataModel.fromJson(response.data);
       emit(MyleadSuccess("Data Getted Successfully"));
     }).catchError((error) {
       emit(MyleadError(error));
