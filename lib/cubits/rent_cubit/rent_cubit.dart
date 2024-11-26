@@ -31,6 +31,7 @@ class RentCubit extends Cubit<RentStates> {
     ).then((response) {
       print(response);
       rentDataModel = RentDataModel.fromJson(response.data);
+      print(rentDataModel?.data.rentData);
       emit(RentScreenSuccess());
     }).catchError((error) {
       emit(RentScreenError());

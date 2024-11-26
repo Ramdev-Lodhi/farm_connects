@@ -27,11 +27,8 @@ class _RentScreenState extends State<RentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? name;
-
   String? mobile;
-
   String? location;
-
   String? price;
   DateTime? serviceFromDate;
   DateTime? serviceToDate;
