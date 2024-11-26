@@ -517,7 +517,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           decoration: InputDecoration(
             labelText: 'Tractor Price ',
             labelStyle: TextStyle(color:cubit.isDark ? Colors.white : Colors.black),
-            prefixIcon: Icon(Icons.currency_rupee),
+            prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark?Colors.white :Colors.black,),
             border: OutlineInputBorder(),
           ),
         ),

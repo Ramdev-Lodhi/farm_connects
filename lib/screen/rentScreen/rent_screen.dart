@@ -217,7 +217,7 @@ class _RentScreenState extends State<RentScreen> {
                           SizedBox(height: 8.0),
                           Text("₹ ${product?.price}",
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                                  fontSize: 15, fontWeight: FontWeight.bold,color: cubit.isDark?Colors.white :Colors.black)),
                           SizedBox(height: 8.0),
                           Text(
                             'Location: ${product?.address?.village == 'No villages' ? product?.address?.sub_district : product?.address?.village}  (${product?.address?.pincode}) ',
@@ -226,7 +226,7 @@ class _RentScreenState extends State<RentScreen> {
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               color:
-                              cubit.isDark ? Colors.white70 : Colors.black54,
+                              cubit.isDark ? Colors.white : Colors.black,
                             ),
                           ),
                           ElevatedButton(

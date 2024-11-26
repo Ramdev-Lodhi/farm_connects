@@ -1,9 +1,11 @@
+import 'package:farm_connects/constants/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/config/network/local/cache_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/network/remote/dio.dart';
+import '../../constants/styles/colors.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/location_cubit/location_cubits.dart';
 import '../../cubits/profile_cubit/profile_states.dart';
@@ -185,7 +187,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               elevation: 5,
               shadowColor: Colors.black.withOpacity(0.2),
               child: AppBar(
-                backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
+                backgroundColor: cubit.isDark ? asmarFate7.withOpacity(0.9) : Colors.white,
                 title: Text('Edit Profile'),
                 actions: [
                   TextButton(

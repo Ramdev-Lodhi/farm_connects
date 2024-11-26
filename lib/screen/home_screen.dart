@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:farm_connects/models/sell_model.dart';
 import 'package:farm_connects/screen/BuyScreen/brand_screen.dart';
 import 'package:farm_connects/screen/compare/compare_screen.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
@@ -130,8 +131,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   Widget build(BuildContext context) {
     final cubit = HomeCubit.get(context);
     final Rentcubit = RentCubit.get(context);
-    final selltractors =
-        SellCubit.get(context).sellAllTractorData?.data.SellTractor ?? [];
+    final selltractors = SellCubit.get(context);
     double screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -158,7 +158,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
           Transform.translate(
               offset: Offset(0, -20), child: gridExploreBuilder(context)),
           _sectionHeader(context, 'Used Tractor'),
-          gridsellTractorsBuilder(selltractors, context),
+          gridsellTractorsBuilder(selltractors.sellAllTractorData, context),
           _viewAllButton(
             context,
             label: "View All Used Tractors",
@@ -190,18 +190,16 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               ],
             ),
           ),
-
-          if(Rentcubit.rentDataModel!.data.rentData.length > 0) ...[
-          _sectionHeader(context, 'Custom Hiring Service'),
-          _customHiringService(Rentcubit.rentDataModel, context),
-
-          _viewAllButton(
-            context,
-            label: "View All Rent Services",
-            onTap: () {
-              cubit.changeNavIndex(3);
-            },
-          ),
+          if (Rentcubit.rentDataModel!.data.rentData.length > 0) ...[
+            _sectionHeader(context, 'Custom Hiring Service'),
+            _customHiringService(Rentcubit.rentDataModel, context),
+            _viewAllButton(
+              context,
+              label: "View All Rent Services",
+              onTap: () {
+                cubit.changeNavIndex(3);
+              },
+            ),
           ],
         ],
       ),
@@ -436,7 +434,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                 ),
                                 // Row for HP and CC details
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     // HP text
                                     Text(
@@ -447,7 +446,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         fontWeight: FontWeight.bold,
                                         // Bold text
                                         color: cubit.isDark
-                                            ? Colors.grey[400]
+                                            ? Colors.white
                                             : Colors.black,
                                       ),
                                     ),
@@ -463,7 +462,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         fontWeight: FontWeight.bold,
                                         // Bold text
                                         color: cubit.isDark
-                                            ? Colors.grey[400]
+                                            ? Colors.white
                                             : Colors.black,
                                       ),
                                     ),
@@ -521,7 +520,9 @@ class _ProductsBuilderState extends State<ProductsBuilder>
       child: ListView.builder(
         scrollDirection: Axis.horizontal, // Horizontal scroll
         // itemCount: homeDataModel?.data.tractors.length ?? 0,
-        itemCount: rentDataModel!.data.rentData.length > 4 ? 4 :rentDataModel.data.rentData.length,
+        itemCount: rentDataModel!.data.rentData.length > 4
+            ? 4
+            : rentDataModel.data.rentData.length,
         itemBuilder: (context, index) {
           final product = rentDataModel.data.rentData[index];
           return Padding(
@@ -587,7 +588,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         fontSize: 14.0.sp,
                                         fontWeight: FontWeight.bold,
                                         color: cubit.isDark
-                                            ? Colors.grey[400]
+                                            ? Colors.white
                                             : Colors.black,
                                       ),
                                     ),
@@ -599,7 +600,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                     fontSize: 14.0.sp,
                                     // fontWeight: FontWeight.bold,
                                     color: cubit.isDark
-                                        ? Colors.grey[400]
+                                        ? Colors.white
                                         : Colors.black,
                                   ),
                                 ),
@@ -647,16 +648,15 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     );
   }
 
-  Widget gridsellTractorsBuilder(selltractors, BuildContext context) {
+  Widget gridsellTractorsBuilder(SellAllTractorData? selltractors, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return SizedBox(
       height: 300.h,
       child: ListView.builder(
-        scrollDirection: Axis.horizontal, // Horizontal scroll
-        // itemCount: homeDataModel?.data.tractors.length ?? 0,
-        itemCount: 6,
+        scrollDirection: Axis.horizontal,
+        itemCount: selltractors!.data.SellTractor.length > 3  ? 6 : selltractors.data.SellTractor.length,
         itemBuilder: (context, index) {
-          final product = selltractors[index];
+          final product = selltractors?.data.SellTractor[index];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.0.w),
             child: GestureDetector(
@@ -711,7 +711,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                 ),
                                 // Row for HP and CC details
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     // HP text
                                     Text(
@@ -722,12 +723,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         fontWeight: FontWeight.bold,
                                         // Bold text
                                         color: cubit.isDark
-                                            ? Colors.grey[400]
+                                            ? Colors.white
                                             : Colors.black,
                                       ),
                                     ),
                                     SizedBox(width: 10.w),
-
                                     // Year text
                                     Text(
                                       'Year: ${product?.year ?? 'N/A'} ',
@@ -737,21 +737,21 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         fontWeight: FontWeight.bold,
                                         // Bold text
                                         color: cubit.isDark
-                                            ? Colors.grey[400]
+                                            ? Colors.white
                                             : Colors.black,
                                       ),
                                     ),
                                   ],
                                 ),
                                 Text(
-                                  'Price: ${product?.price ?? 'N/A'}',
+                                  'Price: ₹ ${product?.price ?? 'N/A'}',
                                   style: TextStyle(
                                     fontSize: 14.0.sp,
                                     // Increased font size
                                     fontWeight: FontWeight.bold,
                                     // Bold text
                                     color: cubit.isDark
-                                        ? Colors.grey[400]
+                                        ? Colors.white
                                         : Colors.black,
                                   ),
                                 ),
@@ -804,7 +804,8 @@ class _ProductsBuilderState extends State<ProductsBuilder>
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
-      ),backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
+      ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -816,14 +817,22 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
+                  Text("Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -843,11 +852,16 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: location,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -867,11 +881,16 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: mobile,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -892,11 +911,16 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.currency_rupee,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -916,14 +940,13 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   Divider(
                     thickness: 1.5,
-                    color:cubit.isDark ? Colors.white : Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
-                    // Set bottom margin to 0
                     child: SizedBox(
-                      width: 150, // Set the desired width here
+                      width: 150,
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -970,17 +993,25 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
+                  Text("Seller Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -997,14 +1028,19 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: location,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => location = value,
                     onChanged: (value) {
@@ -1021,14 +1057,19 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: mobile,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      labelStyle:  TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -1046,15 +1087,21 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.currency_rupee,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -1069,7 +1116,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: cubit.isDark ? Colors.white :Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -1105,7 +1152,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   Widget rentContactDialog(rentdata, BuildContext context) {
-    HomeCubit cubit =HomeCubit.get(context);
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -1122,17 +1169,25 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Owner Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
+                  Text("Owner Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -1148,17 +1203,22 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                    location,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    initialValue: location,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => location = value,
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => location = value,
                     onChanged: (value) {
                       setState(() {
                         location = value;
@@ -1172,16 +1232,20 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue:
-                    mobile,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    initialValue: mobile,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -1192,13 +1256,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
-                      }else if (value.length != 13) {
+                      } else if (value.length != 13) {
                         return 'please enter 10 digit number';
                       }
                       return null;
                     },
                   ),
-
                   Divider(
                     thickness: 1.5,
                     color: cubit.isDark ? Colors.white : Colors.black12,
@@ -1271,7 +1334,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             } else if (category['name'] == 'My Lead') {
               cubit.changeNavIndex(4);
             } else if (category['name'] == 'Compare') {
-              Get.to(()=>CompareScreen());
+              Get.to(() => CompareScreen());
             } else if (category['name'] == 'Sell Tractor') {
               Get.to(() => SellScreen());
             }
