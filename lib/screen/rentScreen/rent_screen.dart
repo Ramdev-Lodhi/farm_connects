@@ -1,20 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
-import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
-import 'package:farm_connects/cubits/rent_cubit/rent_states.dart';
 import 'package:farm_connects/screen/rentScreen/rent_detials_screen.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../constants/styles/colors.dart';
+import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/mylead_cubit/mylead_cubits.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
+import '../../cubits/rent_cubit/rent_cubit.dart';
+import '../../cubits/rent_cubit/rent_states.dart';
 import '../../models/rent_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
+import '../../widgets/custom_contact_form.dart';
 import '../../widgets/placeholder/rentscreen_placeholder.dart';
 
 class RentScreen extends StatefulWidget {
@@ -26,15 +27,13 @@ class _RentScreenState extends State<RentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? name;
-
   String? mobile;
-
   String? location;
-
   String? price;
+  DateTime? serviceFromDate;
+  DateTime? serviceToDate;
 
   void insertrentdata(rentcontactdata) {
-
     var mylead = MyleadCubits.get(context);
     mylead.InsertrentContactData(
         rentcontactdata.image,
@@ -70,58 +69,57 @@ class _RentScreenState extends State<RentScreen> {
   }
 
   Widget productsBuilder(RentDataModel? rentDataModel, BuildContext context) {
-    RentCubit Rentcubit = RentCubit.get(context);
     HomeCubit cubits = HomeCubit.get(context);
     final RentData = rentDataModel?.data.rentData ?? [];
     final services = cubits.homeDataModel?.data.services ?? [];
     if (RentData.isNotEmpty) {
-    return Transform.translate(
-      offset: Offset(0, -20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount:  RentData.length < 3 ? RentData.length : 3,
-                itemBuilder: (context, index) =>
-                    ItemBuilder(RentData[index], context),
-              ),
-              if (services.isNotEmpty) ...[
-                _sectionHeader(context, 'Select Hiring Service'),
-                gridServiceBuilder(cubits.homeDataModel, context),
-                TextButton(
-                  onPressed: () {
-                  },
-                  child: Text(
-                    "View All Services   ➞",
-                    style: TextStyle(
-                      fontSize: 18.0.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue,
+      return Transform.translate(
+        offset: Offset(0, -20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount:  RentData.length < 3 ? RentData.length : 3,
+                  itemBuilder: (context, index) =>
+                      ItemBuilder(RentData[index], context),
+                ),
+                if (services.isNotEmpty) ...[
+                  _sectionHeader(context, 'Select Hiring Service'),
+                  gridServiceBuilder(cubits.homeDataModel, context),
+                  TextButton(
+                    onPressed: () {
+                    },
+                    child: Text(
+                      "View All Services   ➞",
+                      style: TextStyle(
+                        fontSize: 18.0.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue,
+                      ),
                     ),
+                  ),
+                ],
+                Transform.translate(
+                  offset: Offset(0, -25),
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: RentData.length < 3 ? 0 :  RentData.length - 3,
+                    itemBuilder: (context, index) =>
+                        ItemBuilder(RentData[index + 3], context),
                   ),
                 ),
               ],
-              Transform.translate(
-                offset: Offset(0, -25),
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: RentData.length < 3 ? 0 :  RentData.length - 3,
-                  itemBuilder: (context, index) =>
-                      ItemBuilder(RentData[index + 3], context),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
     } else {
       // When no rent data is available
       return Center(
@@ -219,7 +217,7 @@ class _RentScreenState extends State<RentScreen> {
                           SizedBox(height: 8.0),
                           Text("₹ ${product?.price}",
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white : Colors.black)),
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
                           SizedBox(height: 8.0),
                           Text(
                             'Location: ${product?.address?.village == 'No villages' ? product?.address?.sub_district : product?.address?.village}  (${product?.address?.pincode}) ',
@@ -228,7 +226,7 @@ class _RentScreenState extends State<RentScreen> {
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               color:
-                                  cubit.isDark ? Colors.white70 : Colors.black54,
+                              cubit.isDark ? Colors.white70 : Colors.black54,
                             ),
                           ),
                           ElevatedButton(
@@ -236,11 +234,11 @@ class _RentScreenState extends State<RentScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return rentContactDialog(
-                                      product, context);
+                                  return CustomContactForm(product: product);
                                 },
                               );
                             },
+
                             child: Text("Contact Owner",
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
@@ -316,7 +314,7 @@ class _RentScreenState extends State<RentScreen> {
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w600,
                                   color:
-                                      cubit.isDark ? Colors.white : Colors.black,
+                                  cubit.isDark ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -334,17 +332,16 @@ class _RentScreenState extends State<RentScreen> {
     );
   }
 
-  Widget rentContactDialog(rentdata, BuildContext context) {
-    HomeCubit cubit =HomeCubit.get(context);
+  Widget rentContactDialog(rentserviceData, BuildContext context) {
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
-          height: 400.0,
+          height: 500.0, // Increased height to fit date pickers
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
@@ -352,14 +349,13 @@ class _RentScreenState extends State<RentScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Owner Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
+                  Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                  // Name Field
                   TextFormField(
                     initialValue: name,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
+                      prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -377,18 +373,17 @@ class _RentScreenState extends State<RentScreen> {
                       return null;
                     },
                   ),
+                  // Location Field
                   TextFormField(
-                    initialValue:
-                    location,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    initialValue: location,
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
+                      prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => location = value,
+                    ),
+                    onSaved: (value) => location = value,
                     onChanged: (value) {
                       setState(() {
                         location = value;
@@ -401,14 +396,12 @@ class _RentScreenState extends State<RentScreen> {
                       return null;
                     },
                   ),
+                  // Mobile Field
                   TextFormField(
-                    initialValue:
-                    mobile,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    initialValue: mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
+                      prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -422,28 +415,99 @@ class _RentScreenState extends State<RentScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
-                      }else if (value.length != 13) {
-                        return 'please enter 10 digit number';
+                      } else if (value.length != 10) {
+                        return 'Please enter a valid 10-digit number';
                       }
                       return null;
                     },
                   ),
-
+                  // Service From Date Picker
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Service From: ${serviceFromDate != null ? serviceFromDate?.toLocal().toString().split(' ')[0] : 'Select Date'}"),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime.now().add(Duration(days: 365)), // Up to one year
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                serviceFromDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Service To Date Picker
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Service To: ${serviceToDate != null ? serviceToDate?.toLocal().toString().split(' ')[0] : 'Select Date'}"),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            if (serviceFromDate == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Please select Service From date first!")),
+                              );
+                              return;
+                            }
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: serviceFromDate!.add(Duration(days: 1)),
+                              firstDate: serviceFromDate!.add(Duration(days: 1)),
+                              lastDate: DateTime.now().add(Duration(days: 365)), // Up to one year
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                serviceToDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   Divider(
                     thickness: 1.5,
-                    color: cubit.isDark ? Colors.white : Colors.black12,
+                    color: Colors.black12,
                     height: 10,
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
-                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            insertrentdata(rentdata);
-                            Get.back();
+                            if (serviceFromDate == null || serviceToDate == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Please select both dates")),
+                              );
+                              return;
+                            }
+                            insertrentdata(rentserviceData);
+                            Navigator.pop(context);
+                            Get.to(() => RentDetialsScreen(rentdata: rentserviceData));
                           }
                         },
                         child: Text("Contact Owner",
@@ -465,4 +529,5 @@ class _RentScreenState extends State<RentScreen> {
       ),
     );
   }
+
 }
