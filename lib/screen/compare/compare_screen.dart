@@ -162,6 +162,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       },
                       child: Card(
                         elevation: 5,
+                        color: cubit.isDark? Colors.grey[800] : Colors.white,
                         child: Container(
                           width: cardWidth,
                           // Responsive width
@@ -181,14 +182,14 @@ class _CompareScreenState extends State<CompareScreen> {
                                     Icon(
                                       Icons.image_outlined,
                                       size: 50,
-                                      color: Colors.grey,
+                                      color: cubit.isDark? Colors.white : Colors.grey,
                                     ),
                                     SizedBox(height: 10),
                                     Text(
                                       'Select Tractor',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Colors.grey,
+                                        color: cubit.isDark? Colors.white : Colors.grey,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -253,6 +254,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       },
                       child: Card(
                         elevation: 5,
+                        color: cubit.isDark? Colors.grey[800] : Colors.white,
                         child: Container(
                           width: cardWidth,
                           // Responsive width
@@ -271,14 +273,14 @@ class _CompareScreenState extends State<CompareScreen> {
                                     Icon(
                                       Icons.image_outlined,
                                       size: 50,
-                                      color: Colors.grey,
+                                      color: cubit.isDark? Colors.white : Colors.grey,
                                     ),
                                     SizedBox(height: 10),
                                     Text(
                                       'Select Tractor',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Colors.grey,
+                                        color: cubit.isDark ? Colors.white :Colors.grey,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),

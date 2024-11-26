@@ -55,6 +55,8 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit =HomeCubit.get(context);
+    var textcolor = cubit.isDark ? Colors.white : Colors.black;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -82,9 +84,9 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
         body: TabBarView(
           children: [
             _buildVerticalScrollableContent(
-                _buildOverviewSection(widget.rentdata)),
+                _buildOverviewSection(widget.rentdata,textcolor)),
             _buildVerticalScrollableContent(
-                _buildownerSection(widget.rentdata)),
+                _buildownerSection(widget.rentdata,textcolor)),
           ],
         ),
       ),
@@ -97,7 +99,8 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
     );
   }
 
-  Widget _buildOverviewSection(RentData? rentdata) {
+  Widget _buildOverviewSection(RentData? rentdata ,textcolor) {
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -115,7 +118,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             children: [
               Text(
                 '${rentdata?.servicetype} ',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: textcolor),
               ),
               rentdata.rentedStatus == false ?
               Text(
@@ -136,8 +139,8 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             },
             children: [
               _buildTableRow(
-                  Icons.currency_rupee, 'Price', '${rentdata?.price}'),
-              _buildTableRow(Icons.location_on, 'Location', '${rentdata?.address?.state}'),
+                  Icons.currency_rupee, 'Price', '${rentdata?.price}',textcolor),
+              _buildTableRow(Icons.location_on, 'Location', '${rentdata?.address?.state}',textcolor),
 
             ],
           ),
@@ -172,28 +175,34 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
       ),
     );
   }
-
-  Widget _buildIconWithText(IconData icon, String text, String value) {
-    return Row(
+  TableRow _buildTableRow(IconData icon, String label, String value,textcolor) {
+    return TableRow(
       children: [
-        Icon(icon, size: 20),
-        SizedBox(width: 8),
-        Column(
-          children: [
-            Text(text, style: TextStyle(fontSize: 14)),
-            Text(value,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          ],
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(icon, size: 20,color: textcolor,),
+              SizedBox(width: 8),
+              Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: textcolor)),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(value, style: TextStyle(fontSize: 14,color: textcolor)),
         ),
       ],
     );
   }
 
   Widget rentContactDialog(rentdata, BuildContext context) {
+    HomeCubit cubit =HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -205,12 +214,14 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Owner Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -231,9 +242,11 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   TextFormField(
                     initialValue:
                     location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -253,9 +266,11 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
                   TextFormField(
                     initialValue:
                     mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -278,7 +293,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
 
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -313,7 +328,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
     );
   }
 
-  Widget _buildownerSection(RentData? rentdata) {
+  Widget _buildownerSection(RentData? rentdata,textcolor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -324,6 +339,7 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: textcolor
             ),
           ),
         ),
@@ -337,18 +353,18 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
             },
             children: [
               _buildTableRow(
-                  Icons.person, 'Name', '${rentdata?.userInfo?.name}'),
+                  Icons.person, 'Name', '${rentdata?.userInfo?.name}',textcolor),
               _buildTableRow(
-                  Icons.phone, 'Mobile', '${rentdata?.userInfo?.mobile}'),
+                  Icons.phone, 'Mobile', '${rentdata?.userInfo?.mobile}',textcolor),
               _buildTableRow(
-                  Icons.email, 'Email', '${rentdata?.userInfo?.email}'),
-              _buildTableRow(Icons.location_on, 'State', '${rentdata?.address?.state}'),
+                  Icons.email, 'Email', '${rentdata?.userInfo?.email}',textcolor),
+              _buildTableRow(Icons.location_on, 'State', '${rentdata?.address?.state}',textcolor),
               _buildTableRow(
-                  Icons.my_location, 'District', '${rentdata?.address?.district}'),
+                  Icons.my_location, 'District', '${rentdata?.address?.district}',textcolor),
               _buildTableRow(Icons.location_city, 'SubDistrict',
-                  '${rentdata?.address?.sub_district}'),
+                  '${rentdata?.address?.sub_district}',textcolor),
               _buildTableRow(
-                  Icons.maps_home_work, 'Pincode', '${rentdata?.address?.pincode}'),
+                  Icons.maps_home_work, 'Pincode', '${rentdata?.address?.pincode}',textcolor),
             ],
           ),
         ),
@@ -356,24 +372,5 @@ class _TractorsDetailsState extends State<RentDetialsScreen> {
     );
   }
 
-  TableRow _buildTableRow(IconData icon, String label, String value) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Icon(icon, size: 20),
-              SizedBox(width: 8),
-              Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(value, style: TextStyle(fontSize: 14)),
-        ),
-      ],
-    );
-  }
+
 }

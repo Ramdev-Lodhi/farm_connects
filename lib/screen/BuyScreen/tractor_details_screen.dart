@@ -1,3 +1,4 @@
+import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../config/network/local/cache_helper.dart';
@@ -48,6 +49,8 @@ class _TractorsDetailsState extends State<TractorsDetails> {
   }
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+    var textcolor = cubit.isDark ? Colors.white : Colors.black;
     return DefaultTabController(
       length: 6,
       child: Scaffold(
@@ -77,13 +80,13 @@ class _TractorsDetailsState extends State<TractorsDetails> {
         ),
         body: TabBarView(
           children: [
-            _buildVerticalScrollableContent(_buildOverviewSection(widget.tractor)),
+            _buildVerticalScrollableContent(_buildOverviewSection(widget.tractor,textcolor)),
             _buildVerticalScrollableContent(
-                _buildOtherFeaturesSection(widget.tractor)),
-            _buildVerticalScrollableContent(_buildSpecializationSection(widget.tractor)),
-            _buildVerticalScrollableContent(_buildTyresSection()),
-            _buildVerticalScrollableContent(_buildReviewSection()),
-            _buildVerticalScrollableContent(_buildDealersSection()),
+                _buildOtherFeaturesSection(widget.tractor,textcolor)),
+            _buildVerticalScrollableContent(_buildSpecializationSection(widget.tractor,textcolor)),
+            _buildVerticalScrollableContent(_buildTyresSection(textcolor)),
+            _buildVerticalScrollableContent(_buildReviewSection(textcolor)),
+            _buildVerticalScrollableContent(_buildDealersSection(textcolor)),
           ],
         ),
       ),
@@ -96,7 +99,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
     );
   }
 
-  Widget _buildOverviewSection(Tractors tractor) {
+  Widget _buildOverviewSection(Tractors tractor,textcolor) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -111,18 +114,18 @@ class _TractorsDetailsState extends State<TractorsDetails> {
           SizedBox(height: 10),
           Text(
             '${tractor.brand} ${tractor.name}',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: textcolor),
           ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildIconWithText(
-                  Icons.settings, 'Drive',' ${tractor.wheelTyres.wheelDrive}'),
+                  Icons.settings, 'Drive',' ${tractor.wheelTyres.wheelDrive}',textcolor),
               _buildIconWithText(
-                  Icons.timeline, 'No. of Cylinders',' ${tractor.engine.noOfCylinder} Cylinders'),
+                  Icons.timeline, 'No. of Cylinders',' ${tractor.engine.noOfCylinder} Cylinders',textcolor),
               _buildIconWithText(
-                  Icons.power, 'HP',' ${tractor.engine.hpCategory}'),
+                  Icons.power, 'HP',' ${tractor.engine.hpCategory}',textcolor),
             ],
           ),
           SizedBox(height: 20),
@@ -130,13 +133,13 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             children: [
               Text("Price: ",
                   style:
-                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: textcolor)),
               SizedBox(width: 8),
-              Icon(Icons.currency_rupee, size: 25),
+              Icon(Icons.currency_rupee, size: 25,color: textcolor,),
               SizedBox(width: 4),
               Text("${tractor.price}",
                   style:
-                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: textcolor)),
             ],
           ),
           SizedBox(height: 20),
@@ -173,23 +176,23 @@ class _TractorsDetailsState extends State<TractorsDetails> {
     );
   }
 
-  Widget _buildIconWithText(IconData icon, String text,String value) {
+  Widget _buildIconWithText(IconData icon, String text,String value,textcolor) {
     return Row(
 
       children: [
-        Icon(icon, size: 20),
+        Icon(icon, size: 20,color: textcolor),
         SizedBox(width: 8),
         Column(
           children: [
-            Text(text, style: TextStyle(fontSize: 14)),
-            Text(value, style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
+            Text(text, style: TextStyle(fontSize: 14,color: textcolor)),
+            Text(value, style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: textcolor)),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildOtherFeaturesSection(Tractors tractor) {
+  Widget _buildOtherFeaturesSection(Tractors tractor,textcolor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -200,6 +203,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: textcolor
             ),
           ),
         ),
@@ -211,14 +215,14 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             physics: NeverScrollableScrollPhysics(),
             childAspectRatio: 1,
             children: [
-              _buildFeatureItem(Icons.power, 'HP', '50'),
-              _buildFeatureItem(Icons.settings, 'Clutch', 'Single'),
-              _buildFeatureItem(Icons.timeline, 'Gearbox', '6+1'),
-              _buildFeatureItem(Icons.car_repair, 'Brake', 'Disc'),
+              _buildFeatureItem(Icons.power, 'HP', '50',textcolor),
+              _buildFeatureItem(Icons.settings, 'Clutch', 'Single',textcolor),
+              _buildFeatureItem(Icons.timeline, 'Gearbox', '6+1',textcolor),
+              _buildFeatureItem(Icons.car_repair, 'Brake', 'Disc',textcolor),
               _buildFeatureItem(
-                  Icons.electric_bolt, 'Lifting Capacity', '1500 kg'),
-              _buildFeatureItem(Icons.directions_car, 'Wheel Drive', '4WD'),
-              _buildFeatureItem(Icons.verified, 'Warranty', '3 years'),
+                  Icons.electric_bolt, 'Lifting Capacity', '1500 kg',textcolor),
+              _buildFeatureItem(Icons.directions_car, 'Wheel Drive', '4WD',textcolor),
+              _buildFeatureItem(Icons.verified, 'Warranty', '3 years',textcolor),
             ],
           ),
         ),
@@ -226,7 +230,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
     );
   }
 
-  Widget _buildReviewSection() {
+  Widget _buildReviewSection(textcolor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -237,15 +241,16 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: textcolor
             ),
           ),
         ),
-        Center(child: Text('Review Section')),
+        Center(child: Text('Review Section',style: TextStyle(color: textcolor),)),
       ],
     );
   }
 
-  Widget _buildDealersSection() {
+  Widget _buildDealersSection(textcolor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -256,15 +261,16 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: textcolor
             ),
           ),
         ),
-        Center(child: Text('Dealers Section')),
+        Center(child: Text('Dealers Section',style: TextStyle(color: textcolor),)),
       ],
     );
   }
 
-  Widget _buildTyresSection() {
+  Widget _buildTyresSection(textcolor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -275,15 +281,16 @@ class _TractorsDetailsState extends State<TractorsDetails> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: textcolor
             ),
           ),
         ),
-        Center(child: Text('Tyres Section')),
+        Center(child: Text('Tyres Section',style: TextStyle(color: textcolor),)),
       ],
     );
   }
 
-  Widget _buildFeatureItem(IconData icon, String label, String value) {
+  Widget _buildFeatureItem(IconData icon, String label, String value,textcolor) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey, width: 1.0),
@@ -291,18 +298,18 @@ class _TractorsDetailsState extends State<TractorsDetails> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 30),
+          Icon(icon, size: 30,color: textcolor,),
           SizedBox(height: 5),
-          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: textcolor)),
           SizedBox(height: 5),
-          Text(value),
+          Text(value,style: TextStyle(color: textcolor),),
         ],
       ),
     );
   }
 
   @override
-  Widget _buildSpecializationSection(Tractors tractor) {
+  Widget _buildSpecializationSection(Tractors tractor,textcolor) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -320,6 +327,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
+                  color: textcolor
                 ),
               ),
             ),
@@ -442,10 +450,11 @@ class _TractorsDetailsState extends State<TractorsDetails> {
     );
   }
   Widget newTractorContactDialog(newtractors, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
-      ),
+      ),backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -457,12 +466,14 @@ class _TractorsDetailsState extends State<TractorsDetails> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Dealer Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -482,9 +493,11 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                   ),
                   TextFormField(
                     initialValue: location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -504,9 +517,11 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                   ),
                   TextFormField(
                     initialValue: mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -527,13 +542,16 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                     },
                   ),
                   TextFormField(
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -548,7 +566,7 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color:cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -560,10 +578,11 @@ class _TractorsDetailsState extends State<TractorsDetails> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertbuydata(newtractors);
-                            Get.back();
+                            Navigator.pop(context);
+                            Get.to(() => TractorsDetails(tractor: newtractors));
                           }
                         },
-                        child: Text("Contact Dealer",
+                        child: Text("Contact",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),

@@ -1,3 +1,4 @@
+import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 
 class CustomExpansionTile extends StatelessWidget {
@@ -16,6 +17,7 @@ class CustomExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Column(
       children: [
         Container(
@@ -25,10 +27,10 @@ class CustomExpansionTile extends StatelessWidget {
             ),
           ),
           child: ListTile(
-            title: Text(title),
+            title: Text(title,style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),),
             trailing: Icon(isExpanded
                 ? Icons.arrow_drop_up
-                : Icons.arrow_drop_down),
+                : Icons.arrow_drop_down,color: cubit.isDark ? Colors.white : Colors.black,),
             onTap: onTap,
           ),
         ),
@@ -43,7 +45,7 @@ class CustomExpansionTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: Container(
-                      color:Colors.black12,
+                      color:cubit.isDark ? Colors.white : Colors.black12,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -59,7 +61,7 @@ class CustomExpansionTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: Container(
-                      color:Colors.black12,
+                      color:cubit.isDark ? Colors.white : Colors.black12,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(value),

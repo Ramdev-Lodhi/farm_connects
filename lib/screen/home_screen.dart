@@ -528,7 +528,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
             padding: EdgeInsets.symmetric(horizontal: 4.0.w),
             child: GestureDetector(
               onTap: () {
-                // Get.to(() => TractorsDetails(tractor: product!));
+                Get.to(() => RentDetialsScreen(rentdata: product!));
               },
               child: Card(
                 elevation: 1,
@@ -800,10 +800,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   Widget newTractorContactDialog(newtractors, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
-      ),
+      ),backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -815,12 +816,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -840,9 +843,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -862,9 +867,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -885,9 +892,11 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -907,7 +916,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color:cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -944,10 +953,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   Widget sellerContactDialog(selltractors, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -959,15 +970,17 @@ class _ProductsBuilderState extends State<ProductsBuilder>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Seller Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -984,12 +997,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => location = value,
                     onChanged: (value) {
@@ -1006,12 +1021,14 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   TextFormField(
                     initialValue: mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle:  TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -1029,14 +1046,15 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
-                    onSaved: (value) => price = value,
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -1051,7 +1069,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white :Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -1063,10 +1081,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertselldata(selltractors);
-                            Navigator.pop(context);
-
-                            Get.to(() =>
-                                UsedTractorDetails(selltractor: selltractors));
+                            Get.back();
                           }
                         },
                         child: Text("Contact Seller",
@@ -1090,10 +1105,12 @@ class _ProductsBuilderState extends State<ProductsBuilder>
   }
 
   Widget rentContactDialog(rentdata, BuildContext context) {
+    HomeCubit cubit =HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -1101,19 +1118,21 @@ class _ProductsBuilderState extends State<ProductsBuilder>
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-              key: _formKeyrent,
+              key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Owner Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -1129,15 +1148,17 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue: location,
+                    initialValue:
+                    location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),
-                    onSaved: (value) => location = value,
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),onSaved: (value) => location = value,
                     onChanged: (value) {
                       setState(() {
                         location = value;
@@ -1151,13 +1172,16 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     },
                   ),
                   TextFormField(
-                    initialValue: mobile,
+                    initialValue:
+                    mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -1168,28 +1192,28 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
-                      } else if (value.length != 13) {
+                      }else if (value.length != 13) {
                         return 'please enter 10 digit number';
                       }
                       return null;
                     },
                   ),
+
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
                     // Set bottom margin to 0
                     child: SizedBox(
-                      width: 150,
+                      width: 150, // Set the desired width here
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_formKeyrent.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             insertrentdata(rentdata);
-                            Navigator.pop(context);
-                            Get.to(() => RentDetialsScreen(rentdata: rentdata));
+                            Get.back();
                           }
                         },
                         child: Text("Contact Owner",

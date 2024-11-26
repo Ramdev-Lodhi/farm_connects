@@ -568,7 +568,7 @@ class _RentFormScreenState extends State<RentFormScreen>
           children: [
             SizedBox(height: ScreenUtil().setHeight(20)),
             Text("Select Photos",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white : Colors.black)),
             SizedBox(height: ScreenUtil().setHeight(20)),
             ElevatedButton.icon(
               onPressed: _showImageSourceDialog,
