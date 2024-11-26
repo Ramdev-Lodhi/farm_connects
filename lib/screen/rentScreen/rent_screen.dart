@@ -78,7 +78,6 @@ class _RentScreenState extends State<RentScreen> {
         final matchesPincode = rentData.address?.pincode == enteredPincode;
         final matchesService = _selectedService == null ||
             rentData.servicetype == _selectedService;
-
         return matchesPincode && matchesService;
       }).toList();
     });
