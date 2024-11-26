@@ -72,7 +72,7 @@ class _RentScreenState extends State<RentScreen> {
     HomeCubit cubits = HomeCubit.get(context);
     final RentData = rentDataModel?.data.rentData ?? [];
     final services = cubits.homeDataModel?.data.services ?? [];
-    if (RentData.isNotEmpty) {
+    // if (RentData.isNotEmpty) {
     return Transform.translate(
       offset: Offset(0, -20),
       child: Padding(
@@ -120,12 +120,12 @@ class _RentScreenState extends State<RentScreen> {
         ),
       ),
     );
-    } else {
-      // When no rent data is available
-      return Center(
-        child: Text('No Rent Data Available'),
-      );
-    }
+    // } else {
+    //   // When no rent data is available
+    //   return Center(
+    //     child: Text('No Rent Data Available'),
+    //   );
+    // }
   }
 
   Widget _sectionHeader(BuildContext context, String title) {
