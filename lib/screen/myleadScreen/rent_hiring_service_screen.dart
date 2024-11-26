@@ -8,6 +8,7 @@ import '../../cubits/home_cubit/home_cubit.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/myleads_model.dart';
 import '../../models/rent_model.dart';
+import 'package:intl/intl.dart';
 
 class RentHiringServiceScreen extends StatefulWidget {
   @override
@@ -17,7 +18,9 @@ class RentHiringServiceScreen extends StatefulWidget {
 
 class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
   String? userId;
-
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('dd-MM-yyyy').format(dateTime);
+  }
   // List<RentData> filteredRentServices = [];
   List<RentServiceRequest> filteredRentServices = [];
 
@@ -35,10 +38,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final rentserviceData = MyleadCubits.get(context).rentDataModel;
-    final dataRentRequestEnquiry = MyleadCubits.get(context).rentEnquiryData;
-    final dataRentEnquiry = MyleadCubits.get(context).rentEnquiryData;
-    final databuyEnquiry = MyleadCubits.get(context).buyEnquiryData;
+    final rentserviceData = RentCubit.get(context).rentDataModel;
     final rentservicedata = RentCubit.get(context).rentDataModel;
     HomeCubit cubit = HomeCubit.get(context);
 
@@ -100,10 +100,8 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
       var filteredRequests = rentServiceRequest.where((request) {
         return request.requestedBy == userId;
       }).toList();
-
       filteredRentServices.addAll(filteredRequests);
-
-          rentItems.add(Padding(
+      rentItems.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: ListView.builder(
           physics: BouncingScrollPhysics(),
@@ -215,6 +213,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 SizedBox(height: 8.0),
                                 Text(
                                   'Price: ₹ ${rentData.price}',
@@ -244,11 +243,20 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                           ? Colors.white70
                                           : Colors.black54),
                                 ),
+                                SizedBox(height: 8.0),
+
                               ],
                             ),
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Text(
+                    'Requested Date: ${_formatDate(filteredRentServices.requestedFrom)} To ${_formatDate(filteredRentServices.requestedTo)}',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: cubit.isDark ? Colors.white70 : Colors.black54,
                     ),
                   ),
                 ],
@@ -428,6 +436,13 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Text(
+                    'Requested Date: ${_formatDate(rentServiceRequest.requestedFrom)} To ${_formatDate(rentServiceRequest.requestedTo)}',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: cubit.isDark ? Colors.white70 : Colors.black54,
                     ),
                   ),
                 ],
