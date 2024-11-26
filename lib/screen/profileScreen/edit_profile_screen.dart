@@ -185,7 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               elevation: 5,
               shadowColor: Colors.black.withOpacity(0.2),
               child: AppBar(
-                backgroundColor: cubit.isDark ? Colors.black : Colors.white,
+                backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
                 title: Text('Edit Profile'),
                 actions: [
                   TextButton(
@@ -227,12 +227,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: TextFormField(
+                              style: TextStyle(color:textColor,),
                               initialValue:
                                   profileCubit.profileModel.data?.mobile,
                               decoration: InputDecoration(
                                 labelText: 'Mobile',
                                 labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold, // Makes the label bold
+                                  fontWeight: FontWeight.bold,
+                                  color:textColor,// Makes the label bold
                                 ),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
@@ -368,14 +370,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     required String label,
     required FormFieldSetter<String> onSaved,
   }) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black,),
         initialValue: initialValue,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-            fontWeight: FontWeight.bold, // Makes the label bold
+            fontWeight: FontWeight.bold,
+            color:cubit.isDark ? Colors.white : Colors.black,// Makes the label bold
           ),
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),

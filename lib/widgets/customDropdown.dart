@@ -162,7 +162,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           labelText: widget.label,
           labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
-              color:cubit.isDark ? Colors.white : Colors.black          ),
+              color:cubit.isDark ? Colors.white : Colors.black),
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 12),
         ),
@@ -176,11 +176,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 overflow: TextOverflow.ellipsis,
 
                 style: TextStyle(
-                  color: selectedItem == null ? Colors.grey : Colors.black,
+                  color: selectedItem == null ? Colors.grey : cubit.isDark ? Colors.white : Colors.black,
                 ),
               ),
             ),
-            Icon(Icons.arrow_drop_down),
+            Icon(Icons.arrow_drop_down,color: cubit.isDark ? Colors.white : Colors.black,),
           ],
         ),
       ),
