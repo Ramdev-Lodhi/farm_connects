@@ -42,7 +42,7 @@ class CompareExpansionTile extends StatelessWidget {
               // Iterate over each detail and display the name with its respective values below
               for (var detail in details)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  padding: const EdgeInsets.only(top: 2.0),
                   child: Column(
                     children: [
                       // Display the name of the detail (key)
@@ -59,7 +59,7 @@ class CompareExpansionTile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Now display the values for that name in a table format
+
                       Table(
                         children: [
                           TableRow(

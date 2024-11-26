@@ -82,127 +82,139 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
     //     ? tractors.where((tractor) => tractor.brand == selectedBrand).toList()
     //     : tractors;
 // print('sell = ${sellAllTractorData?.data.SellTractor}');
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    if(tractors.isNotEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 // Display first two tractors
-            Column(
-              children: List.generate(
-                tractors.length < 2 ? tractors.length : 2,
-                (index) => tractorItemBuilder(tractors[index], context),
+              Column(
+                children: List.generate(
+                  tractors.length < 2 ? tractors.length : 2,
+                      (index) => tractorItemBuilder(tractors[index], context),
+                ),
               ),
-            ),
 
 // Display brands list
-            if (brands.isNotEmpty) ...[
-              _sectionHeader(
-                context,
-                'Select your favorite brands',
-                Icon(Icons.branding_watermark_outlined),
-                Colors.red,
+              if (brands.isNotEmpty) ...[
+                _sectionHeader(
+                  context,
+                  'Select your favorite brands',
+                  Icon(Icons.branding_watermark_outlined),
+                  Colors.red,
+                ),
+
+                gridBrandsBuilder(HomeCubit
+                    .get(context)
+                    .homeDataModel, context),
+                TextButton(
+                  onPressed: () {
+                    Get.to(AllBrandScreen());
+                  },
+                  child: Text(
+                    "View All Brands   ➞",
+                    style: TextStyle(
+                      fontSize: 18.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: cubits.isDark ? Colors.blue : Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
+
+              Column(
+                children: List.generate(
+                  tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
+                      (index) =>
+                      tractorItemBuilder(tractors[index + 2], context),
+                ),
               ),
 
-              gridBrandsBuilder(HomeCubit.get(context).homeDataModel, context),
-              TextButton(
-                onPressed: () {
-                  Get.to(AllBrandScreen());
-                },
-                child: Text(
-                  "View All Brands   ➞",
-                  style: TextStyle(
-                    fontSize: 18.0.sp,
-                    fontWeight: FontWeight.w600,
-                    color: cubits.isDark ? Colors.blue : Colors.blue,
-                  ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionHeader(
+                      context,
+                      'Select tractor by HP',
+                      Icon(Icons.flash_on),
+                      orange,
+                    ),
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      childAspectRatio: 2.2,
+                      children: [
+                        budgetOption("Under 20 HP", context),
+                        budgetOption("21 - 30 HP", context),
+                        budgetOption("31 - 40 HP", context),
+                        budgetOption("41 - 45 HP", context),
+                        budgetOption("46 - 50 HP", context),
+                        budgetOption("51 - 60 HP", context),
+                        budgetOption("61 - 75 HP", context),
+                        budgetOption("Above 75 HP", context),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: List.generate(
+                  (tractors.length - 6).clamp(0, 6),
+                      (index) =>
+                      tractorItemBuilder(tractors[index + 6], context),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionHeader(
+                      context,
+                      'Select your budget',
+                      Icon(Icons.payments),
+                      Colors.green,
+                    ),
+
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      childAspectRatio: 2.2,
+                      children: [
+                        budgetOption("Under 3 Lakhs", context),
+                        budgetOption("3 to 5 Lakhs", context),
+                        budgetOption("5 to 7 Lakhs", context),
+                        budgetOption("7 to 10 Lakhs", context),
+                        budgetOption("Above 10 Lakhs", context),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: List.generate(
+                  tractors.length > 12 ? tractors.length - 12 : 0,
+                      (index) =>
+                      tractorItemBuilder(tractors[index + 12], context),
                 ),
               ),
             ],
-
-            Column(
-              children: List.generate(
-                tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
-                (index) => tractorItemBuilder(tractors[index + 2], context),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _sectionHeader(
-                    context,
-                    'Select tractor by HP',
-                    Icon(Icons.flash_on),
-                    orange,
-                  ),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3,
-                    childAspectRatio: 2.2,
-                    children: [
-                      budgetOption("Under 20 HP", context),
-                      budgetOption("21 - 30 HP", context),
-                      budgetOption("31 - 40 HP", context),
-                      budgetOption("41 - 45 HP", context),
-                      budgetOption("46 - 50 HP", context),
-                      budgetOption("51 - 60 HP", context),
-                      budgetOption("61 - 75 HP", context),
-                      budgetOption("Above 75 HP", context),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: List.generate(
-                (tractors.length - 6).clamp(0, 6),
-                (index) => tractorItemBuilder(tractors[index + 6], context),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _sectionHeader(
-                    context,
-                    'Select your budget',
-                    Icon(Icons.payments),
-                    Colors.green,
-                  ),
-
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3,
-                    childAspectRatio: 2.2,
-                    children: [
-                      budgetOption("Under 3 Lakhs", context),
-                      budgetOption("3 to 5 Lakhs", context),
-                      budgetOption("5 to 7 Lakhs", context),
-                      budgetOption("7 to 10 Lakhs", context),
-                      budgetOption("Above 10 Lakhs", context),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: List.generate(
-                tractors.length > 12 ? tractors.length - 12 : 0,
-                (index) => tractorItemBuilder(tractors[index + 12], context),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    }else {
+      // When no rent data is available
+      return Center(
+        child: Text('No Sell Data Available'),
+      );
+    }
   }
 
   Widget _sectionHeader(
@@ -339,7 +351,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.bold,
                                   color: cubit.isDark
-                                      ? Colors.grey[400]
+                                      ? Colors.white
                                       : Colors.black,
                                 ),
                               ),
@@ -350,19 +362,19 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.bold,
                                   color: cubit.isDark
-                                      ? Colors.grey[400]
+                                      ? Colors.white
                                       : Colors.black,
                                 ),
                               ),
                             ],
                           ),
                           Text(
-                            'Price: ${product?.price ?? 'N/A'} ',
+                            'Price: ₹ ${product?.price ?? 'N/A'} ',
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               fontWeight: FontWeight.bold,
                               color: cubit.isDark
-                                  ? Colors.grey[400]
+                                  ? Colors.white
                                   : Colors.black,
                             ),
                           ),
@@ -482,103 +494,6 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
     );
   }
 
-  Widget gridTractorsBuilder(
-      SellAllTractorData? SellAllTractorData, BuildContext context) {
-// SellCubit cubit = SellCubit.get(context);
-    HomeCubit cubit = HomeCubit.get(context);
-    return SizedBox(
-      height: 460.h,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          final product = SellAllTractorData?.data.SellTractor[index];
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.0.w, vertical: 4.0.h),
-            child: Card(
-              elevation: 1,
-              child: Material(
-                elevation: 3.0,
-                borderRadius: BorderRadius.circular(8.0),
-                color: cubit.isDark ? Colors.grey[800] : Colors.white,
-                child: Container(
-                  width: 300.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 170.w,
-                          child: CachedNetworkImage(
-                            imageUrl: product?.image ?? '',
-                            fit: BoxFit.contain,
-                            width: double.infinity,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${product?.brand ?? ''} ${product?.modelname ?? ''}',
-                                maxLines: 1,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: cubit.isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'HP: ${product?.modelHP ?? 'N/A'}',
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: cubit.isDark
-                                          ? Colors.grey[400]
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  Text(
-                                    'State: ${product?.state ?? 'N/A'}',
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: cubit.isDark
-                                          ? Colors.grey[400]
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   Widget sellerContactDialog(selltractors, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);

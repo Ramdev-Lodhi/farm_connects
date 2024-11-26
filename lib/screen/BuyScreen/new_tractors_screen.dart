@@ -320,7 +320,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
                                 'HP: ${product?.engine.hpCategory ?? 'N/A'}',
@@ -328,7 +328,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.bold,
                                   color: cubit.isDark
-                                      ? Colors.grey[400]
+                                      ? Colors.white
                                       : Colors.black,
                                 ),
                               ),
@@ -339,7 +339,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.bold,
                                   color: cubit.isDark
-                                      ? Colors.grey[400]
+                                      ? Colors.white
                                       : Colors.black,
                                 ),
                               ),
@@ -523,7 +523,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                                       fontSize: 14.0.sp,
                                       fontWeight: FontWeight.bold,
                                       color: cubit.isDark
-                                          ? Colors.grey[400]
+                                          ? Colors.white
                                           : Colors.black,
                                     ),
                                   ),
@@ -534,7 +534,7 @@ class _NewTractorScreenState extends State<NewTractorScreen> {
                                       fontSize: 14.0.sp,
                                       fontWeight: FontWeight.bold,
                                       color: cubit.isDark
-                                          ? Colors.grey[400]
+                                          ? Colors.white
                                           : Colors.black,
                                     ),
                                   ),
