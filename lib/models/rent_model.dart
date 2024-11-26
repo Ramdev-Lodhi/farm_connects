@@ -30,14 +30,9 @@ class RentData {
   late String servicetype;
   late String price;
   late bool rentedStatus;
-  // String? pincode;
-  // String? state;
-  // String? district;
-  // String? sub_district;
-  // String? village;
   late Address? address;
-  late UserInfo? userInfo; // Nullable to handle missing or null
-  late ServiceRequests? serviceRequests; // Nullable to handle missing or null
+  late UserInfo? userInfo;
+  late ServiceRequests? serviceRequests;
 
   RentData.fromJson(Map<String, dynamic> json) {
     id = json['_id'];

@@ -102,37 +102,47 @@ class RentCubit extends Cubit<RentStates> {
 
 
   Future<void> InsertrentContactData(
+      String id,
       String image,
       String servicetype,
-      String userId,
+      String OwnerId,
       String rentername,
+      String userId,
       String name,
       String mobile,
-      String location ,
-      String budget) async {
+      String location,
+      DateTime serviceFromDate,
+      DateTime serviceToDate) async {
     emit(RentFormLoading());
+
     String token = CacheHelper.getData(key: 'token') ?? '';
     try {
+      print(id);
+      print(userId);
+      print(name);
+      print(mobile);
+      print(location);
+      print(serviceFromDate);
+      print(serviceToDate);
+      print(token);
       final response = await DioHelper.putData(
-          method: 'contact/rentContact',
+          method: 'rent/rentServiceRequest/$id',
           token: token,
           data: {
-            "name" : name,
-            "mobile": mobile,
-            "location":location,
-            "budget":budget,
-            "renterInfo":{
-              "renterID": userId,
-              "rent_image": image,
-              "rentserviceName": servicetype,
+            "serviceRequests":{
+              "name" : name,
+              "mobile": mobile,
+              "location":location,
+              "requestedFrom": serviceFromDate.toIso8601String(),
+              "requestedTo": serviceToDate.toIso8601String()
             }
           });
-
+      // print("response:$response");
       await DioHelper.postData(
           method: 'notification/send-contact-notification',
           token: token,
           data: {
-            "id":userId,
+            "id":OwnerId,
             "title": "New Contact Request for You, ${rentername}",
             "message": "User ${name} has sent a message: \"I'm interested in buy a  ${servicetype}. Please get in touch!\"",
             "image":image,

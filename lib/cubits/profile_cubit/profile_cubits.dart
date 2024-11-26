@@ -32,7 +32,7 @@ class ProfileCubits extends Cubit<ProfileState> {
         method: 'user/profile',
         token: token,
       );
-
+// print(response);
       profileModel = ProfileModel.fromJson(response.data);
       emit(ProfileSuccessState());
     } catch (error) {

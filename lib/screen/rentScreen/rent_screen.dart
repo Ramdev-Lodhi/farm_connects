@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/home_data_model.dart';
+import '../../widgets/custom_contact_form.dart';
 import '../../widgets/placeholder/rentscreen_placeholder.dart';
 
 class RentScreen extends StatefulWidget {
@@ -32,9 +33,10 @@ class _RentScreenState extends State<RentScreen> {
   String? location;
 
   String? price;
+  DateTime? serviceFromDate;
+  DateTime? serviceToDate;
 
   void insertrentdata(rentcontactdata) {
-
     var mylead = MyleadCubits.get(context);
     mylead.InsertrentContactData(
         rentcontactdata.image,
@@ -70,7 +72,6 @@ class _RentScreenState extends State<RentScreen> {
   }
 
   Widget productsBuilder(RentDataModel? rentDataModel, BuildContext context) {
-    RentCubit Rentcubit = RentCubit.get(context);
     HomeCubit cubits = HomeCubit.get(context);
     final RentData = rentDataModel?.data.rentData ?? [];
     final services = cubits.homeDataModel?.data.services ?? [];
@@ -236,11 +237,11 @@ class _RentScreenState extends State<RentScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return rentContactDialog(
-                                      product, context);
+                                  return CustomContactForm(product: product);
                                 },
                               );
                             },
+
                             child: Text("Contact Owner",
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
@@ -334,7 +335,8 @@ class _RentScreenState extends State<RentScreen> {
     );
   }
 
-  Widget rentContactDialog(rentdata, BuildContext context) {
+  Widget rentContactDialog(rentserviceData, BuildContext context) {
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -342,7 +344,7 @@ class _RentScreenState extends State<RentScreen> {
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
-          height: 400.0,
+          height: 500.0, // Increased height to fit date pickers
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
@@ -351,6 +353,7 @@ class _RentScreenState extends State<RentScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                  // Name Field
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -373,16 +376,17 @@ class _RentScreenState extends State<RentScreen> {
                       return null;
                     },
                   ),
+                  // Location Field
                   TextFormField(
-                    initialValue:
-                    location,
+                    initialValue: location,
                     decoration: InputDecoration(
                       labelText: 'Location',
                       prefixIcon: Icon(Icons.location_on),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => location = value,
+                    ),
+                    onSaved: (value) => location = value,
                     onChanged: (value) {
                       setState(() {
                         location = value;
@@ -395,9 +399,9 @@ class _RentScreenState extends State<RentScreen> {
                       return null;
                     },
                   ),
+                  // Mobile Field
                   TextFormField(
-                    initialValue:
-                    mobile,
+                    initialValue: mobile,
                     decoration: InputDecoration(
                       labelText: 'Mobile',
                       prefixIcon: Icon(Icons.phone),
@@ -414,11 +418,77 @@ class _RentScreenState extends State<RentScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter Mobile';
-                      }else if (value.length != 13) {
-                        return 'please enter 10 digit number';
+                      } else if (value.length != 10) {
+                        return 'Please enter a valid 10-digit number';
                       }
                       return null;
                     },
+                  ),
+                  // Service From Date Picker
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Service From: ${serviceFromDate != null ? serviceFromDate?.toLocal().toString().split(' ')[0] : 'Select Date'}"),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime.now().add(Duration(days: 365)), // Up to one year
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                serviceFromDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Service To Date Picker
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Service To: ${serviceToDate != null ? serviceToDate?.toLocal().toString().split(' ')[0] : 'Select Date'}"),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            if (serviceFromDate == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Please select Service From date first!")),
+                              );
+                              return;
+                            }
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: serviceFromDate!.add(Duration(days: 1)),
+                              firstDate: serviceFromDate!.add(Duration(days: 1)),
+                              lastDate: DateTime.now().add(Duration(days: 365)), // Up to one year
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                serviceToDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   Divider(
                     thickness: 1.5,
@@ -427,15 +497,20 @@ class _RentScreenState extends State<RentScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
-                    // Set bottom margin to 0
                     child: SizedBox(
                       width: 150, // Set the desired width here
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            insertrentdata(rentdata);
+                            if (serviceFromDate == null || serviceToDate == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Please select both dates")),
+                              );
+                              return;
+                            }
+                            insertrentdata(rentserviceData);
                             Navigator.pop(context);
-                            Get.to(() => RentDetialsScreen(rentdata: rentdata));
+                            Get.to(() => RentDetialsScreen(rentdata: rentserviceData));
                           }
                         },
                         child: Text("Contact Owner",
@@ -457,4 +532,5 @@ class _RentScreenState extends State<RentScreen> {
       ),
     );
   }
+
 }
