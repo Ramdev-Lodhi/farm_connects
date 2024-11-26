@@ -20,14 +20,9 @@ class RentCubit extends Cubit<RentStates> {
     String token = CacheHelper.getData(key: 'token') ?? '';
     String lang = CacheHelper.getData(key: 'lang') ?? 'en';
     String pincode = CacheHelper.getData(key: 'pincode') ?? '';
-    DioHelper.postData(
-      method: 'rent/getrentItem',
+    DioHelper.getData(
+      method: 'rent/getRentAllservices',
       token: token,
-      data: {
-        'address':{
-          'pincode': pincode,
-        },
-      },
     ).then((response) {
       print(response);
       rentDataModel = RentDataModel.fromJson(response.data);
@@ -145,7 +140,7 @@ class RentCubit extends Cubit<RentStates> {
           data: {
             "id":OwnerId,
             "title": "New Contact Request for You, ${rentername}",
-            "message": "User ${name} has sent a message: \"I'm interested in buy a  ${servicetype}. Please get in touch!\"",
+            "message": "User ${name} has sent a message: \"I'm interested in    ${servicetype}. Please get in touch!\"",
             "image":image,
           });
 
