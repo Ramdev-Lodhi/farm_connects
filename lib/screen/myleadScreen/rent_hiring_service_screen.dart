@@ -505,7 +505,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Price: ${rentData.price ?? 'Not Available'}',
+                                  'Price: ₹ ${rentData.price ?? 'Not Available'}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
                                       color: cubit.isDark ? Colors.white70 : Colors.black54
@@ -513,7 +513,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Location: ${rentData.address?.state}, ${rentData.address?.sub_district}',
+                                  'Location: ${rentData.address?.state},'"\n"' ${rentData.address?.sub_district} (${rentData.address?.pincode})',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -536,5 +536,4 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
       ),
     );
   }
-
 }
