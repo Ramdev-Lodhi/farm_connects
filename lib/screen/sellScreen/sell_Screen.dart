@@ -76,7 +76,7 @@ class _SellScreenState extends State<SellScreen> {
                       // Form Section
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: homeCubit.isDark ?Colors.grey[800] : Colors.white,
                           borderRadius: BorderRadius.circular(10.0),
                           boxShadow: [
                             BoxShadow(
@@ -89,9 +89,9 @@ class _SellScreenState extends State<SellScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Sell Your Used Tractor',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: homeCubit.isDark ?Colors.white : Colors.black,),
                             ),
                             const SizedBox(height: 20),
                             CustomTextField(

@@ -340,6 +340,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
   }
 
   Widget _buildTractorTypeSection() {
+    HomeCubit cubit = HomeCubit.get(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -348,6 +349,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color:cubit.isDark ? Colors.white : Colors.black
           ),
         ),
         SizedBox(height: ScreenUtil().setHeight(20)),
@@ -415,6 +417,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
   }
 
   Widget _buildConditionSection() {
+    HomeCubit cubit = HomeCubit.get(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -423,6 +426,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+              color:cubit.isDark ? Colors.white : Colors.black
           ),
         ),
         SizedBox(height: ScreenUtil().setHeight(20)),
@@ -460,6 +464,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
   }
 
   Widget _buildImageSection() {
+    HomeCubit cubit = HomeCubit.get(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -468,6 +473,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+              color:cubit.isDark ? Colors.white : Colors.black
           ),
         ),
         Row(
@@ -482,7 +488,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
                 });
               },
             ),
-            Text("Yes"),
+            Text("Yes" ,style: TextStyle(color:cubit.isDark ? Colors.white : Colors.black),),
             Radio<String>(
               value: 'No',
               groupValue: _selectedRC,
@@ -492,7 +498,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
                 });
               },
             ),
-            Text("No"),
+            Text("No",style: TextStyle(color:cubit.isDark ? Colors.white : Colors.black),),
           ],
         ),
         SizedBox(height: ScreenUtil().setHeight(20)),
@@ -501,13 +507,16 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+              color:cubit.isDark ? Colors.white : Colors.black
           ),
         ),
         SizedBox(height: ScreenUtil().setHeight(20)),
         TextFormField(
           controller: priceController,
+          style: TextStyle(color:cubit.isDark ? Colors.white : Colors.black),
           decoration: InputDecoration(
             labelText: 'Tractor Price ',
+            labelStyle: TextStyle(color:cubit.isDark ? Colors.white : Colors.black),
             prefixIcon: Icon(Icons.currency_rupee),
             border: OutlineInputBorder(),
           ),
@@ -518,6 +527,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+              color:cubit.isDark ? Colors.white : Colors.black
           ),
         ),
         SizedBox(height: ScreenUtil().setHeight(20)),
@@ -558,6 +568,7 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
+                          color:cubit.isDark ? Colors.grey[800] : Colors.white,
                           elevation: 4.0,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -566,15 +577,14 @@ class _MultiStepSellScreenState extends State<MultiStepSellScreen>
                                 Icon(
                                   Icons.image_outlined,
                                   size: 50,
-                                  color: Colors.grey,
+                                  color:cubit.isDark ? Colors.white : Colors.black,
                                 ),
                                 SizedBox(height: 8),
                                 Text(
                                   "Please select images of the tractor to proceed. You can select up to four images at a time.",
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
+                                      color:cubit.isDark ? Colors.white : Colors.black                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ],
