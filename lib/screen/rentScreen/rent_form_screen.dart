@@ -65,8 +65,8 @@ class _RentFormScreenState extends State<RentFormScreen>
     BlocProvider.of<LocationCubits>(context).loadStates();
     var profileData = ProfileCubits.get(context).profileModel.data;
     if (profileData != null) {
-      _name = profileData.name ?? CacheHelper.getData(key: 'name') ;
-      _email =  profileData.email ?? CacheHelper.getData(key: 'email') ;
+      _name = profileData.name ?? CacheHelper.getData(key: 'name');
+      _email = profileData.email ?? CacheHelper.getData(key: 'email');
       _mobile = profileData.mobile;
       selectedState = profileData.state != null
           ? profileData.state
@@ -86,8 +86,7 @@ class _RentFormScreenState extends State<RentFormScreen>
           ? profileData.pincode
           : CacheHelper.getData(key: 'pincode');
       loadDistricts();
-    } else {
-    }
+    } else {}
   }
 
   @override
@@ -104,13 +103,14 @@ class _RentFormScreenState extends State<RentFormScreen>
       if (selectedDistrict != null) {
         filteredSubDistricts = districts
             .firstWhere((district) => district.district == selectedDistrict)
-            .subDistricts;  // Filter sub-districts based on selected district
+            .subDistricts; // Filter sub-districts based on selected district
       }
 
       if (selectedSubDistrict != null) {
         filteredVillages = filteredSubDistricts
-            .firstWhere((subDistrict) => subDistrict.subDistrict == selectedSubDistrict)
-            .villages;  // Filter villages based on selected sub-district
+            .firstWhere(
+                (subDistrict) => subDistrict.subDistrict == selectedSubDistrict)
+            .villages; // Filter villages based on selected sub-district
       }
       setState(() {});
     }
@@ -135,8 +135,10 @@ class _RentFormScreenState extends State<RentFormScreen>
     if (selectedState != null &&
         selectedDistrict != null &&
         selectedSubDistrict != null &&
-        selectedVillage != null && _selectedPricetype != null && _selectedService != null) {
-      if(_images != null){
+        selectedVillage != null &&
+        _selectedPricetype != null &&
+        _selectedService != null) {
+      if (_images != null) {
         var rentCubit = RentCubit.get(context);
         rentCubit.InsertRentData(
             _name!,
@@ -150,7 +152,7 @@ class _RentFormScreenState extends State<RentFormScreen>
             _selectedService!,
             '${_price}  ${_selectedPricetype}'!,
             _images!);
-      }else{
+      } else {
         showCustomSnackbar('Alert', 'Please select image!', isError: true);
       }
     } else {
@@ -202,10 +204,13 @@ class _RentFormScreenState extends State<RentFormScreen>
                       TabBarView(
                         controller: _tabController,
                         children: [
-                          _buildVerticalScrollableContent(_buildAddressSection(),
+                          _buildVerticalScrollableContent(
+                              _buildAddressSection(),
                               showNext: true),
-                          _buildVerticalScrollableContent(_buildRentFormSection(),
-                              showPrevious: true, showSubmit: true),
+                          _buildVerticalScrollableContent(
+                              _buildRentFormSection(),
+                              showPrevious: true,
+                              showSubmit: true),
                         ],
                       ),
                       if (_isLoading)
@@ -310,6 +315,8 @@ class _RentFormScreenState extends State<RentFormScreen>
   Widget _buildAddressSection() {
     var profileCubit = ProfileCubits.get(context);
     var locationCubits = LocationCubits.get(context);
+    HomeCubit cubit = HomeCubit.get(context);
+    var textColor = cubit.isDark ? Colors.white : Colors.black;
     return Form(
       key: _formKey,
       child: Column(
@@ -317,7 +324,8 @@ class _RentFormScreenState extends State<RentFormScreen>
         children: [
           Text(
             'Information',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: textColor),
           ),
           SizedBox(height: ScreenUtil().setHeight(12)),
           _buildTextField(
@@ -358,7 +366,8 @@ class _RentFormScreenState extends State<RentFormScreen>
           SizedBox(height: 8.0),
           Text(
             'Address',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: textColor),
           ),
           SizedBox(height: 8.0),
           Row(
@@ -387,7 +396,6 @@ class _RentFormScreenState extends State<RentFormScreen>
                   hint: "Select District",
                   items: districts.map((d) => d.district).toList(),
                   value: selectedDistrict,
-
                   onChanged: (value) {
                     setState(() {
                       selectedDistrict = value;
@@ -403,14 +411,14 @@ class _RentFormScreenState extends State<RentFormScreen>
             ],
           ),
           SizedBox(height: ScreenUtil().setHeight(16)),
-
           SizedBox(height: ScreenUtil().setHeight(16)),
           Row(
             children: [
               Expanded(
                 child: CustomDropdown(
                   hint: "Select Sub-District",
-                  items: filteredSubDistricts.map((s) => s.subDistrict).toList(),
+                  items:
+                      filteredSubDistricts.map((s) => s.subDistrict).toList(),
                   value: selectedSubDistrict,
                   onChanged: (value) {
                     setState(() {
@@ -441,7 +449,6 @@ class _RentFormScreenState extends State<RentFormScreen>
               ),
             ],
           ),
-
           SizedBox(height: ScreenUtil().setHeight(12)),
           _buildTextField(
             keyboardtype: TextInputType.number,
@@ -467,16 +474,18 @@ class _RentFormScreenState extends State<RentFormScreen>
     required FormFieldSetter<String> onSaved,
     required FormFieldSetter<String> onChanged,
   }) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         keyboardType: keyboardtype,
         initialValue: initialValue,
+        style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+              fontWeight: FontWeight.bold,
+              color: cubit.isDark ? Colors.white : Colors.black),
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
         ),
@@ -496,6 +505,7 @@ class _RentFormScreenState extends State<RentFormScreen>
             .map((services) => services.service)
             .toList() ??
         [];
+    HomeCubit cubit = HomeCubit.get(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -519,9 +529,11 @@ class _RentFormScreenState extends State<RentFormScreen>
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     controller: _priceController,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Price',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                     ),
                     onSaved: (value) => _price = value,
@@ -593,6 +605,7 @@ class _RentFormScreenState extends State<RentFormScreen>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        color: cubit.isDark ? Colors.grey[800] : Colors.white,
                         elevation: 4.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -601,13 +614,13 @@ class _RentFormScreenState extends State<RentFormScreen>
                               Icon(
                                 Icons.image_outlined,
                                 size: 50,
-                                color: Colors.grey,
+                                color: cubit.isDark ? Colors.white : Colors.grey,
                               ),
                               SizedBox(height: 8),
                               Text(
                                 "Please select images of the Services to proceed.",
                                 style:
-                                    TextStyle(fontSize: 16, color: Colors.grey),
+                                    TextStyle(fontSize: 16, color: cubit.isDark ? Colors.white : Colors.grey),
                                 textAlign: TextAlign.center,
                               ),
                             ],

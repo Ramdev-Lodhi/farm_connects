@@ -1,3 +1,4 @@
+import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -153,6 +154,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return GestureDetector(
       onTap: _showBottomSheet,
       child: InputDecorator(
@@ -160,7 +162,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           labelText: widget.label,
           labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
-          ),
+              color:cubit.isDark ? Colors.white : Colors.black),
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 12),
         ),
@@ -172,12 +174,13 @@ class _CustomDropdownState extends State<CustomDropdown> {
               child: Text(
                 selectedItem ?? widget.hint,
                 overflow: TextOverflow.ellipsis,
+
                 style: TextStyle(
-                  color: selectedItem == null ? Colors.grey : Colors.black,
+                  color: selectedItem == null ? Colors.grey : cubit.isDark ? Colors.white : Colors.black,
                 ),
               ),
             ),
-            Icon(Icons.arrow_drop_down),
+            Icon(Icons.arrow_drop_down,color: cubit.isDark ? Colors.white : Colors.black,),
           ],
         ),
       ),
