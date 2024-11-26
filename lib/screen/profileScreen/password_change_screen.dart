@@ -137,13 +137,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     TextInputType keyboardType = TextInputType.emailAddress,
     required bool obscureText,
   }) {
+      HomeCubit cubit = HomeCubit.get(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         initialValue: initialValue,
+        style: TextStyle(color:cubit.isDark ? Colors.white : Colors.black ),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(fontWeight: FontWeight.bold,color:cubit.isDark ? Colors.white : Colors.black ),
           border: OutlineInputBorder(),
           suffixIcon: suffixIcon, // Use the Widget directly here
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
@@ -166,10 +168,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
 
   Widget _buildPasswordSuffixIcon() {
+    HomeCubit cubit = HomeCubit.get(context);
     return IconButton(
       icon: Icon(
         _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-        color: Colors.black,
+        color:cubit.isDark ? Colors.white : Colors.black,
       ),
       onPressed: () {
         setState(() {
@@ -179,10 +182,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
   Widget _buildCPasswordSuffixIcon() {
+    HomeCubit cubit = HomeCubit.get(context);
     return IconButton(
       icon: Icon(
         _isCPasswordVisible ? Icons.visibility : Icons.visibility_off,
-        color: Colors.black,
+        color: cubit.isDark ? Colors.white : Colors.black,
       ),
       onPressed: () {
         setState(() {

@@ -46,6 +46,7 @@ class _ImageDialogState extends State<ImageDialog> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
+          backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
           child: Container(
             height: 350,
             padding: EdgeInsets.all(20),
