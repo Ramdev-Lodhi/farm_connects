@@ -48,6 +48,8 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
     }
     @override
     Widget build(BuildContext context) {
+      HomeCubit cubit = HomeCubit.get(context);
+      var textcolor = cubit.isDark ? Colors.white : Colors.black;
       // Get tractors list from HomeCubit
       final tractors = HomeCubit.get(context).homeDataModel?.data.tractors ?? [];
       // Function to get the tractor price based on brand and model name
@@ -90,11 +92,11 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
           body: TabBarView(
             children: [
               _buildVerticalScrollableContent(
-                  _buildOverviewSection(widget.selltractor,tractorPrice)),
+                  _buildOverviewSection(widget.selltractor,tractorPrice,textcolor)),
               _buildVerticalScrollableContent(
-                  _buildOtherFeaturesSection(widget.selltractor)),
+                  _buildOtherFeaturesSection(widget.selltractor,textcolor)),
               _buildVerticalScrollableContent(
-                  _buildSellerSection(widget.selltractor)),
+                  _buildSellerSection(widget.selltractor,textcolor)),
             ],
           ),
         ),
@@ -105,7 +107,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
         child: child,
       );
     }
-    Widget _buildOverviewSection(SellData? selltractor ,tractorPrice  ) {
+    Widget _buildOverviewSection(SellData? selltractor ,tractorPrice ,textcolor ) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -120,29 +122,29 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
             SizedBox(height: 10),
             Text(
               '${selltractor?.brand} ${selltractor?.modelname}',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: textcolor),
             ),
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildIconWithText(
-                    Icons.location_on, 'Location', ' ${selltractor?.state}'),
+                    Icons.location_on, 'Location', ' ${selltractor?.state}',textcolor),
                 _buildIconWithText(
-                    Icons.timeline, 'Year', ' ${selltractor?.year}'),
-                _buildIconWithText(Icons.power, 'HP', ' ${selltractor?.modelHP}'),
+                    Icons.timeline, 'Year', ' ${selltractor?.year}',textcolor),
+                _buildIconWithText(Icons.power, 'HP', ' ${selltractor?.modelHP}',textcolor),
               ],
             ),
             SizedBox(height: 20),
             Row(
               children: [
-                Icon(Icons.currency_rupee, size: 25),
+                Icon(Icons.currency_rupee, size: 25,color: textcolor,),
                 SizedBox(width: 8),
                 Column(
                   children: [
                     Text("${selltractor.price}",
                         style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: textcolor)),
                   ],
                 ),
               ],
@@ -184,22 +186,22 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
         ),
       );
     }
-    Widget _buildIconWithText(IconData icon, String text, String value) {
+    Widget _buildIconWithText(IconData icon, String text, String value,textcolor) {
       return Row(
         children: [
-          Icon(icon, size: 20),
+          Icon(icon, size: 20,color: textcolor,),
           SizedBox(width: 8),
           Column(
             children: [
-              Text(text, style: TextStyle(fontSize: 14)),
+              Text(text, style: TextStyle(fontSize: 14,color: textcolor)),
               Text(value,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: textcolor)),
             ],
           ),
         ],
       );
     }
-    Widget _buildOtherFeaturesSection(SellData? selltractor) {
+    Widget _buildOtherFeaturesSection(SellData? selltractor,textcolor) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -210,6 +212,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: textcolor
               ),
             ),
           ),
@@ -222,17 +225,17 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
               childAspectRatio: 1,
               children: [
                 _buildFeatureItem(
-                    Icons.location_city, 'City', '${selltractor?.location}'),
-                _buildFeatureItem(Icons.power, 'HP', '${selltractor?.modelHP}'),
+                    Icons.location_city, 'City', '${selltractor?.location}',textcolor),
+                _buildFeatureItem(Icons.power, 'HP', '${selltractor?.modelHP}',textcolor),
                 _buildFeatureItem(Icons.settings, 'Engine Condition',
-                    '${selltractor?.engine_Condition}'),
+                    '${selltractor?.engine_Condition}',textcolor),
                 _buildFeatureItem(
-                    Icons.timeline, 'Hour Driven', '${selltractor?.hourDriven}'),
-                _buildFeatureItem(Icons.car_repair, 'RC', '${selltractor?.RC}'),
+                    Icons.timeline, 'Hour Driven', '${selltractor?.hourDriven}',textcolor),
+                _buildFeatureItem(Icons.car_repair, 'RC', '${selltractor?.RC}',textcolor),
                 _buildFeatureItem(
-                    Icons.electric_bolt, 'Model Year', '${selltractor?.year}'),
+                    Icons.electric_bolt, 'Model Year', '${selltractor?.year}',textcolor),
                 _buildFeatureItem(Icons.directions_car, 'Tyre Condition',
-                    '${selltractor?.tyre_Condition}'),
+                    '${selltractor?.tyre_Condition}',textcolor),
               ],
             ),
           ),
@@ -240,7 +243,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
       );
     }
 
-    Widget _buildFeatureItem(IconData icon, String label, String value) {
+    Widget _buildFeatureItem(IconData icon, String label, String value,textcolor) {
       return Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey, width: 1.0),
@@ -248,20 +251,22 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 30),
+            Icon(icon, size: 30,color: textcolor,),
             SizedBox(height: 5),
-            Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: textcolor)),
             SizedBox(height: 5),
-            Text(value),
+            Text(value ,style: TextStyle(color: textcolor),),
           ],
         ),
       );
     }
     Widget sellerContactDialog(selltractors, BuildContext context) {
+      HomeCubit cubit = HomeCubit.get(context);
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
+        backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
         insetPadding: EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Container(
@@ -273,12 +278,14 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                    Text("Seller Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                     TextFormField(
                       initialValue: name,
+                      style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                       decoration: InputDecoration(
                         labelText: 'Name',
-                        prefixIcon: Icon(Icons.person),
+                        labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                        prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                         border: OutlineInputBorder(),
                         contentPadding:
                         EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -298,9 +305,11 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                     ),
                     TextFormField(
                       initialValue: location,
+                      style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                       decoration: InputDecoration(
                         labelText: 'Location',
-                        prefixIcon: Icon(Icons.location_on),
+                        labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                        prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                         border: OutlineInputBorder(),
                         contentPadding:
                         EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -320,9 +329,11 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                     ),
                     TextFormField(
                       initialValue: mobile,
+                      style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                       decoration: InputDecoration(
                         labelText: 'Mobile',
-                        prefixIcon: Icon(Icons.phone),
+                        labelStyle:  TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                        prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                         border: OutlineInputBorder(),
                         contentPadding:
                         EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -343,9 +354,11 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                       },
                     ),
                     TextFormField(
+                      style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                       decoration: InputDecoration(
                         labelText: 'Budget',
-                        prefixIcon: Icon(Icons.currency_rupee),
+                        labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                        prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
                         border: OutlineInputBorder(),
                         contentPadding:
                         EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -364,7 +377,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                     ),
                     Divider(
                       thickness: 1.5,
-                      color: Colors.black12,
+                      color: cubit.isDark ? Colors.white :Colors.black12,
                       height: 10,
                     ),
                     Container(
@@ -399,7 +412,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
       );
     }
 
-    Widget _buildSellerSection(SellData? selltractor) {
+    Widget _buildSellerSection(SellData? selltractor,textcolor) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -410,6 +423,7 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: textcolor
               ),
             ),
           ),
@@ -422,10 +436,10 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
                 1: FlexColumnWidth(2), // Flex for the second column
               },
               children: [
-                _buildTableRow(Icons.person, 'Name', '${selltractor?.name}'),
-                _buildTableRow(Icons.phone, 'Mobile', '${selltractor?.mobile}'),
-                _buildTableRow(Icons.location_on, 'Location', '${selltractor?.state}'),
-                _buildTableRow(Icons.location_city, 'City', '${selltractor?.location}'),
+                _buildTableRow(Icons.person, 'Name', '${selltractor?.name}',textcolor),
+                _buildTableRow(Icons.phone, 'Mobile', '${selltractor?.mobile}',textcolor),
+                _buildTableRow(Icons.location_on, 'Location', '${selltractor?.state}',textcolor),
+                _buildTableRow(Icons.location_city, 'City', '${selltractor?.location}',textcolor),
               ],
             ),
           ),
@@ -433,22 +447,22 @@ import '../../cubits/profile_cubit/profile_cubits.dart';
       );
     }
 
-    TableRow _buildTableRow(IconData icon, String label, String value) {
+    TableRow _buildTableRow(IconData icon, String label, String value,textcolor) {
       return TableRow(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                Icon(icon, size: 20),
+                Icon(icon, size: 20,color: textcolor,),
                 SizedBox(width: 8),
-                Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: textcolor)),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(value, style: TextStyle(fontSize: 14)),
+            child: Text(value, style: TextStyle(fontSize: 14,color: textcolor)),
           ),
         ],
       );

@@ -1,6 +1,7 @@
 // File: lib/screen/sellScreen/sell_image_source_dialog.dart
 
 import 'dart:io';
+import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -45,17 +46,19 @@ class _SellImageSourceDialogState extends State<SellImageSourceDialog> {
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       child: Container(
         height: 250.0, // Adjust height as needed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(height: 10.0),
-            Text("Select Tractor Images", style: TextStyle(fontSize: 20)),
+            Text("Select Tractor Images", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
             SizedBox(height: 10.0),
             ElevatedButton.icon(
               onPressed: _pickImagesFromGallery,
@@ -70,7 +73,7 @@ class _SellImageSourceDialogState extends State<SellImageSourceDialog> {
             ),
             Divider(
               thickness: 1.5,
-              color: Colors.black12,
+              color: cubit.isDark ? Colors.white : Colors.black12,
               height: 10,
             ),
             ElevatedButton.icon(
@@ -86,7 +89,7 @@ class _SellImageSourceDialogState extends State<SellImageSourceDialog> {
             ),
             Divider(
               thickness: 1.5,
-              color: Colors.black12,
+              color: cubit.isDark ? Colors.white : Colors.black12,
               height: 10,
             ),
             Container(

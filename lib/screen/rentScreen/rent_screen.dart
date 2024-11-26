@@ -219,7 +219,7 @@ class _RentScreenState extends State<RentScreen> {
                           SizedBox(height: 8.0),
                           Text("₹ ${product?.price}",
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                                  fontSize: 15, fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white : Colors.black)),
                           SizedBox(height: 8.0),
                           Text(
                             'Location: ${product?.address?.village == 'No villages' ? product?.address?.sub_district : product?.address?.village}  (${product?.address?.pincode}) ',
@@ -335,10 +335,12 @@ class _RentScreenState extends State<RentScreen> {
   }
 
   Widget rentContactDialog(rentdata, BuildContext context) {
+    HomeCubit cubit =HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -350,12 +352,14 @@ class _RentScreenState extends State<RentScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Owner Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Owner Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -376,9 +380,11 @@ class _RentScreenState extends State<RentScreen> {
                   TextFormField(
                     initialValue:
                     location,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -398,9 +404,11 @@ class _RentScreenState extends State<RentScreen> {
                   TextFormField(
                     initialValue:
                     mobile,
+                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -420,9 +428,10 @@ class _RentScreenState extends State<RentScreen> {
                       return null;
                     },
                   ),
+
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -434,8 +443,7 @@ class _RentScreenState extends State<RentScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             insertrentdata(rentdata);
-                            Navigator.pop(context);
-                            Get.to(() => RentDetialsScreen(rentdata: rentdata));
+                            Get.back();
                           }
                         },
                         child: Text("Contact Owner",
