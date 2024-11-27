@@ -5,7 +5,7 @@ class DioHelper {
 
   static init() {
     dio = Dio(BaseOptions(
-        baseUrl: "your_api_url",
+        baseUrl: "https://farmconnects-s31x.onrender.com/api/",
         receiveDataWhenStatusError: true,
         headers: {
           "Content-Type": "application/json",
