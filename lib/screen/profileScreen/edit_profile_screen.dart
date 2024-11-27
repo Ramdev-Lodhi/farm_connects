@@ -388,8 +388,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
         ),
         onSaved: onSaved,
-        validator: (value) =>
-            value?.isEmpty ?? true ? 'Please enter your $label' : null,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your $label';
+          }
+          final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+          if (label.toLowerCase() == 'email' && !emailRegex.hasMatch(value)) {
+            return 'Enter a valid email address';
+          }
+          return null;
+        },
+        // validator: (value) =>
+        //     value?.isEmpty ?? true ? 'Please enter your $label' : null,
       ),
     );
   }

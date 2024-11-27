@@ -82,7 +82,7 @@ class ProfileCubits extends Cubit<ProfileState> {
           data: {
             "name": name,
             "email": email,
-            "mobile": "+91${mobile}",
+            "mobile": mobile,
             "state": state,
             "district": district,
             "sub_district": sub_district,
@@ -127,7 +127,7 @@ class ProfileCubits extends Cubit<ProfileState> {
           data: {
             "name": name,
             "email": email,
-            "mobile": "+91${mobile}",
+            "mobile": mobile,
             "state": state,
             "district": district,
             "sub_district": sub_district,
