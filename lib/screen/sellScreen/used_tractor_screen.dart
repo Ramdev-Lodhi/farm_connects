@@ -2,11 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:farm_connects/cubits/home_cubit/home_cubit.dart';
+import 'package:farm_connects/screen/sellScreen/sell_tractors_by_brand.dart';
 import 'package:flutter/services.dart';
 import '../../config/network/local/cache_helper.dart';
 import '../../constants/styles/colors.dart';
+import '../../cubits/location_cubit/location_cubits.dart';
 import '../../cubits/mylead_cubit/mylead_cubits.dart';
 import '../../cubits/profile_cubit/profile_cubits.dart';
+import '../../widgets/customDropdown.dart';
 import '../../widgets/placeholder/usedscreen_placeholder.dart';
 import '../../widgets/snackbar_helper.dart';
 import '../BuyScreen/tractors_by_brand_screen.dart';
@@ -34,13 +37,14 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
   String? mobile;
   String? location;
   String? price;
+  String? selectedState;
 
   @override
   void initState() {
     super.initState();
     name = CacheHelper.getData(key: 'name') ?? "";
     location =
-    '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
+        '${CacheHelper.getData(key: 'state') ?? ''}, ${CacheHelper.getData(key: 'subDistrict') ?? ''}';
     mobile = ProfileCubits.get(context).profileModel.data?.mobile ?? "";
   }
 
@@ -76,13 +80,17 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
   Widget productsBuilder(SellAllTractorData? sellAllTractorData, context) {
     SellCubit cubit = SellCubit.get(context);
     HomeCubit cubits = HomeCubit.get(context);
+    var locationCubits = LocationCubits.get(context);
+
     final tractors = sellAllTractorData?.data.SellTractor ?? [];
+
     final brands = HomeCubit.get(context).homeDataModel?.data.brands ?? [];
-    // final filteredTractors = selectedBrand != null
-    //     ? tractors.where((tractor) => tractor.brand == selectedBrand).toList()
-    //     : tractors;
-// print('sell = ${sellAllTractorData?.data.SellTractor}');
-    if(tractors.isNotEmpty) {
+
+    final filteredTractors = selectedState != null
+        ? tractors.where((tractor) => tractor.state == selectedState).toList()
+        : tractors;
+
+    if (tractors.isNotEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: SingleChildScrollView(
@@ -90,11 +98,40 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-// Display first two tractors
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomDropdown(
+                  hint: "Select State",
+                  items: locationCubits.stateNames,
+                  value: selectedState,
+                  onChanged: (value) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        selectedState = value;
+                      });
+                    });
+                  },
+                  label: "State",
+                ),
+              ),
+              if(filteredTractors.isEmpty)
+              Center(
+                child: Text(
+                  "No Service Available for this State",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: cubits.isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+
+
               Column(
                 children: List.generate(
-                  tractors.length < 2 ? tractors.length : 2,
-                      (index) => tractorItemBuilder(tractors[index], context),
+                  filteredTractors.length < 2 ? filteredTractors.length : 2,
+                  (index) =>
+                      tractorItemBuilder(filteredTractors[index], context),
                 ),
               ),
 
@@ -106,10 +143,8 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                   Icon(Icons.branding_watermark_outlined),
                   Colors.red,
                 ),
-
-                gridBrandsBuilder(HomeCubit
-                    .get(context)
-                    .homeDataModel, context),
+                gridBrandsBuilder(
+                    HomeCubit.get(context).homeDataModel, context),
                 TextButton(
                   onPressed: () {
                     Get.to(AllBrandScreen());
@@ -127,9 +162,11 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
 
               Column(
                 children: List.generate(
-                  tractors.length > 6 ? 4 : (tractors.length - 2).clamp(0, 4),
-                      (index) =>
-                      tractorItemBuilder(tractors[index + 2], context),
+                  filteredTractors.length > 6
+                      ? 4
+                      : (filteredTractors.length - 2).clamp(0, 4),
+                  (index) =>
+                      tractorItemBuilder(filteredTractors[index + 2], context),
                 ),
               ),
 
@@ -165,9 +202,9 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               ),
               Column(
                 children: List.generate(
-                  (tractors.length - 6).clamp(0, 6),
-                      (index) =>
-                      tractorItemBuilder(tractors[index + 6], context),
+                  (filteredTractors.length - 6).clamp(0, 6),
+                  (index) =>
+                      tractorItemBuilder(filteredTractors[index + 6], context),
                 ),
               ),
               Padding(
@@ -181,7 +218,6 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                       Icon(Icons.payments),
                       Colors.green,
                     ),
-
                     GridView.count(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -200,16 +236,18 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               ),
               Column(
                 children: List.generate(
-                  tractors.length > 12 ? tractors.length - 12 : 0,
-                      (index) =>
-                      tractorItemBuilder(tractors[index + 12], context),
+                  filteredTractors.length > 12
+                      ? filteredTractors.length - 12
+                      : 0,
+                  (index) =>
+                      tractorItemBuilder(filteredTractors[index + 12], context),
                 ),
               ),
             ],
           ),
         ),
       );
-    }else {
+    } else {
       // When no rent data is available
       return Center(
         child: Text('No Sell Data Available'),
@@ -373,9 +411,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               fontWeight: FontWeight.bold,
-                              color: cubit.isDark
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: cubit.isDark ? Colors.white : Colors.black,
                             ),
                           ),
                           Padding(
@@ -435,7 +471,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
             child: GestureDetector(
               onTap: () {
                 selectedBrand = product.name;
-                Get.to(() => TractorsByBrandScreen(
+                Get.to(() => SellTractorsByBrand(
                     brandName: product.name, brandId: product.id));
 
                 setState(() {});
@@ -494,7 +530,6 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
     );
   }
 
-
   Widget sellerContactDialog(selltractors, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
@@ -513,17 +548,25 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black)),
+                  Text("Seller Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.person,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => name = value,
                     onChanged: (value) {
@@ -540,14 +583,19 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                   ),
                   TextFormField(
                     initialValue: location,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => location = value,
                     onChanged: (value) {
@@ -564,14 +612,19 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                   ),
                   TextFormField(
                     initialValue: mobile,
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      labelStyle:  TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.phone,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     ),
                     onSaved: (value) => mobile = value,
                     onChanged: (value) {
@@ -589,15 +642,21 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                     },
                   ),
                   TextFormField(
-                    style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
-                      prefixIcon: Icon(Icons.currency_rupee,color: cubit.isDark ? Colors.white : Colors.black,),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.currency_rupee,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -612,7 +671,7 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: cubit.isDark ? Colors.white :Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
