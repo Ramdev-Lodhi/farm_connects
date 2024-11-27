@@ -294,6 +294,7 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                               fontWeight: FontWeight.bold,
                               color: cubit.isDark ? Colors.white : Colors.black,
                             ),
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           // Status
