@@ -11,25 +11,25 @@ import '../screen/rentScreen/rent_form_screen.dart';
 import '../screen/sellScreen/sell_Screen.dart';
 import '../widgets/sell_rent_dialog.dart';
 
-class AppBarLayout extends StatefulWidget implements PreferredSizeWidget {
+class AppBarLayoutNew extends StatefulWidget implements PreferredSizeWidget {
   final bool isDark;
   final VoidCallback? onSearchPressed;
   final VoidCallback? onDropdownChanged;
 
-  AppBarLayout({
+  AppBarLayoutNew({
     required this.isDark,
     this.onSearchPressed,
     this.onDropdownChanged,
   });
 
   @override
-  _AppBarLayoutState createState() => _AppBarLayoutState();
+  _AppBarLayoutNewState createState() => _AppBarLayoutNewState();
 
   @override
   Size get preferredSize => Size.fromHeight(56.0);
 }
 
-class _AppBarLayoutState extends State<AppBarLayout> {
+class _AppBarLayoutNewState extends State<AppBarLayoutNew> {
   late Timer _timer;
   bool _isSell = true;
 
@@ -56,9 +56,7 @@ class _AppBarLayoutState extends State<AppBarLayout> {
   @override
   Widget build(BuildContext context) {
     var cubit = HomeCubit.get(context);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
+    return SliverAppBar(
           // automaticallyImplyLeading: false,
           expandedHeight: 40.0,
           floating: true,
@@ -107,43 +105,41 @@ class _AppBarLayoutState extends State<AppBarLayout> {
                 color: cubit.isDark ? Colors.white : Colors.black,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SellRentDialog(
-                        onSell: () {
-                          Get.to(() => SellScreen());
-                        },
-                        onRent: () {
-                          Get.to(() => RentFormScreen());
-                        },
-                        isDark: false,
-                      );
-                    },
-                  );
-                },
-                child: Container(
-                  width: 70.sp,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87, width: 2),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Image.asset(
-                    _isSell
-                        ? 'assets/images/rent_sell/sell.png'
-                        : 'assets/images/rent_sell/rent.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            )
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 10),
+            //   child: GestureDetector(
+            //     onTap: () {
+            //       showDialog(
+            //         context: context,
+            //         builder: (BuildContext context) {
+            //           return SellRentDialog(
+            //             onSell: () {
+            //               Get.to(() => SellScreen());
+            //             },
+            //             onRent: () {
+            //               Get.to(() => RentFormScreen());
+            //             },
+            //             isDark: false,
+            //           );
+            //         },
+            //       );
+            //     },
+            //     child: Container(
+            //       width: 70.sp,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: Colors.black87, width: 2),
+            //         borderRadius: BorderRadius.circular(5.0),
+            //       ),
+            //       child: Image.asset(
+            //         _isSell
+            //             ? 'assets/images/rent_sell/sell.png'
+            //             : 'assets/images/rent_sell/rent.png',
+            //         fit: BoxFit.contain,
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
-        ),
-      ],
-    );
+        );
   }
 }

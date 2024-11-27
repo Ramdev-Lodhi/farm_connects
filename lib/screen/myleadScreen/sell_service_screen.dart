@@ -332,13 +332,19 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 8.0),
-                                Text(
-                                  'Name: ${selldata.brand} ${selldata.modelname}',
-                                  style: TextStyle(
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    'Name: ${selldata.brand} ${selldata.modelname}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
+                                      color: cubit.isDark ? Colors.white70 : Colors.black54,
+                                    ),
                                   ),
-                                ),SizedBox(height: 8.0),
+                                ),
+                                SizedBox(height: 8.0),
                                 Text(
                                   'Mobile: ${selldata.mobile}',
                                   style: TextStyle(

@@ -46,8 +46,13 @@ class _SellScreenState extends State<SellScreen> {
     return BlocProvider(
       create: (context) => SellCubit(),
       child: Scaffold(
-        appBar:AppBarLayout(isDark: homeCubit.isDark),
-
+        appBar:PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: Card(
+            elevation: 2,
+            child: AppBarLayout(isDark: homeCubit.isDark),
+          ),
+        ),
         body: BlocConsumer<SellCubit, SellFormState>(
           listener: (context, state) {
             if (state is SellFormState && state.showSnackbar != null) {
