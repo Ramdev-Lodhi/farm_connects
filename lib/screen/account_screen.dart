@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
 import 'package:farm_connects/screen/myleadScreen/rent_hiring_service_screen.dart';
+import 'package:farm_connects/screen/myleadScreen/sell_service_screen.dart';
 import 'package:farm_connects/screen/profileScreen/edit_profile_screen.dart';
 import 'package:farm_connects/screen/profileScreen/imageUpload_screen.dart';
 import 'package:farm_connects/screen/profileScreen/password_change_screen.dart';
@@ -33,7 +34,7 @@ class _AccountScreenState extends State<AccountScreen>
     super.initState();
     RentCubit.get(context)..GetRentData();
     ProfileCubits.get(context)..getProfileData();
-    MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry()..getrentItemByUserId();
+    MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry()..getrentItemByUserId()..getallSellenquiry();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -392,7 +393,7 @@ class _AccountScreenState extends State<AccountScreen>
         children: [
           _buildGridItem(Icons.list_alt, 'Listed Item', Colors.blue,gridColor,textColor),
           // _buildGridItem(Icons.shopping_cart, 'Buy Item', Colors.green),
-          _buildGridItem(Icons.receipt_long, 'Purchase Item', Colors.orange,gridColor,textColor),
+          _buildGridItem(Icons.sell_outlined, 'Sell Service', Colors.orange,gridColor,textColor),
           _buildGridItem(Icons.home_work, 'Rent Hiring Service', Colors.purple,gridColor,textColor),
           _buildGridItem(Icons.inventory, 'My Inventory', Colors.red,gridColor,textColor),
         ],
@@ -411,6 +412,8 @@ class _AccountScreenState extends State<AccountScreen>
             Get.to(()=> ListedItemScreen());
           } else if(title == 'Rent Hiring Service'){
             Get.to(()=> RentHiringServiceScreen());
+          }else if(title == 'Sell Service'){
+            Get.to(()=> SellServiceScreen());
           }
         },
         borderRadius: BorderRadius.circular(12.0),

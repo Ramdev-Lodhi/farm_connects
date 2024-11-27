@@ -17,6 +17,7 @@ class MyleadCubits extends Cubit<MyleadState> {
 
   static MyleadCubits get(context) => BlocProvider.of(context);
   sellEnquiryData? sellEnquirydata = null;
+  sellAllEnquiryData? allsellEnquirydata = null;
   RentEnquiryData? rentEnquiryData = null;
   BuyEnquiryData? buyEnquiryData= null;
   Future<void> InsertContactData(
@@ -83,6 +84,24 @@ class MyleadCubits extends Cubit<MyleadState> {
     ).then((response) {
       // print('sellenquerydata : ${response.data}');
       sellEnquirydata = sellEnquiryData.fromJson(response.data);
+      // print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
+
+      emit(MyleadSuccess("Data Getted Successfully"));
+    }).catchError((error) {
+      emit(MyleadError(error));
+    });
+  }
+  void getallSellenquiry() {
+    emit(MyleadLoading());
+    String token = CacheHelper.getData(key: 'token') ?? '';
+    String lang = CacheHelper.getData(key: 'lang') ?? 'en';
+    DioHelper.getData(
+      method: 'contact/getallsellContact',
+      token: token,
+      lang: lang,
+    ).then((response) {
+      // print('sellenquerydata : ${response.data}');
+      allsellEnquirydata = sellAllEnquiryData.fromJson(response.data);
       // print('sellEnquirydata: ${sellEnquirydata?.data.Sellenquiry.length}');
 
       emit(MyleadSuccess("Data Getted Successfully"));

@@ -163,4 +163,56 @@ class DealerInfo {
     // renterId = json['renterID'] ?? '';
 
   }
+
+
+}
+//   all enquiry
+
+class sellAllEnquiryData {
+  late bool status;
+  late SellallEnquiry data;
+  sellAllEnquiryData.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    // print(status);
+    data = SellallEnquiry.fromJson(json['data']);
+  }
+}
+class SellallEnquiry {
+  List<SellallEnquirydata> Sellallenquiry = [];
+  SellallEnquiry.fromJson(Map<String, dynamic> json) {
+    json['Allsellenquiry'].forEach((element) {
+      Sellallenquiry.add(SellallEnquirydata.fromJson(element));
+    });
+
+  }
+}
+
+class SellallEnquirydata {
+  late String farmerId;
+  late String farmername;
+  late String farmermobile;
+  late String farmerlocation;
+  late String budget;
+  late SellerallInfo? allsellerInfo;
+  SellallEnquirydata.fromJson(Map<String, dynamic> json) {
+    farmerId = json['userId'] ?? '';
+    farmername = json['name'] ?? '';
+    farmermobile = json['mobile'] ?? '';
+    farmerlocation = json['location'] ?? '';
+    budget = json['budget'] ?? '';
+    allsellerInfo = json['sellerInfo'] != null ? SellerallInfo.fromJson(json['sellerInfo']) : null;
+  }
+}
+class SellerallInfo {
+  late String brand;
+  late String modelname;
+  late String image;
+  late String sellerId;
+  SellerallInfo.fromJson(Map<String, dynamic> json) {
+    brand = json['sellBrand'] ?? '';
+    modelname = json['sellmodelName'] ?? '';
+    image = json['sell_image'] ?? '';
+    sellerId = json['sellerID'] ?? '';
+
+  }
 }
