@@ -21,6 +21,7 @@ import '../models/home_data_model.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../models/rent_model.dart';
+import '../widgets/custom_contact_form.dart';
 import '../widgets/placeholder/homescreen_placeholder.dart';
 import 'BuyScreen/tractor_details_screen.dart';
 import 'BuyScreen/tractors_by_brand_screen.dart';
@@ -614,8 +615,7 @@ class _ProductsBuilderState extends State<ProductsBuilder>
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return rentContactDialog(
-                                                product, context);
+                                            return CustomContactForm(product: product);
                                           },
                                         );
                                       },

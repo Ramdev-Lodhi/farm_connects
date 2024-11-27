@@ -16,6 +16,7 @@ import '../cubits/mylead_cubit/mylead_cubits.dart';
 import '../cubits/profile_cubit/profile_cubits.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/home_cubit/home_states.dart';
+import '../cubits/rent_cubit/rent_cubit.dart';
 import 'myleadScreen/listed_item_screen.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -30,6 +31,7 @@ class _AccountScreenState extends State<AccountScreen>
   @override
   void initState() {
     super.initState();
+    RentCubit.get(context)..GetRentData();
     ProfileCubits.get(context)..getProfileData();
     MyleadCubits.get(context)..getSellenquiry()..getBuyenquiry()..getRentenquiry()..getrentItemByUserId();
     _tabController = TabController(length: 2, vsync: this);

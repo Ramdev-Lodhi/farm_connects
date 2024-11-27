@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../config/network/local/cache_helper.dart';
+import '../constants/styles/colors.dart';
+import '../cubits/home_cubit/home_cubit.dart';
 import '../cubits/mylead_cubit/mylead_cubits.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
 import '../cubits/profile_cubit/profile_cubits.dart';
@@ -61,7 +63,9 @@ class _CustomContactFormState extends State<CustomContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = HomeCubit.get(context);
     return Dialog(
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -74,19 +78,21 @@ class _CustomContactFormState extends State<CustomContactForm> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   "Contact Form",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20,color: cubit.isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12.0),
-                // Name Field
+
                 TextFormField(
                   initialValue: name,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Name',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    prefixIcon:  Icon(Icons.person,color: cubit.isDark ? skin : Colors.black,),
+                    border: const OutlineInputBorder(),
                   ),
+                  style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                   onChanged: (value) => name = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -99,11 +105,13 @@ class _CustomContactFormState extends State<CustomContactForm> {
                 // Location Field
                 TextFormField(
                   initialValue: location,
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                     labelText: 'Location',
-                    prefixIcon: Icon(Icons.location_on),
+                    labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    prefixIcon: Icon(Icons.location_on,color: cubit.isDark ? skin : Colors.black,),
                     border: OutlineInputBorder(),
                   ),
+                  style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                   onChanged: (value) => location = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -116,11 +124,13 @@ class _CustomContactFormState extends State<CustomContactForm> {
                 // Mobile Field
                 TextFormField(
                   initialValue: mobile,
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                     labelText: 'Mobile',
-                    prefixIcon: Icon(Icons.phone),
+                    labelStyle: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
+                    prefixIcon: Icon(Icons.phone,color: cubit.isDark ? skin : Colors.black,),
                     border: OutlineInputBorder(),
                   ),
+                  style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black),
                   onChanged: (value) => mobile = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -188,6 +198,7 @@ class _CustomContactFormState extends State<CustomContactForm> {
     required Function(DateTime) onDateSelected,
     required BuildContext context, // Add context as a required parameter
   }) {
+    final cubit = HomeCubit.get(context);
     return InputDecorator(
       decoration: InputDecoration(
         labelText: label,
@@ -202,17 +213,17 @@ class _CustomContactFormState extends State<CustomContactForm> {
         children: [
           Row(
             children: [
-              Icon(Icons.date_range),
+              Icon(Icons.date_range,color: cubit.isDark ? skin : Colors.black,),
               SizedBox(width: 10),
               Text(
                 selectedDate != null
                     ? selectedDate.toLocal().toString().split(' ')[0] // Display in "YYYY-MM-DD" format
-                    : 'Select Date',
+                    : 'Select Date',style: TextStyle(color: cubit.isDark ? Colors.white : Colors.black,),
               ),
             ],
           ),
           IconButton(
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_month,color: cubit.isDark ? Colors.white : Colors.black,),
             onPressed: () async {
               DateTime? pickedDate = await showDatePicker(
                 context: context,

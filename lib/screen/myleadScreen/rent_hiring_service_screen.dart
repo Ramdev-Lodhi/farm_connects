@@ -1,40 +1,59 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:farm_connects/cubits/mylead_cubit/mylead_cubits.dart';
+import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/palette.dart';
 import '../../cubits/home_cubit/home_cubit.dart';
+import '../../cubits/profile_cubit/profile_cubits.dart';
 import '../../models/myleads_model.dart';
 import '../../models/rent_model.dart';
+import 'package:intl/intl.dart';
 
 class RentHiringServiceScreen extends StatefulWidget {
   @override
-  State<RentHiringServiceScreen> createState() => _RentHiringServiceScreenState();
+  State<RentHiringServiceScreen> createState() =>
+      _RentHiringServiceScreenState();
 }
 
 class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
+  String? userId;
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('dd-MM-yyyy').format(dateTime);
+  }
+  // List<RentData> filteredRentServices = [];
+  List<RentServiceRequest> filteredRentServices = [];
+
   @override
   void initState() {
     super.initState();
-    MyleadCubits.get(context)..getSellenquiry()..getRentenquiry()..getBuyenquiry()..getrentItemByUserId();
+    userId = ProfileCubits.get(context).profileModel.data?.id ?? "";
+    MyleadCubits.get(context)
+      ..getSellenquiry()
+      ..getRentenquiry()
+      ..getBuyenquiry()
+      ..getrentItemByUserId();
+    RentCubit.get(context)..GetRentData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final rentserviceData = MyleadCubits.get(context).rentDataModel;
-
-    final dataRentRequestEnquiry = MyleadCubits.get(context).rentEnquiryData;
-    final dataRentEnquiry = MyleadCubits.get(context).rentEnquiryData;
-    final databuyEnquiry = MyleadCubits.get(context).buyEnquiryData;
+    final rentserviceData = RentCubit.get(context).rentDataModel;
+    final rentservicedata = RentCubit.get(context).rentDataModel;
     HomeCubit cubit = HomeCubit.get(context);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Rent Hiring Service",style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,color: cubit.isDark ? Colors.white70 : Colors.black,
-          ),),
+          title: Text(
+            "Rent Hiring Service",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: cubit.isDark ? Colors.white70 : Colors.black,
+            ),
+          ),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
@@ -56,10 +75,9 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
           children: [
             _buildVerticalScrollableContent(
                 _buildRentService(rentserviceData!)),
+            _buildVerticalScrollableContent(_buildrentEnquiry(rentserviceData)),
             _buildVerticalScrollableContent(
-                _buildrentEnquiry(rentserviceData)),
-            _buildVerticalScrollableContent(
-                _buildRentRequestEnquiry(dataRentEnquiry!)),
+                _buildRentRequestEnquiry(rentservicedata!)),
           ],
         ),
       ),
@@ -72,27 +90,40 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
     );
   }
 
-  Widget _buildRentRequestEnquiry(RentEnquiryData dataRentEnquiry) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: dataRentEnquiry.data.RentRequestenquiry.length,
-        itemBuilder: (context, index) {
-          return ItemBuilder(dataRentEnquiry.data.RentRequestenquiry[index], context);
-        },
-      ),
+  Widget _buildRentRequestEnquiry(RentDataModel rentDataModel) {
+    final rentData = rentDataModel.data.rentData ?? [];
+
+    List<Widget> rentItems = [];
+    filteredRentServices.clear();
+    for (var data in rentData) {
+      List<RentServiceRequest>? rentServiceRequest = data.rentServiceRequest;
+      var filteredRequests = rentServiceRequest.where((request) {
+        return request.requestedBy == userId;
+      }).toList();
+      filteredRentServices.addAll(filteredRequests);
+      rentItems.add(Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: filteredRentServices.length,
+          itemBuilder: (context, index) {
+            return ItemBuilder(filteredRentServices[index],data, context);
+          },
+        ),
+      ));
+    }
+    return Column(
+      children: rentItems,
     );
   }
 
-  Widget ItemBuilder(RentRequestEnquirydata rentRequestEnquiry, BuildContext context) {
+  Widget ItemBuilder(
+      RentServiceRequest filteredRentServices,RentData rentData, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
-      onTap: () {
-        // Implement navigation to details screen if needed
-      },
+      onTap: () {},
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 4.0.h),
         child: Card(
@@ -119,13 +150,14 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                     ),
                     color: cubit.isDark ? Colors.grey[700] : Colors.grey[200],
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Model Name
                           Text(
-                            rentRequestEnquiry.renterInfo?.modelname ?? 'Unknown',
+                            '${rentData.servicetype}',
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.bold,
@@ -135,15 +167,17 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                           ),
                           // Status
                           Text(
-                            rentRequestEnquiry.renterInfo?.requestStatus ?? 'Unknown',
+                            filteredRentServices.requestStatus ?? 'Unknown',
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               fontWeight: FontWeight.w500,
-                              color: rentRequestEnquiry.renterInfo?.requestStatus == 'Pending'
+                              color: filteredRentServices.requestStatus ==
+                                      'Pending'
                                   ? Color(0xFFF57F17)
-                                  : rentRequestEnquiry.renterInfo?.requestStatus == 'Approved'
-                                  ? Colors.green
-                                  : Colors.red,
+                                  : filteredRentServices.requestStatus ==
+                                          'Approved'
+                                      ? Colors.green
+                                      : Colors.red,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -165,7 +199,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                               height: 120.w,
                               width: 120.w,
                               child: CachedNetworkImage(
-                                imageUrl: rentRequestEnquiry.renterInfo?.image ?? '',
+                                imageUrl: rentData.image ?? '',
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
@@ -179,37 +213,50 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Price: ₹ ${rentRequestEnquiry.budget}',
+                                  'Price: ₹ ${rentData.price}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Mobile: ',
+                                  'Mobile: ${filteredRentServices.mobile}',
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Location: ${rentRequestEnquiry.farmerlocation.replaceAll(",", "\n")}',
+                                  'Location: ${filteredRentServices.location.replaceAll(",", "\n")}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
+                                SizedBox(height: 8.0),
+
                               ],
                             ),
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Text(
+                    'Requested Date: ${_formatDate(filteredRentServices.requestedFrom)} To ${_formatDate(filteredRentServices.requestedTo)}',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: cubit.isDark ? Colors.white70 : Colors.black54,
                     ),
                   ),
                 ],
@@ -221,11 +268,9 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
     );
   }
 
-
   Widget _buildrentEnquiry(RentDataModel rentDataModel) {
     final rentData = rentDataModel?.data?.rentData ?? [];
 
-    // Construct a list of widgets before returning
     List<Widget> rentItems = [];
 
     for (var data in rentData) {
@@ -235,9 +280,10 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: data.rentServiceRequest.length, // Corrected
+            itemCount: data.rentServiceRequest.length,
             itemBuilder: (context, index) {
-              return RentItemBuilder(data.rentServiceRequest[index],data, context); // Corrected
+              return RentItemBuilder(
+                  data.rentServiceRequest[index], data, context); // Corrected
             },
           ),
         ),
@@ -249,7 +295,8 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
     );
   }
 
-  Widget RentItemBuilder(RentServiceRequest rentServiceRequest,RentData rentData, BuildContext context) {
+  Widget RentItemBuilder(RentServiceRequest rentServiceRequest,
+      RentData rentData, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
@@ -282,13 +329,14 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                     ),
                     color: cubit.isDark ? Colors.grey[700] : Colors.grey[200],
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Farmer Name
                           Text(
-                             '${rentData.servicetype}',
+                            '${rentData.servicetype}',
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.bold,
@@ -302,11 +350,13 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                             style: TextStyle(
                               fontSize: 14.0.sp,
                               fontWeight: FontWeight.w500,
-                              color: rentServiceRequest.requestStatus == 'Pending'
-                                  ? Color(0xFFF57F17)
-                                  : rentServiceRequest.requestStatus == 'Approved'
-                                  ? Colors.green
-                                  : Colors.red,
+                              color:
+                                  rentServiceRequest.requestStatus == 'Pending'
+                                      ? Color(0xFFF57F17)
+                                      : rentServiceRequest.requestStatus ==
+                                              'Approved'
+                                          ? Colors.green
+                                          : Colors.red,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -346,25 +396,29 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                 Text(
                                   'Name: ${rentServiceRequest.name}',
                                   style: TextStyle(
-                                      fontSize: 14.0.sp,fontWeight: FontWeight.bold,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      fontSize: 14.0.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
                                   'Price: ₹ ${rentData.price}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
                                   'Mobile: ${rentServiceRequest.mobile}',
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
@@ -373,14 +427,22 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Text(
+                    'Requested Date: ${_formatDate(rentServiceRequest.requestedFrom)} To ${_formatDate(rentServiceRequest.requestedTo)}',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: cubit.isDark ? Colors.white70 : Colors.black54,
                     ),
                   ),
                 ],
@@ -392,8 +454,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
     );
   }
 
-
-
   Widget _buildRentService(RentDataModel rentserviceData) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -402,7 +462,8 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
         shrinkWrap: true,
         itemCount: rentserviceData.data.rentData.length,
         itemBuilder: (context, index) {
-          return RentServiceItemBuilder(rentserviceData.data.rentData[index], context);
+          return RentServiceItemBuilder(
+              rentserviceData.data.rentData[index], context);
         },
       ),
     );
@@ -441,7 +502,8 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                     ),
                     color: cubit.isDark ? Colors.grey[700] : Colors.grey[200],
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -456,11 +518,13 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            '${rentData.rentedStatus == false ? 'Unavailable': 'Available'} ',
+                            '${rentData.rentedStatus == false ? 'Unavailable' : 'Available'} ',
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.bold,
-                              color: rentData.rentedStatus ? Colors.green : Colors.red,
+                              color: rentData.rentedStatus
+                                  ? Colors.green
+                                  : Colors.red,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -500,26 +564,31 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                                   'Name: ${rentData.userInfo?.name ?? 'Not Available'}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
                                   'Price: ₹ ${rentData.price ?? 'Not Available'}',
                                   style: TextStyle(
                                       fontSize: 14.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Location: ${rentData.address?.state},'"\n"' ${rentData.address?.sub_district} (${rentData.address?.pincode})',
+                                  'Location: ${rentData.address?.state},'
+                                  "\n"
+                                  ' ${rentData.address?.sub_district} (${rentData.address?.pincode})',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: cubit.isDark ? Colors.white70 : Colors.black54
-                                  ),
+                                      color: cubit.isDark
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                               ],
                             ),
