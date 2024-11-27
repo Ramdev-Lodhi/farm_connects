@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
+import 'package:farm_connects/screen/account_screen.dart';
+import 'package:farm_connects/screen/myleadScreen/rent_hiring_service_screen.dart';
 import 'package:farm_connects/screen/rentScreen/rent_form_screen.dart';
 import 'package:farm_connects/screen/sellScreen/sell_Screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,6 +18,7 @@ import '../config/location/location_permission.dart';
 import '../constants/styles/colors.dart';
 import '../cubits/home_cubit/home_states.dart';
 import '../cubits/home_cubit/home_cubit.dart';
+import '../cubits/mylead_cubit/mylead_cubits.dart';
 import '../cubits/rent_cubit/rent_cubit.dart';
 import '../cubits/sell_cubit/sell_cubit.dart';
 import '../service/notification_service.dart';
@@ -40,12 +43,16 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     super.initState();
-
+    MyleadCubits.get(context)
+      ..getSellenquiry()
+      ..getRentenquiry()
+      ..getBuyenquiry()
+      ..getrentItemByUserId();
+    RentCubit.get(context)..GetRentData();
     NotificationService.initialize();
     _firebaseMessaging.requestPermission();
     // checkAndroidVersionAndPermission();
     _firebaseMessaging.getToken().then((token) {
-
       // print("Firebase Token: $token");
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -60,7 +67,13 @@ class _HomeLayoutState extends State<HomeLayout> {
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("Message clicked: ${message.notification?.title}");
-
+      // Get.to(AccountScreen());
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RentHiringServiceScreen(),
+        ),
+      );
     });
     ProfileCubits.get(context)..getProfileData();
     RentCubit.get(context)..GetRentData();

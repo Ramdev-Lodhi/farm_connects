@@ -38,7 +38,8 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final rentserviceData = RentCubit.get(context).rentDataModel;
+    final rentserviceData = MyleadCubits.get(context).rentDataModel;
+    print(rentserviceData?.data.rentData);
     final rentservicedata = RentCubit.get(context).rentDataModel;
     HomeCubit cubit = HomeCubit.get(context);
 
@@ -73,9 +74,13 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
         ),
         body: TabBarView(
           children: [
+            (rentserviceData!.data.rentData.isNotEmpty) ?
             _buildVerticalScrollableContent(
-                _buildRentService(rentserviceData!)),
-            _buildVerticalScrollableContent(_buildrentEnquiry(rentserviceData)),
+                _buildRentService(rentserviceData)) :
+            Center( child: Text('No Service Available')),
+            (rentserviceData.data.rentData.isNotEmpty) ?
+            _buildVerticalScrollableContent(_buildrentEnquiry(rentserviceData)) :
+            Center( child: Text('No Service Request Available')),
             _buildVerticalScrollableContent(
                 _buildRentRequestEnquiry(rentservicedata!)),
           ],
@@ -92,7 +97,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
 
   Widget _buildRentRequestEnquiry(RentDataModel rentDataModel) {
     final rentData = rentDataModel.data.rentData ?? [];
-
     List<Widget> rentItems = [];
     filteredRentServices.clear();
     for (var data in rentData) {
@@ -101,17 +105,29 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
         return request.requestedBy == userId;
       }).toList();
       filteredRentServices.addAll(filteredRequests);
+      // print(filteredRequests.length);
+      // print(filteredRentServices.length);
+      if(filteredRequests.length != 0){
       rentItems.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: ListView.builder(
+        child:filteredRentServices.length != 0 ? ListView.builder(
           physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           itemCount: filteredRentServices.length,
           itemBuilder: (context, index) {
             return ItemBuilder(filteredRentServices[index],data, context);
           },
+        ) : Center(
+          child: Text('No Requests'),
         ),
       ));
+      }
+    }
+    // print(rentItems.length);
+    if(rentItems.length == 0){
+      return Center(
+        child: Text('No Your Service Request'),
+      );
     }
     return Column(
       children: rentItems,
@@ -121,7 +137,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
   Widget ItemBuilder(
       RentServiceRequest filteredRentServices,RentData rentData, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
-
     return GestureDetector(
       onTap: () {},
       child: Padding(
@@ -138,7 +153,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
               ),
               child: Column(
                 children: [
-                  // Header Card for Model Name and Status
                   Card(
                     margin: EdgeInsets.zero,
                     elevation: 2.0,
@@ -269,15 +283,14 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
   }
 
   Widget _buildrentEnquiry(RentDataModel rentDataModel) {
-    final rentData = rentDataModel?.data?.rentData ?? [];
+    final rentData = rentDataModel.data.rentData ?? [];
 
     List<Widget> rentItems = [];
-
     for (var data in rentData) {
       rentItems.add(
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: ListView.builder(
+          child:  ListView.builder(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             itemCount: data.rentServiceRequest.length,
@@ -298,7 +311,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
   Widget RentItemBuilder(RentServiceRequest rentServiceRequest,
       RentData rentData, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
-
     return GestureDetector(
       onTap: () {
         // Implement navigation to details screen if needed
@@ -317,7 +329,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
               ),
               child: Column(
                 children: [
-                  // Header Card for Farmer Name and Status
                   Card(
                     margin: EdgeInsets.zero,
                     elevation: 2.0,
@@ -474,7 +485,7 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
 
     return GestureDetector(
       onTap: () {
-        // Implement navigation to details screen if needed
+
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 4.0.h),
@@ -507,7 +518,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Service Type
                           Text(
                             rentData.servicetype ?? 'Unknown Service',
                             style: TextStyle(
@@ -532,7 +542,6 @@ class _RentHiringServiceScreenState extends State<RentHiringServiceScreen> {
                       ),
                     ),
                   ),
-                  // Main content of the card
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
