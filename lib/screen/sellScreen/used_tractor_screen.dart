@@ -105,11 +105,9 @@ class _UsedTractorScreenState extends State<UsedTractorScreen> {
                   items: locationCubits.stateNames,
                   value: selectedState,
                   onChanged: (value) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
                       setState(() {
                         selectedState = value;
                       });
-                    });
                   },
                   label: "State",
                 ),

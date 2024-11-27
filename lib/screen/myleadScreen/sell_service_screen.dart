@@ -27,13 +27,12 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
   void initState() {
     super.initState();
     userId = ProfileCubits.get(context).profileModel.data?.id ?? "";
-    MyleadCubits.get(context)..getallSellenquiry();
+    MyleadCubits.get(context)..getSellenquiry();
   }
 
   @override
   Widget build(BuildContext context) {
-    final sellserviceData = MyleadCubits.get(context).allsellEnquirydata;
-    print(sellserviceData?.data.Sellallenquiry);
+    final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
     HomeCubit cubit = HomeCubit.get(context);
     final selltractor = SellCubit.get(context);
 
@@ -59,8 +58,7 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                 indicatorColor: Colors.black,
                 tabs: [
                   Tab(text: 'Your Service'),
-                  Tab(text: 'Service sell Response'),
-                  // Tab(text: 'Your Request'),
+                  Tab(text: 'Service Sell Response'),
                 ],
               ),
             ),
@@ -68,15 +66,13 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
         ),
         body: TabBarView(
           children: [
-            (sellserviceData!.data.Sellallenquiry.isNotEmpty) ?
+            (selltractor.sellAllTractorData!.data.SellTractor.isNotEmpty) ?
             _buildVerticalScrollableContent(
                 _buildyourSellservice(selltractor.sellAllTractorData)) :
             Center( child: Text('No Service Available')),
-            (sellserviceData.data.Sellallenquiry.isNotEmpty) ?
-            _buildVerticalScrollableContent(_buildSellEnquiry(sellserviceData)) :
+            (dataSellEnquiry!.data.Sellenquiry.isNotEmpty) ?
+            _buildVerticalScrollableContent(_buildSellEnquiry(dataSellEnquiry)) :
             Center( child: Text('No Service Request Available')),
-            // _buildVerticalScrollableContent(
-                // _buildRentRequestEnquiry(sellserviceData!)),
           ],
         ),
       ),
@@ -89,23 +85,20 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
     );
   }
 
-  Widget _buildSellEnquiry(sellAllEnquiryData dataSellEnquiry) {
-    var tractor=dataSellEnquiry.data.Sellallenquiry;
-    final filteredTractors = tractor.where((tractor) => tractor.farmerId == userId).toList();
+  Widget _buildSellEnquiry(sellEnquiryData dataSellEnquiry) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: filteredTractors.length,
+        itemCount: dataSellEnquiry.data.Sellenquiry.length,
         itemBuilder: (context, index) {
-          return ItemBuilder(filteredTractors[index], context);
+          return ItemBuilder(dataSellEnquiry.data.Sellenquiry[index], context);
         },
       ),
     );
   }
-
-  Widget ItemBuilder( sellEnquiry, BuildContext context) {
+  Widget ItemBuilder(SellEnquirydata sellEnquiry, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
@@ -152,15 +145,20 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            'Pending',
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          // Status
+                          // Text(
+                          //   sellEnquiry.renterInfo?.requestStatus ?? 'Unknown',
+                          //   style: TextStyle(
+                          //     fontSize: 14.0.sp,
+                          //     fontWeight: FontWeight.w500,
+                          //     color: sellEnquiry.renterInfo?.requestStatus == 'Pending'
+                          //         ? Color(0xFFF57F17)
+                          //         : sellEnquiry.renterInfo?.requestStatus == 'Approved'
+                          //         ? Colors.green
+                          //         : Colors.red,
+                          //   ),
+                          //   overflow: TextOverflow.ellipsis,
+                          // ),
                         ],
                       ),
                     ),
@@ -179,7 +177,7 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                               height: 120.w,
                               width: 120.w,
                               child: CachedNetworkImage(
-                                imageUrl: sellEnquiry.allsellerInfo?.image ?? '',
+                                imageUrl: sellEnquiry.sellerInfo?.image ?? '',
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
@@ -203,7 +201,7 @@ class _SellServiceScreenState extends State<SellServiceScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Mobile: ${sellEnquiry.farmermobile}',
+                                  'Mobile: ',
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
                                       color: cubit.isDark ? Colors.white70 : Colors.black54

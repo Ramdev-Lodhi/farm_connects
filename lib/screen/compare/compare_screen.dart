@@ -469,7 +469,9 @@ class _CompareScreenState extends State<CompareScreen> {
               ),
             ),
             if(filteredTractors.isEmpty && comparefilteredTractors.isEmpty)
-            gridTractorsBuilder(cubit.homeDataModel, context),
+              gridTractorsBuilder(cubit.homeDataModel, context),
+            if(filteredTractors.isEmpty && comparefilteredTractors.isEmpty)
+              gridTractors(cubit.homeDataModel, context),
           ],
         ),
       ),
@@ -497,11 +499,149 @@ class _CompareScreenState extends State<CompareScreen> {
       height: 200.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: (randomTractor?.data.tractors.length ?? 0) ~/ 2, // Display two items per card
+        itemCount: (randomTractor!.data.tractors.length > 12 ? 12 : randomTractor!.data.tractors.length)  ~/ 2, // Display two items per card
         itemBuilder: (context, index) {
           final product1 = randomTractor?.data.tractors[index * 2];
           final product2 = (index * 2 + 1) < (randomTractor?.data.tractors.length ?? 0)
               ? randomTractor?.data.tractors[index * 2 + 1]
+              : null; // Check if a second product exists for the card
+
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+            child: GestureDetector(
+              onTap: () {
+                // Here you can print or do other actions with the product
+                if (product1 != null && product2 != null) {
+                 Get.to(()=>FixedCompareTractorScreen(
+                   filteredTractors: product1,
+                   comparefilteredTractors: product2,
+                 ),);
+                }
+              },
+              child: Card(
+                elevation: 1,
+                child: Material(
+                  elevation: 3.0,
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: cubit.isDark ? Colors.grey[800] : Colors.white,
+                  child: Container(
+                    width: 300.w, // Adjust the card width
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Stack(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Card 1 for product1
+                              if (product1 != null)
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 170.w,
+                                        child: CachedNetworkImage(
+                                          imageUrl: product1.image ?? '',
+                                          fit: BoxFit.contain,
+                                          width: double.infinity,
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error_outline),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${product1.brand ?? ''} ${product1.name ?? ''}'.trim(),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 16.0.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: cubit.isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              if (product2 != null)
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 170.w,
+                                        child: CachedNetworkImage(
+                                          imageUrl: product2.image ?? '',
+                                          fit: BoxFit.contain,
+                                          width: double.infinity,
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error_outline),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${product2.brand ?? ''} ${product2.name ?? ''}'.trim(),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 16.0.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: cubit.isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                          // CircleAvatar displaying "Vs" in the center of the images
+                          Positioned(
+                            top: 60.0, // Position it slightly above the images
+                            left: MediaQuery.of(context).size.width / 2 - 45, // Center horizontally
+                            child: CircleAvatar(
+                              backgroundColor: Colors.orange,
+                              radius: 15.0,
+                              child: Text(
+                                "Vs",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget gridTractors(HomeDataModel? randomTractor, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
+    return SizedBox(
+      height: 200.h,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: (randomTractor!.data.tractors.length <12  ? randomTractor!.data.tractors.length : 12) ~/ 2, // Display two items per card
+        itemBuilder: (context, index) {
+          final product1 = randomTractor?.data.tractors[(index * 2) + 12];
+          final product2 = (index * 2 + 1) < (randomTractor?.data.tractors.length ?? 0)
+              ? randomTractor?.data.tractors[(index * 2 + 1) +12]
               : null; // Check if a second product exists for the card
 
           return Padding(

@@ -27,7 +27,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
   void initState() {
     super.initState();
     userId = ProfileCubits.get(context).profileModel.data?.id ?? "";
-    MyleadCubits.get(context)..getSellenquiry();
+    MyleadCubits.get(context)..getallSellenquiry();
     MyleadCubits.get(context)..getRentenquiry();
     MyleadCubits.get(context)..getBuyenquiry();
     RentCubit.get(context)..GetRentData();
@@ -35,9 +35,9 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dataSellEnquiry = MyleadCubits.get(context).sellEnquirydata;
     final databuyEnquiry = MyleadCubits.get(context).buyEnquiryData;
     final rentservicedata = RentCubit.get(context).rentDataModel;
+    final sellserviceData = MyleadCubits.get(context).allsellEnquirydata;
     HomeCubit cubit = HomeCubit.get(context);
     return DefaultTabController(
       length: 3,
@@ -69,7 +69,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
             _buildVerticalScrollableContent(
                 _buildBuyEnquiry(databuyEnquiry!)),
             _buildVerticalScrollableContent(
-                _buildSellEnquiry(dataSellEnquiry!)),
+                _buildSellEnquiry(sellserviceData!)),
             _buildVerticalScrollableContent(
                 _buildRentRequestEnquiry(rentservicedata!)),
           ],
@@ -84,20 +84,24 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
     );
   }
 
-  Widget _buildSellEnquiry(sellEnquiryData dataSellEnquiry) {
+
+  Widget _buildSellEnquiry(sellAllEnquiryData dataSellEnquiry) {
+    var tractor=dataSellEnquiry.data.Sellallenquiry;
+    final filteredTractors = tractor.where((tractor) => tractor.farmerId == userId).toList();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: dataSellEnquiry.data.Sellenquiry.length,
+        itemCount: filteredTractors.length,
         itemBuilder: (context, index) {
-          return ItemBuilder(dataSellEnquiry.data.Sellenquiry[index], context);
+          return ItemBuilder(filteredTractors[index], context);
         },
       ),
     );
   }
-  Widget ItemBuilder(SellEnquirydata sellEnquiry, BuildContext context) {
+
+  Widget ItemBuilder( sellEnquiry, BuildContext context) {
     HomeCubit cubit = HomeCubit.get(context);
 
     return GestureDetector(
@@ -144,20 +148,15 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          // Status
-                          // Text(
-                          //   sellEnquiry.renterInfo?.requestStatus ?? 'Unknown',
-                          //   style: TextStyle(
-                          //     fontSize: 14.0.sp,
-                          //     fontWeight: FontWeight.w500,
-                          //     color: sellEnquiry.renterInfo?.requestStatus == 'Pending'
-                          //         ? Color(0xFFF57F17)
-                          //         : sellEnquiry.renterInfo?.requestStatus == 'Approved'
-                          //         ? Colors.green
-                          //         : Colors.red,
-                          //   ),
-                          //   overflow: TextOverflow.ellipsis,
-                          // ),
+                          Text(
+                            'Pending',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.red,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),
@@ -176,7 +175,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                               height: 120.w,
                               width: 120.w,
                               child: CachedNetworkImage(
-                                imageUrl: sellEnquiry.sellerInfo?.image ?? '',
+                                imageUrl: sellEnquiry.allsellerInfo?.image ?? '',
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
@@ -200,7 +199,7 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  'Mobile: ',
+                                  'Mobile: ${sellEnquiry.farmermobile}',
                                   style: TextStyle(
                                       fontSize: 12.0.sp,
                                       color: cubit.isDark ? Colors.white70 : Colors.black54
@@ -231,7 +230,6 @@ class _ListedItemScreenState extends State<ListedItemScreen> {
       ),
     );
   }
-
 
 
   Widget _buildrentEnquiry(RentEnquiryData dataRentEnquiry) {
