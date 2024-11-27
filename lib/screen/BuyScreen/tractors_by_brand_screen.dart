@@ -517,11 +517,13 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
       ),
     );
   }
-  Widget sellerContactDialog(selltractors, BuildContext context) {
+  Widget newTractorContactDialog(newtractors, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -533,12 +535,22 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Seller Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -558,9 +570,16 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   TextFormField(
                     initialValue: location,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -580,9 +599,16 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   TextFormField(
                     initialValue: mobile,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -603,13 +629,21 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                     },
                   ),
                   TextFormField(
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.currency_rupee,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -624,23 +658,22 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
-                    // Set bottom margin to 0
                     child: SizedBox(
-                      width: 150, // Set the desired width here
+                      width: 150,
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            insertselldata(selltractors);
-                            Get.to(() =>
-                                UsedTractorDetails(selltractor: selltractors));
+                            insertbuydata(newtractors);
+                            Navigator.pop(context);
+                            Get.to(() => TractorsDetails(tractor: newtractors));
                           }
                         },
-                        child: Text("Contact Seller",
+                        child: Text("Contact",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
@@ -660,11 +693,13 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
     );
   }
 
-  Widget newTractorContactDialog(newtractors, BuildContext context) {
+  Widget sellerContactDialog(selltractors, BuildContext context) {
+    HomeCubit cubit = HomeCubit.get(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      backgroundColor: cubit.isDark ? Colors.grey[800] : Colors.white,
       insetPadding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Container(
@@ -676,12 +711,22 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Dealer Contact Form", style: TextStyle(fontSize: 20)),
+                  Text("Seller Contact Form",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: cubit.isDark ? Colors.white : Colors.black)),
                   TextFormField(
                     initialValue: name,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -701,9 +746,16 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   TextFormField(
                     initialValue: location,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      prefixIcon: Icon(Icons.location_on),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.location_on,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -723,9 +775,16 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   TextFormField(
                     initialValue: mobile,
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Mobile',
-                      prefixIcon: Icon(Icons.phone),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -746,13 +805,21 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                     },
                   ),
                   TextFormField(
+                    style: TextStyle(
+                        color: cubit.isDark ? Colors.white : Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Budget',
-                      prefixIcon: Icon(Icons.currency_rupee),
+                      labelStyle: TextStyle(
+                          color: cubit.isDark ? Colors.white : Colors.black),
+                      prefixIcon: Icon(
+                        Icons.currency_rupee,
+                        color: cubit.isDark ? Colors.white : Colors.black,
+                      ),
                       border: OutlineInputBorder(),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    ),onSaved: (value) => price = value,
+                    ),
+                    onSaved: (value) => price = value,
                     onChanged: (value) {
                       setState(() {
                         price = value;
@@ -767,7 +834,7 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                   ),
                   Divider(
                     thickness: 1.5,
-                    color: Colors.black12,
+                    color: cubit.isDark ? Colors.white : Colors.black12,
                     height: 10,
                   ),
                   Container(
@@ -778,11 +845,11 @@ class _TractorsByBrandScreenState extends State<TractorsByBrandScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            insertbuydata(newtractors);
-                            Get.to(() => TractorsDetails(tractor: newtractors));
+                            insertselldata(selltractors);
+                            Get.back();
                           }
                         },
-                        child: Text("Contact Dealer",
+                        child: Text("Contact Seller",
                             style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009688),
