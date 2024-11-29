@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,13 +31,30 @@ class AuthCubits extends Cubit<Authstates> {
     serverClientId:
         "475762921924-607vhtcp8u4hl3ime3r8mebeb6ehtsbq.apps.googleusercontent.com",
   );
+  Future<bool> health(String token) async {
+    if (token.isEmpty) {
+      return false;
+    }
+    try {
+      final response = await DioHelper.getData(
+        method: 'health',
+        token: token,
+      );
+      // print(response);
+      if (response.data['status'] == true) {
+        return true;
+      }
+    } catch (error) {
 
+      return false;
+    }
+    return false;
+  }
   Future<bool> validateToken(String token) async {
     if (token.isEmpty) {
       _clearCachedData();
       return false;
     }
-
     try {
       final response = await DioHelper.getData(
         method: 'token_check',
@@ -46,10 +65,21 @@ class AuthCubits extends Cubit<Authstates> {
         return true;
       }
     } catch (error) {
-      print("Error validating token: $error");
+      if (error is DioError) {
+        if (error.error is SocketException) {
+          print("Network error: ${error.error}");
+        }  else if (error.type == DioErrorType.receiveTimeout) {
+          print("Receive timeout error: ${error.message}");
+        }  else if (error.type == DioErrorType.cancel) {
+          print("Request was canceled: ${error.message}");
+        }
+      } else {
+        // Handle non-Dio errors
+        print("Unknown error occurred: $error");
+      }
     }
 
-     _clearCachedData();
+    _clearCachedData();
     await _googleSignIn.signOut();
     return false;
   }

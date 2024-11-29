@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:farm_connects/cubits/profile_cubit/profile_cubits.dart';
 import 'package:farm_connects/cubits/rent_cubit/rent_cubit.dart';
 import 'package:farm_connects/screen/authScreen/otpScreen/LoginScreen_withOTP.dart';
@@ -15,6 +16,7 @@ import '../layout/home_layout.dart';
 import '../cubits/home_cubit/home_cubit.dart';
 import 'package:farm_connects/cubits/home_cubit/home_states.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
+import 'connectivity_Checker.dart';
 import 'constants/styles/styles.dart';
 import 'cubits/location_cubit/location_cubits.dart';
 import 'cubits/mylead_cubit/mylead_cubits.dart';
@@ -23,15 +25,28 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // await FirebaseMessaging.instance.requestPermission();
-  // String? token1 = await FirebaseMessaging.instance.getToken();
-  // print("FCM Token: $token1");
   DioHelper.init();
   await CacheHelper.init();
-  String token = CacheHelper.getData(key: 'token') ?? '';
-  bool isValidToken = await AuthCubits().validateToken(token);
-  runApp(MyApp(isValidToken ? HomeLayout() : OTPScreen()));
-  // runApp(MyApp(token != '' ? HomeLayout() : OTPScreen()));
+
+  // Function to check internet connection
+  Future<void> checkConnectivityAndRunApp() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    print('Connection: $connectivityResult');  // Check the actual value being returned
+    if (connectivityResult.contains(ConnectivityResult.none)) {
+      runApp(MyApp(NoInternetScreen(onRetry: checkConnectivityAndRunApp)));
+    } else {
+      String token = CacheHelper.getData(key: 'token') ?? '';
+      bool isValidNetwork = await AuthCubits().health(token);
+      if(isValidNetwork){
+      bool isValidToken = await AuthCubits().validateToken(token);
+      runApp(MyApp(isValidToken ? HomeLayout() : OTPScreen()));
+      }else{
+        runApp(MyApp(NoInternetScreen(onRetry: checkConnectivityAndRunApp)));
+      }
+    }
+  }
+
+  checkConnectivityAndRunApp();
 }
 
 class MyApp extends StatefulWidget {
